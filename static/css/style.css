@@ -665,14 +665,55 @@ footer::before {
 }
 
 .about-content {
-  background-color: var(--card-bg);
+  max-width: 800px;
+  margin: 0 auto;
   padding: 2.5rem;
+  position: relative;
+  background-color: var(--card-bg);
   border-radius: 12px;
   border: 1px solid var(--card-border);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  margin-top: 2.5rem;
-  position: relative;
   overflow: hidden;
+}
+
+.wave-emoji {
+  display: inline-block;
+  animation: wave 2.5s infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(14deg);
+  }
+
+  20% {
+    transform: rotate(-8deg);
+  }
+
+  30% {
+    transform: rotate(14deg);
+  }
+
+  40% {
+    transform: rotate(-4deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  60% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .about-content::before {

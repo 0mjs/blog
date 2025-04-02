@@ -40,7 +40,7 @@ type Post struct {
 var (
 	posts        []Post
 	postsMap     = make(map[string]Post)
-	weeklyStatus = "This blog features zero JavaScript!"
+	weeklyStatus = "This blog is built with Zinc, an API framework for Go."
 )
 
 // Custom template functions
