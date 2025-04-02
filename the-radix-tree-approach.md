@@ -1,21 +1,30 @@
 ---
 {
-    "title": "Building a Fast Router in Go: The Radix Tree Approach",
+    "title": "Learning from the Best: Implementing a Radix Tree Router in Zinc",
     "date": "2025-04-02T02:58:57Z"
 }
 ---
 
-Ever wondered why some web frameworks are lightning fast while others feel like they're running through molasses? Let me tell you about one of the coolest parts of building Zinc - our router's radix tree implementation.
+When we started building Zinc, our Go web framework, one of the key decisions was choosing the right approach for routing. After studying how established frameworks handle this challenge, we were drawn to the elegance of the radix tree - a data structure with roots dating back to the 1960s that continues to power some of the fastest routers today.
 
-## The Problem
+## The Challenge of Routing
 
-When you're building a web framework, routing is everything. You need to match URLs to handlers quickly. While Go 1.22's `net/http` package brought some nice improvements to pattern matching, it still doesn't handle complex routing patterns with the flexibility and performance we need. It's like trying to find a needle in a haystack - but the haystack is your URL patterns and the needle is the right handler.
+Routing might seem straightforward, but as web applications grow in complexity, the way you match URLs to handlers can significantly impact performance. While Go 1.22's `net/http` package offers solid pattern matching, we wanted something that could efficiently handle complex routing patterns for our specific needs.
 
-## Enter the Radix Tree
+## Standing on the Shoulders of Giants
 
-A radix tree (or compressed trie) is perfect for this. Think of it like a family tree, but for URL patterns. Each node represents a part of a URL, and we compress common prefixes to save space. It's like having a smart address book where "Matt" and "Matthew" share the same "Mat" prefix.
+We didn't invent this approach - far from it. Our implementation draws inspiration from several excellent Go frameworks that pioneered the use of radix trees for routing:
 
-Here's a quick example of how our routes look in the tree:
+- [**HttpRouter**](https://github.com/julienschmidt/httprouter): Julienschmidt's HttpRouter was one of the first to demonstrate the power of radix trees for Go HTTP routing
+- [**Gin**](https://github.com/gin-gonic/gin): Built on HttpRouter's foundation with additional features
+- [**Echo**](https://github.com/labstack/echo): Uses a similar approach with its own optimizations
+- [**FastHTTP**](https://github.com/valyala/fasthttp): While not directly a router, its routing components use similar principles
+
+## What is a Radix Tree?
+
+The radix tree (or compressed prefix tree) was developed in the late 1960s by Donald R. Morrison. Unlike a regular trie where each node represents a single character, a radix tree compresses chains of nodes that have only one child, saving memory and improving traversal speed.
+
+Here's a simplified visualization of how routes might look in a radix tree:
 
 ```
 /           -> HomeHandler
@@ -26,64 +35,44 @@ Here's a quick example of how our routes look in the tree:
     └── v1/ -> APIv1Handler
 ```
 
-## Why It's Fast
+What makes this approach elegant is how the tree structure naturally matches URL hierarchies. When a request comes in, we just walk down the tree following the path segments to find the correct handler - typically in O(k) time, where k is the length of the URL.
 
-The beauty of this approach is O(k) lookup time, where k is the length of the URL. No more scanning through a list of routes - we just follow the tree branches. It's like having a GPS for your URLs.
+## A Simple Implementation
 
-## The Cool Part
-
-What makes our implementation special is how we handle dynamic segments (like `:id` in `/post/:id`). Instead of doing regex matches or string splitting, we use the tree structure itself to identify parameters. It's elegant, and it's fast.
-
-## The Code
-
-Here's a sneak peek at how it works (simplified, of course):
+While our production implementation handles many edge cases, the core concept can be illustrated with just a few lines of code:
 
 ```go
-// Node represents a single node in our radix tree
+// A simplified version of our radix tree node
 type Node struct {
-    path     string
+    segment  string
     handler  http.HandlerFunc
-    children map[string]*Node
-    params   []string
-}
-
-// addRoute adds a new route to the tree
-func (n *Node) addRoute(path string, handler http.HandlerFunc) {
-    // Split path into segments
-    segments := strings.Split(path, "/")
-    current := n
-    
-    for _, segment := range segments {
-        if segment == "" {
-            continue
-        }
-        
-        // Check if it's a parameter
-        if strings.HasPrefix(segment, ":") {
-            current.params = append(current.params, segment[1:])
-        }
-        
-        // Add to tree
-        if _, exists := current.children[segment]; !exists {
-            current.children[segment] = &Node{
-                path:     segment,
-                children: make(map[string]*Node),
-            }
-        }
-        current = current.children[segment]
-    }
-    
-    current.handler = handler
+    children []*Node
+    isParam  bool
 }
 ```
 
-## The Payoff
+The beauty is in how the tree handles route matching - we simply traverse the path segments, finding child nodes that match each segment. When we encounter a parameter segment (like `:id`), we store its value for the handler to use.
 
-The result? Lightning-fast route matching, even with thousands of routes. We're talking microseconds here, not milliseconds. And the memory footprint? Tiny compared to regex-based solutions.
+## Learning from Each Framework
+
+Each of the frameworks we studied contributed something to our understanding:
+
+- From HttpRouter: The core prefix tree algorithm and efficient matching
+- From Gin: How to smoothly integrate middleware with the routing system
+- From Echo: Ideas for a clean, developer-friendly API
+- From FastHTTP: Performance optimizations, though we chose to stay with net/http for compatibility
+
+## Performance Without Premature Optimization
+
+While the radix tree approach is inherently fast, we've tried to balance performance with readability. Our implementation isn't the most aggressively optimized - we've focused on creating something that's both efficient and maintainable.
+
+In benchmarks, we've found the approach works well even with hundreds of routes, with lookup times consistently in the microsecond range. Most importantly, it scales predictably as routes increase.
 
 ## Wrapping Up
 
-Building a fast router isn't just about matching URLs - it's about doing it efficiently at scale. The radix tree approach gives us that sweet spot of performance and simplicity. Plus, it's just cool to see how a data structure from the 1960s is still kicking ass in modern web frameworks.
+The radix tree router exemplifies one of the most enjoyable aspects of software development - drawing on established computer science concepts (sometimes over half a century old!) and applying them to modern problems. 
 
-Next time you're building a web framework (or just curious about how they work), give the radix tree a look. It might just be the performance boost you're looking for.
+Our implementation in Zinc isn't revolutionary - it's an adaptation of proven approaches from the Go community. But it serves as a reminder that sometimes the best solutions aren't about inventing something new, but about understanding and applying the right tool for the job.
+
+If you're building your own web framework or are just curious about routing algorithms, I'd encourage you to explore the source code of the frameworks mentioned above. There's a wealth of knowledge in how they've implemented and optimized these concepts.
 
