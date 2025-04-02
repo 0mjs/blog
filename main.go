@@ -121,8 +121,16 @@ func init() {
 	// Load posts from content directory
 	entries, err := os.ReadDir("content")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Warning: Could not read content directory: %v", err)
+		// Initialize with empty posts rather than crashing
+		posts = []Post{}
+		return
 	}
+
+	// Initialize posts with an empty slice instead of nil
+	posts = []Post{}
+	// Initialize postsMap
+	postsMap = make(map[string]Post)
 
 	for _, entry := range entries {
 		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".md") {
@@ -201,13 +209,19 @@ func init() {
 
 			post.HTML = template.HTML(markdown.Render(doc, renderer))
 			posts = append(posts, post)
+
+			// Add to postsMap
+			postsMap[post.Slug] = post
 		}
 	}
 
-	// Sort posts by date
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].Date.After(posts[j].Date)
-	})
+	// Only sort if we have posts
+	if len(posts) > 0 {
+		// Sort posts by date
+		sort.Slice(posts, func(i, j int) bool {
+			return posts[i].Date.After(posts[j].Date)
+		})
+	}
 }
 
 func main() {
@@ -252,15 +266,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 func handlePost(w http.ResponseWriter, r *http.Request) {
 	slug := strings.TrimPrefix(r.URL.Path, "/post/")
 
-	var post *Post
-	for _, p := range posts {
-		if p.Slug == slug {
-			post = &p
-			break
-		}
-	}
-
-	if post == nil {
+	post, exists := postsMap[slug]
+	if !exists {
 		http.NotFound(w, r)
 		return
 	}

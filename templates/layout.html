@@ -42,12 +42,18 @@
 
 <body>
   <header>
+    <div class="header-background">
+      <div class="header-glow"></div>
+    </div>
     <nav>
       <a href="/" class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="house-icon">
-          <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
-        </svg>
+        <div class="logo-container">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="house-icon">
+            <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
+          </svg>
+          <div class="logo-sparkle"></div>
+        </div>
       </a>
       <div class="nav-links">
         <a href="/about" {{if eq .CurrentRoute "/about" }}class="active" {{end}}>
