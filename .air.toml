@@ -1,0 +1,3 @@
+[build]
+bin = "tmp/main"
+cmd = "go build -o tmp/main main.go"

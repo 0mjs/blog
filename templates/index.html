@@ -1,0 +1,42 @@
+{{define "content"}}
+<div class="container">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="profile-image-container">
+        <img src="/static/img/matt.png" alt="Matt Stevenson" class="profile-image">
+        <!-- Replace with your own image at static/img/profile.jpg when ready -->
+      </div>
+      <div class="hero-text">
+        <h1>Matt J. Stevenson</h1>
+        <div class="status-bubble">
+          <p class="status-text">{{.WeeklyStatus}}</p>
+          <div class="status-meta">Weekly update</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="posts-section">
+    <h2 class="posts-heading">Latest</h2>
+    <div class="posts">
+      {{range .Posts}}
+      <a href="/post/{{.Slug}}" class="post-card">
+        <article class="post-preview">
+          <div class="post-date">{{.Date.Format "Jan 02"}}</div>
+          <h2>{{.Title}}</h2>
+          <div class="post-meta">
+            <span class="reading-time">{{.Content | countWords | readingTime}} min read</span>
+          </div>
+        </article>
+      </a>
+      {{else}}
+      <div class="no-posts">
+        <p>No posts yet. Check back soon!</p>
+      </div>
+      {{end}}
+    </div>
+  </section>
+</div>
+{{end}}
