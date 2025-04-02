@@ -3,15 +3,29 @@
   <section class="hero">
     <div class="hero-content">
       <div class="profile-image-container">
-        <img src="/static/img/matt.png" alt="Matt Stevenson" class="profile-image">
+        <img src="/static/img/mmm.png" alt="Matt Stevenson" class="profile-image">
         <!-- Replace with your own image at static/img/profile.jpg when ready -->
       </div>
       <div class="hero-text">
         <h1>Matt J. Stevenson</h1>
         <div class="status-bubble">
           <p class="status-text">{{.WeeklyStatus}}</p>
-          <div class="status-meta">Weekly update</div>
+          <div class="status-meta">- matt</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tech-section">
+    <h3 class="tech-heading">Currently Working With</h3>
+    <div class="tech-container">
+      <div class="tech-item">
+        <img src="/static/img/go.svg" alt="Go" class="tech-icon">
+        <span class="tech-label">Go</span>
+      </div>
+      <div class="tech-item">
+        <img src="/static/img/pg.svg" alt="PostgreSQL" class="tech-icon">
+        <span class="tech-label">Postgres</span>
       </div>
     </div>
   </section>
@@ -19,7 +33,7 @@
   <div class="section-divider"></div>
 
   <section class="posts-section">
-    <h2 class="posts-heading">Latest</h2>
+    <h2 class="posts-heading">Blog</h2>
     <div class="posts">
       {{range .Posts}}
       <a href="/post/{{.Slug}}" class="post-card">

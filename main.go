@@ -4,6 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 	"html/template"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
@@ -15,8 +16,13 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/alecthomas/chroma"
+	"github.com/alecthomas/chroma/formatters/html"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
 	"github.com/gomarkdown/markdown"
-	"github.com/gomarkdown/markdown/html"
+	"github.com/gomarkdown/markdown/ast"
+	mdhtml "github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 )
 
@@ -34,7 +40,7 @@ type Post struct {
 var (
 	posts        []Post
 	postsMap     = make(map[string]Post)
-	weeklyStatus = "Working on a new CMS integration. Stay tuned for more updates!"
+	weeklyStatus = "This blog features zero JavaScript!"
 )
 
 // Custom template functions
@@ -143,17 +149,57 @@ func init() {
 			post.Content = parts[2]
 
 			// Convert markdown to HTML
-			extensions := parser.CommonExtensions | parser.AutoHeadingIDs
+			extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.FencedCode
 			p := parser.NewWithExtensions(extensions)
 			doc := p.Parse([]byte(post.Content))
 
 			// Create HTML renderer with flags
-			htmlFlags := html.CommonFlags | html.HrefTargetBlank
-			opts := html.RendererOptions{Flags: htmlFlags}
-			renderer := html.NewRenderer(opts)
+			htmlFlags := mdhtml.CommonFlags | mdhtml.HrefTargetBlank
+			opts := mdhtml.RendererOptions{
+				Flags: htmlFlags,
+				RenderNodeHook: func(w io.Writer, node ast.Node, entering bool) (ast.WalkStatus, bool) {
+					if code, ok := node.(*ast.CodeBlock); ok && entering {
+						lang := string(code.Info)
+						if lang == "" {
+							lang = "text"
+						}
+
+						// Get lexer for the language
+						lexer := lexers.Get(lang)
+						if lexer == nil {
+							lexer = lexers.Fallback
+						}
+						lexer = chroma.Coalesce(lexer)
+
+						// Use a custom style that matches our CSS
+						style := styles.Get("monokai")
+						if style == nil {
+							style = styles.Fallback
+						}
+
+						formatter := html.New(
+							html.WithClasses(true),
+							html.TabWidth(4),
+						)
+
+						iterator, err := lexer.Tokenise(nil, string(code.Literal))
+						if err != nil {
+							io.WriteString(w, string(code.Literal))
+							return ast.GoToNext, true
+						}
+
+						// Write the highlighted code
+						io.WriteString(w, `<pre class="chroma"><code class="language-`+lang+`">`)
+						formatter.Format(w, style, iterator)
+						io.WriteString(w, "</code></pre>")
+						return ast.GoToNext, true
+					}
+					return ast.GoToNext, false
+				},
+			}
+			renderer := mdhtml.NewRenderer(opts)
 
 			post.HTML = template.HTML(markdown.Render(doc, renderer))
-
 			posts = append(posts, post)
 		}
 	}

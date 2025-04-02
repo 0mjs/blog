@@ -7,9 +7,35 @@
   <title>{{if .Post}}{{.Post.Title}} | {{end}}Matt J. Stevenson</title>
   <meta name="description" content="Thoughts on software engineering, systems, and technology by Matt J. Stevenson">
   <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    @font-face {
+      font-family: 'Dank Mono';
+      src: url('/static/fonts/DankMono/DankMono-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Dank Mono';
+      src: url('/static/fonts/DankMono/DankMono-Italic.ttf') format('truetype');
+      font-weight: normal;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Dank Mono';
+      src: url('/static/fonts/DankMono/DankMono-Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <!-- Fallback font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=SF+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff3e00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5'/></svg>">
 </head>
@@ -24,13 +50,6 @@
         </svg>
       </a>
       <div class="nav-links">
-        <a href="/" {{if eq .CurrentRoute "/" }}class="active" {{end}}>
-          <span>Blog</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
-          </svg>
-        </a>
         <a href="/about" {{if eq .CurrentRoute "/about" }}class="active" {{end}}>
           <span>About</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"

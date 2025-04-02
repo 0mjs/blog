@@ -27,7 +27,7 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--bg-color);
@@ -118,6 +118,7 @@ nav {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  letter-spacing: 0.02em;
 }
 
 .nav-links a::after,
@@ -226,6 +227,15 @@ nav {
   flex: 1;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.02em;
+}
+
 h1 {
   font-size: 3.2rem;
   font-weight: 800;
@@ -271,6 +281,13 @@ h1::after {
   right: -15px;
   border-left: none;
   border-top: none;
+}
+
+.subtitle,
+.post-description,
+.post-meta,
+.post-content p {
+  letter-spacing: 0.01em;
 }
 
 .subtitle {
@@ -319,9 +336,65 @@ h1::after {
   letter-spacing: 0.5px;
 }
 
-.status-bubble:hover {
+/* Tech section styles */
+.tech-section {
+  padding: 1rem 0 2rem;
+  text-align: center;
+}
+
+.tech-heading {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  position: relative;
+  display: inline-block;
+}
+
+.tech-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: var(--accent-color);
+}
+
+.tech-container {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  transition: all 0.3s ease;
+  gap: 0.75rem;
+}
+
+.tech-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.tech-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-color);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tech-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
 }
 
 /* Section divider */
@@ -422,7 +495,7 @@ h1::after {
 }
 
 .post-date {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
   font-weight: 600;
   color: var(--teal-light);
   font-size: 0.9rem;
@@ -439,6 +512,7 @@ h1::after {
   padding: 0;
   color: var(--text-color);
   flex-grow: 1;
+  letter-spacing: -0.01em;
 }
 
 .post-preview .post-meta {
@@ -683,6 +757,7 @@ footer::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  line-height: 1.2;
 }
 
 .post-header .post-meta {
@@ -717,8 +792,8 @@ footer::before {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 1.15rem;
+  line-height: 1.7;
 }
 
 .post-content::before {
@@ -811,7 +886,7 @@ footer::before {
 
 /* Languages section styles */
 .languages-section {
-  padding: 2rem 0 4rem;
+  padding: 4rem 0 6rem;
 }
 
 .languages-heading {
@@ -927,4 +1002,156 @@ footer::before {
   .languages-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Code block styling */
+.post-content pre {
+  background-color: var(--code-bg);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--code-border);
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.post-content pre::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--teal-light), var(--accent-color));
+  border-radius: 8px 8px 0 0;
+}
+
+.post-content pre code {
+  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95em;
+  line-height: 1.5;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: var(--text-color);
+  display: block;
+}
+
+/* Only style inline code */
+:not(pre)>code {
+  color: var(--teal-light);
+  background-color: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  border: 1px solid var(--code-border);
+  font-size: 0.9em;
+  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+}
+
+/* Chroma syntax highlighting */
+.chroma {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.chroma code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: inherit;
+}
+
+/* Keywords */
+.chroma .k,
+.chroma .kc,
+.chroma .kd,
+.chroma .kn,
+.chroma .kp,
+.chroma .kr,
+.chroma .kt {
+  color: var(--teal-light);
+  font-weight: 600;
+}
+
+/* Strings */
+.chroma .s,
+.chroma .sa,
+.chroma .sb,
+.chroma .sc,
+.chroma .dl,
+.chroma .sd,
+.chroma .s2,
+.chroma .se,
+.chroma .sh,
+.chroma .si,
+.chroma .sx,
+.chroma .sr,
+.chroma .s1,
+.chroma .ss {
+  color: var(--accent-color);
+}
+
+/* Numbers */
+.chroma .m,
+.chroma .mb,
+.chroma .mf,
+.chroma .mh,
+.chroma .mi,
+.chroma .il,
+.chroma .mo {
+  color: var(--accent-hover);
+}
+
+/* Comments */
+.chroma .c,
+.chroma .ch,
+.chroma .cm,
+.chroma .c1,
+.chroma .cs {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Functions */
+.chroma .nf,
+.chroma .fm {
+  color: var(--link-color);
+  font-weight: 500;
+}
+
+/* Types */
+.chroma .nc,
+.chroma .nx {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* Built-ins */
+.chroma .nb {
+  color: var(--teal-light);
+  font-style: italic;
+}
+
+/* Variables */
+.chroma .n {
+  color: var(--text-color);
+}
+
+/* Operators */
+.chroma .o,
+.chroma .ow {
+  color: var(--accent-color);
+}
+
+/* Punctuation */
+.chroma .p {
+  color: var(--text-secondary);
 }
