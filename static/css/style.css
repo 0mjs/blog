@@ -35,18 +35,10 @@ body {
   background-color: var(--bg-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image:
-    repeating-linear-gradient(45deg,
-      rgba(192, 192, 192, 0.03) 0px,
-      rgba(192, 192, 192, 0.03) 1px,
-      transparent 1px,
-      transparent 10px),
-    repeating-linear-gradient(-45deg,
-      rgba(50, 50, 50, 0.03) 0px,
-      rgba(50, 50, 50, 0.03) 1px,
-      transparent 1px,
-      transparent 10px);
-  background-size: 30px 30px;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(60, 60, 60, 0.08), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(120, 120, 120, 0.05), transparent 30%),
+    linear-gradient(140deg, #050505 0%, #0d0d0d 30%, #101010 50%, #0d0d0d 70%, #050505 100%);
   background-attachment: fixed;
 }
 
@@ -57,16 +49,21 @@ body {
 }
 
 header {
-  background-color: rgba(19, 44, 57, 0.5);
-  border-bottom: 1px solid rgba(28, 66, 87, 0.6);
+  background-color: rgba(15, 15, 15, 0.7);
+  border-bottom: none;
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.05),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  border-radius: 0 0 15px 15px;
+  margin: 0 15px;
 }
 
 header::before {
@@ -81,6 +78,7 @@ header::before {
   height: 100%;
   overflow: hidden;
   z-index: -1;
+  border-radius: 0 0 15px 15px;
 }
 
 .header-glow {
@@ -89,14 +87,17 @@ header::before {
   left: -10%;
   width: 120%;
   height: 200%;
-  background: radial-gradient(ellipse at top right,
-      rgba(192, 192, 192, 0.1),
-      transparent 70%), radial-gradient(ellipse at top left,
-      rgba(50, 50, 50, 0.1),
+  background:
+    radial-gradient(ellipse at top right,
+      rgba(192, 192, 192, 0.05),
+      transparent 70%),
+    radial-gradient(ellipse at top left,
+      rgba(50, 50, 50, 0.05),
       transparent 70%);
-  opacity: 0.5;
+  opacity: 0.6;
   z-index: -1;
-  filter: blur(30px);
+  filter: blur(20px);
+  border-radius: 0 0 15px 15px;
 }
 
 nav {
@@ -194,30 +195,27 @@ nav {
   font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
-  padding: 5px 10px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   letter-spacing: 0.02em;
+  background-color: rgba(30, 30, 30, 0.6);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links a:hover,
+.footer-links a:hover {
+  background-color: rgba(50, 50, 50, 0.6);
+  transform: translateY(-2px);
 }
 
 .nav-links a::after,
 .footer-links a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent-color);
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after,
-.footer-links a:hover::after {
-  width: 100%;
+  display: none;
 }
 
 .nav-links a svg,
@@ -236,14 +234,12 @@ nav {
 /* Highlight active page links */
 .nav-links a.active {
   color: var(--accent-color);
-  border: none;
-  background-color: transparent;
-  box-shadow: none;
+  background-color: rgba(40, 40, 40, 0.8);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .nav-links a.active::after {
-  width: 100%;
-  background: var(--accent-color);
+  display: none;
 }
 
 .nav-links a.active svg {
@@ -410,58 +406,23 @@ nav {
 }
 
 .profile-decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  z-index: 0;
-  pointer-events: none;
+  display: none;
 }
 
 .decoration-dot {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent-color);
-  box-shadow: 0 0 15px var(--accent-color);
+  display: none;
 }
 
 .decoration-dot:nth-child(1) {
-  top: 15%;
-  left: 0;
-  transform: translateX(-50%);
-  animation: blink 3s ease-in-out infinite;
+  display: none;
 }
 
 .decoration-dot:nth-child(2) {
-  top: 20%;
-  right: 0;
-  transform: translateX(50%);
-  animation: blink 3s ease-in-out 1s infinite;
+  display: none;
 }
 
 .decoration-dot:nth-child(3) {
-  bottom: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: blink 3s ease-in-out 2s infinite;
-}
-
-@keyframes blink {
-
-  0%,
-  100% {
-    opacity: 0.8;
-    transform: translateX(-50%) scale(1);
-  }
-
-  50% {
-    opacity: 0.4;
-    transform: translateX(-50%) scale(0.8);
-  }
+  display: none;
 }
 
 .hero-text {
@@ -694,22 +655,23 @@ h1 {
 .section-divider {
   width: 100%;
   height: 1px;
-  background-color: var(--card-border);
-  margin: 1rem 0;
+  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+  margin: 2rem 0;
   position: relative;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .section-divider::before {
-  content: '•';
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--accent-color);
-  background-color: var(--bg-color);
-  padding: 0 20px;
-  font-size: 20px;
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(135deg, var(--metal-dark), var(--metal-light));
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(192, 192, 192, 0.3);
 }
 
 /* Posts section */
@@ -1409,27 +1371,64 @@ footer::before {
   }
 }
 
-/* Code block styling */
+/* Code block styling - Complete redesign */
 .post-content pre {
-  background-color: var(--code-bg);
+  background-color: #1a1a1a;
   padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--code-border);
+  border-radius: 10px;
   overflow-x: auto;
   margin: 1.5rem 0;
   position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid #2c2c2c;
+  padding-top: 2rem;
 }
 
+/* Fix for code language display */
 .post-content pre::before {
-  content: '';
+  content: attr(data-lang);
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, var(--metal-dark), var(--metal-light));
-  border-radius: 8px 8px 0 0;
+  top: 0.4rem;
+  right: 1rem;
+  color: #888;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}
+
+/* Hugo specific language labels */
+.highlight pre.chroma::before {
+  content: attr(data-lang);
+}
+
+/* Default language label if none is specified */
+pre:not([class])::before {
+  content: "CODE";
+  color: #888;
+}
+
+/* Handle specific languages through class names */
+pre.language-go::before,
+div.language-go pre::before,
+pre.go::before,
+div.go pre::before {
+  content: "GO";
+  color: #50B7E0;
+}
+
+pre.language-javascript::before,
+div.language-javascript pre::before,
+pre.javascript::before,
+div.javascript pre::before {
+  content: "JAVASCRIPT";
+  color: #f7df1e;
+}
+
+pre.language-typescript::before,
+div.language-typescript pre::before,
+pre.typescript::before,
+div.typescript pre::before {
+  content: "TYPESCRIPT";
+  color: #3178c6;
 }
 
 .post-content pre code {
@@ -1439,14 +1438,14 @@ footer::before {
   background-color: transparent;
   padding: 0;
   border: none;
-  color: var(--text-color);
+  color: #e6e6e6;
   display: block;
 }
 
 /* Only style inline code */
 :not(pre)>code {
   color: var(--metal-light);
-  background-color: var(--code-bg);
+  background-color: rgba(60, 60, 60, 0.4);
   padding: 0.2em 0.4em;
   border-radius: 3px;
   border: 1px solid var(--code-border);
@@ -1464,16 +1463,179 @@ footer::before {
   overflow: visible;
 }
 
-.chroma code {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
+/* Remove any extra containers or backgrounds */
+.post-content .highlight {
   background: transparent;
-  padding: 0;
   border: none;
-  color: inherit;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
+.post-content .highlight pre {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid #2c2c2c;
+  border-radius: 10px;
+}
+
+/* Ensure the chroma element inside pre doesn't add extra styling */
+.post-content pre .chroma {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Specific fix for Hugo code highlighting */
+.post-content div.highlight {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.post-content div.highlight pre {
+  margin: 1.5rem 0;
+  background-color: #1a1a1a;
+  border: 1px solid #2c2c2c;
+}
+
+/* Language-specific theming */
+/* Go */
+.language-go pre,
+.language-go,
+.post-content .chroma.language-go,
+pre.chroma.language-go,
+div.highlight .language-go {
+  background-color: #1a2327 !important;
+  border-color: #234556 !important;
+}
+
+.language-go::before {
+  content: "Go";
+  color: #50B7E0;
+}
+
+/* TypeScript */
+.language-typescript pre,
+.language-typescript,
+.post-content .chroma.language-typescript,
+pre.chroma.language-typescript,
+div.highlight .language-typescript {
+  background-color: #272320 !important;
+  border-color: #44340e !important;
+}
+
+.language-typescript::before {
+  content: "TypeScript";
+  color: #3178c6;
+}
+
+/* JavaScript */
+.language-javascript pre,
+.language-javascript,
+.post-content .chroma.language-javascript,
+pre.chroma.language-javascript,
+div.highlight .language-javascript {
+  background-color: #272620 !important;
+  border-color: #554b17 !important;
+}
+
+.language-javascript::before {
+  content: "JavaScript";
+  color: #f7df1e;
+}
+
+/* HTML */
+.language-html pre,
+.language-html,
+.post-content .chroma.language-html,
+pre.chroma.language-html,
+div.highlight .language-html {
+  background-color: #27201f !important;
+  border-color: #582f28 !important;
+}
+
+.language-html::before {
+  content: "HTML";
+  color: #e34c26;
+}
+
+/* CSS */
+.language-css pre,
+.language-css,
+.post-content .chroma.language-css,
+pre.chroma.language-css,
+div.highlight .language-css {
+  background-color: #1f2227 !important;
+  border-color: #3143a2 !important;
+}
+
+.language-css::before {
+  content: "CSS";
+  color: #264de4;
+}
+
+/* YAML */
+.language-yaml pre,
+.language-yaml,
+.post-content .chroma.language-yaml,
+pre.chroma.language-yaml,
+div.highlight .language-yaml {
+  background-color: #272027 !important;
+  border-color: #48274c !important;
+}
+
+.language-yaml::before {
+  content: "YAML";
+  color: #cb3a97;
+}
+
+/* JSON */
+.language-json pre,
+.language-json,
+.post-content .chroma.language-json,
+pre.chroma.language-json,
+div.highlight .language-json {
+  background-color: #1f2720 !important;
+  border-color: #2d4c2d !important;
+}
+
+.language-json::before {
+  content: "JSON";
+  color: #8bc34a;
+}
+
+/* Shell/Bash */
+.language-bash pre,
+.language-bash,
+.post-content .chroma.language-bash,
+pre.chroma.language-bash,
+div.highlight .language-bash,
+.language-shell pre,
+.language-shell,
+.post-content .chroma.language-shell,
+pre.chroma.language-shell,
+div.highlight .language-shell {
+  background-color: #252525 !important;
+  border-color: #444444 !important;
+}
+
+.language-bash::before {
+  content: "Bash";
+  color: #a9b7c6;
+}
+
+.language-shell::before {
+  content: "Shell";
+  color: #a9b7c6;
+}
+
+/* Syntax highlighting colors */
 /* Keywords */
 .chroma .k,
 .chroma .kc,
@@ -1482,7 +1644,7 @@ footer::before {
 .chroma .kp,
 .chroma .kr,
 .chroma .kt {
-  color: var(--metal-light);
+  color: #cc99cd;
   font-weight: 600;
 }
 
@@ -1501,7 +1663,7 @@ footer::before {
 .chroma .sr,
 .chroma .s1,
 .chroma .ss {
-  color: var(--accent-color);
+  color: #7ec699;
 }
 
 /* Numbers */
@@ -1512,7 +1674,7 @@ footer::before {
 .chroma .mi,
 .chroma .il,
 .chroma .mo {
-  color: var(--accent-hover);
+  color: #f08d49;
 }
 
 /* Comments */
@@ -1521,42 +1683,42 @@ footer::before {
 .chroma .cm,
 .chroma .c1,
 .chroma .cs {
-  color: var(--text-secondary);
+  color: #7f8c98;
   font-style: italic;
 }
 
 /* Functions */
 .chroma .nf,
 .chroma .fm {
-  color: var(--link-color);
+  color: #6ab0f3;
   font-weight: 500;
 }
 
 /* Types */
 .chroma .nc,
 .chroma .nx {
-  color: var(--accent-color);
+  color: #e2b93d;
   font-weight: 600;
 }
 
 /* Built-ins */
 .chroma .nb {
-  color: var(--metal-light);
+  color: #cc99cd;
   font-style: italic;
 }
 
 /* Variables */
 .chroma .n {
-  color: var(--text-color);
+  color: #e6e6e6;
 }
 
 /* Operators */
 .chroma .o,
 .chroma .ow {
-  color: var(--accent-color);
+  color: #56b6c2;
 }
 
 /* Punctuation */
 .chroma .p {
-  color: var(--text-secondary);
+  color: #d4d4d4;
 }
