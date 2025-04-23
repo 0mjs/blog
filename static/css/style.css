@@ -29,7 +29,7 @@
 }
 
 body {
-  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--bg-color);
@@ -436,7 +436,7 @@ nav {
 
 h1 {
   font-size: 3.2rem;
-  font-weight: 800;
+  font-weight: 600;
   margin-bottom: 0.5rem;
   color: var(--text-color);
   letter-spacing: -2px;
@@ -750,7 +750,7 @@ h1 {
 }
 
 .post-date {
-  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
   font-weight: 600;
   color: var(--metal-dark);
   font-size: 0.9rem;
@@ -1226,6 +1226,26 @@ footer::before {
   color: var(--accent-color);
 }
 
+/* Add styles for images within post content */
+.post-content img {
+  display: block;
+  /* Needed for margin auto to work */
+  margin-left: auto;
+  /* Center align horizontally */
+  margin-right: auto;
+  /* Center align horizontally */
+  max-width: 100%;
+  /* Ensure responsiveness */
+  height: auto;
+  /* Maintain aspect ratio */
+  border-radius: 10px;
+  /* Rounded corners */
+  margin-top: 1.5rem;
+  /* Add some space above */
+  margin-bottom: 1.5rem;
+  /* Add some space below */
+}
+
 .post-footer {
   margin-top: 3rem;
   text-align: center;
@@ -1432,7 +1452,7 @@ div.typescript pre::before {
 }
 
 .post-content pre code {
-  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
   font-size: 0.95em;
   line-height: 1.5;
   background-color: transparent;
@@ -1450,7 +1470,7 @@ div.typescript pre::before {
   border-radius: 3px;
   border: 1px solid var(--code-border);
   font-size: 0.9em;
-  font-family: 'Dank Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace;
 }
 
 /* Chroma syntax highlighting */
