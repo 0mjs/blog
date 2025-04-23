@@ -40,7 +40,7 @@ type Post struct {
 var (
 	posts        []Post
 	postsMap     = make(map[string]Post)
-	weeklyStatus = "hmm.."
+	weeklyStatus = "🏖️"
 )
 
 // Custom template functions
