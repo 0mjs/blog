@@ -33,7 +33,7 @@ Things changed when I discovered HTTP clients for the first time, such as Postma
 
 This was my bridge to full-stack land with isomorphic JavaScript. I was still living in React, but my reach now extended to the server and databases. The feedback loop lengthened, but the results became far more powerful.
 
-## Fading Tangibility & Broadening Horizons
+## A Degradation of the Tangible
 
 Venturing deeper, first with vanilla Node.js, Express.js, and onto frameworks like Feathers.js and Nest.js, then Python's FastAPI, and eventually Go, 1.22's `net/http` and to Fiber and Echo. All of this coupled with the dawning of infrastructure as a concept to me - and something I felt almost obligated to do and learn. Docker needs to be configured, servers need to be hosted, and developers have to have some way of deploying new versions. I felt the tangibility fade. Debugging was no longer as simple as a quick page refresh and development no longer included whimsically altering the height of a delightfully over-engineered `TopNav.tsx` component. Instead it meant considering how systems interact, trawling logs, tracing request lifecycles, and following execution paths that quite often refused to show their faces.
 
