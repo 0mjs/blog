@@ -13,19 +13,17 @@ Frontend work is gloriously tangible. The code you write turns into something yo
 
 Now, lest the tooling brigade come for me: yes, there are plenty of **intangible** concepts even on the "front of the front-end". Bundlers, build pipelines, runtimes, all that oldschool webpack-shaped sorcery, absolutely. But for the purposes of this tale I'm talking about the bit the user actually interacts with in the browser, not the machinery that wrangles our code into shape.
 
-## MAMP, End-to-End
+## The Prophecy of MAMP
 
-In around 2016 when I was beginning my journey in professional Software Engineering, before meta-frameworks like Next and Nuxt had taken shape, my journey into full-stack began on a classic MAMP stack, where I was exposed to full-stack development in a professional setting for this first time.
+In around 2016 when I was beginning my journey in professional Software Engineering, before meta-frameworks like Next and Nuxt had taken shape, my journey into full-stack began on a classic MAMP stack (MacOS, Apache, MySQL, PHP), where I was exposed to full-stack development in a professional setting for this first time.
 
 I vividly recall crafting simple login pages with raw HTML and CSS, sprinkled with JavaScript for client-side validation where and when I could understand it enough to do so, and tying it all together with PHP to handle `POST` requests, sessions, and authentication logic. Seeing my CSS-styled form submit to a PHP script, verifying credentials against a MySQL database, and redirecting users upon success was my first taste of end-to-end development. It was here I learned the fundamentals of HTTP, form handling, and server-side sessions.
 
-## The Dawn of React.js + Node.js
+## The Dawn of the MERN Stack
 
-A quick tip of the hat to frameworks like Next.js. Those early versions around v9 and v10, were my first real glimpse of backend thinking inside a front-end comfort zone. Pages Router, file-based routing, and the wonderfully simple API routes felt like guard-rails for Express and Node.js without the boilerplate. Helpers like `Link`, `Image`, and `Head` took care of the messy bits so I could focus on wiring data together.
+For three years, I built end-to-end applications with the pure MERN stack (MongoDB, Express.js, React, and Node.js) knitting together front-end components, Express middleware, and MongoDB data models (like Mongoose ORM). During that time, I learned full-stack fundamentals: designing database schemas, writing RESTful APIs, handling user authentication and sessions, and deploying services. Writing JavaScript across every layer taught me valuable lessons about asynchronous flows, error handling, and how front-end and back-end concerns intersect.
 
-Dropping an ORM like Prisma or even the native MongoDB SDK into a `/api/*` route was when the penny finally dropped: "Ah, this is just a server under the hood." Fetching from a database, shaping the response, and watching it hydrate a React page all in one repo bridged a gap I hadn't fully understood. Next.js didn't just abstract the complexity, it introduced it in a way that made complete sense - all in one language. This gives developers space to explore common backend patterns while still shipping features that look great in the browser.
-
-That gentle on-ramp turned out to be invaluable once I started designing standalone services and databases from scratch.
+Then Next.js arrived and distilled many of those MERN best practices into a single, streamlined framework: file-based routing, built-in API routes, and server-side rendering. The transition sped up my workflow while preserving the full-stack and isomorphic JavaScript experience I cherished.
 
 ## REST API's & The Gateway Drug
 
@@ -35,7 +33,7 @@ This was my bridge to full-stack land with isomorphic JavaScript. I was still li
 
 ## A Degradation of the Tangible
 
-Venturing deeper, first with vanilla Node.js, Express.js, and onto frameworks like Feathers.js and Nest.js, then Python's FastAPI, and eventually Go, 1.22's `net/http` and to Fiber and Echo. All of this coupled with the dawning of infrastructure as a concept to me - and something I felt almost obligated to do and learn. Docker needs to be configured, servers need to be hosted, and developers have to have some way of deploying new versions. I felt the tangibility fade. Debugging was no longer as simple as a quick page refresh and development no longer included whimsically altering the height of a delightfully over-engineered `TopNav.tsx` component. Instead it meant considering how systems interact, trawling logs, tracing request lifecycles, and following execution paths that quite often refused to show their faces.
+Venturing deeper, first with vanilla Node.js, Express.js, and onto frameworks like Feathers.js and Nest.js, then Python's FastAPI, and eventually Go, 1.22's `net/http` (having used Gin, Echo, and Fiber). All of this coupled with the dawning of infrastructure as a concept to me as an engineer - and something I felt almost obligated to do and learn. Docker needs to be configured, servers need to be hosted, and developers have to have some way of deploying new versions. I felt the tangibility fade. Debugging was no longer as simple as a quick page refresh and development no longer included whimsically altering the height of a delightfully over-engineered `TopNav.tsx` component. Instead it meant considering how systems interact, trawling logs, tracing request lifecycles, and following execution paths that quite often refused to show their faces.
 
 Moving off NoSQL/Document databases for development also helped to further understand important relational concepts. Schema design, normalisation, query optimisation, these ideas live in the mind long before they emerge in running code. You can't just slap a red border on an index in order to remain steadfast that it's working (though, that could well be handy). Delbert, note that down.
 
