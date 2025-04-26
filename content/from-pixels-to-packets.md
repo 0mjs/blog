@@ -63,4 +63,4 @@ This journey has taught me that growth is often an exercise in embracing ever-in
 
 Both worlds have their own charm. Frontend offers instant gratification and direct user impact. Backend and infrastructure offer scale, depth, and the quiet pride of elegant engineering.
 
-So if you're eyeing a similar path, lean into the abstraction. Learn to enjoy the graceful flow of data as much as the perfect pixel. Build mental models for things in place for things you can't physically see or interact with. Embrace intangibility.
+So if you're eyeing a similar path, lean into the abstraction. Learn to enjoy the graceful flow of data as much as the perfect pixel. Build mental models in place for things you can't physically see or interact with. Embrace intangibility.
