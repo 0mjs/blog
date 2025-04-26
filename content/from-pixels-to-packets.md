@@ -17,7 +17,7 @@ Now, lest the tooling brigade come for me: yes, there are plenty of **intangible
 
 In around 2016 when I was beginning my journey in professional Software Engineering, before meta-frameworks like Next and Nuxt had taken shape, my journey into full-stack began on a classic MAMP stack, where I was exposed to full-stack development in a professional setting for this first time.
 
-I vividly recall crafting simple login pages with raw HTML and CSS, sprinkled with JavaScript for client-side validation where and when I could understand it enough to do so, and tying it all together with PHP to handle `POST` requests, sessions, and authentication logic. Seeing my CSS-styled form submit to a PHP script, verifying credentials against a MySQL database, and redirecting users upon success was my first taste of end-to-end development. It was here I learned the fundamentals of HTTP, form handling, and server-side sessions, experience that would shape my appreciation for the seamless API routes I'd later encounter in frameworks like Next.js.
+I vividly recall crafting simple login pages with raw HTML and CSS, sprinkled with JavaScript for client-side validation where and when I could understand it enough to do so, and tying it all together with PHP to handle `POST` requests, sessions, and authentication logic. Seeing my CSS-styled form submit to a PHP script, verifying credentials against a MySQL database, and redirecting users upon success was my first taste of end-to-end development. It was here I learned the fundamentals of HTTP, form handling, and server-side sessions.
 
 ## The Dawn of React.js + Node.js
 
