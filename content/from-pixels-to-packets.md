@@ -4,7 +4,6 @@
     "date": "2025-04-23T10:35:54Z"
 }
 ---
-
 In my early career, I was **enthralled** by the immediate feedback loop of frontend development. There's something uniquely satisfying about tweaking something and seeing instant feedback, often in realtime. In a very specific way, whatever way my passion for the subject began was more in how a "Login" page was created visually rather than how the server processed a `POST /auth/signin` request. TypeScript was certainly gaining traction at the time, but hadn't quite caught on yet, so plain old JavaScript, quirks and all, was the only learning curve to conquer, with the goal of building user interfaces on various teams. I perched happily on the summit of Mount Stupid, convinced quite quickly after learning the very basics of JavaScript and React that `.map()` and `.filter()` and knowing where and when to use `useState` or `useEffect` were peak computer-science. Plus, the developer experience I had initially was relatively primitive and pretty tangible... Need to debug? Fire in a `console.log()` and carry on. Unsure about your layout? Throw on a `border: 1px solid red` and adjust the CSS until it all lines up, as one does!
 
 ## The Tangibility of Frontend
@@ -21,7 +20,7 @@ I vividly recall crafting simple login pages with raw HTML and CSS, sprinkled wi
 
 ## The Dawn of the MERN Stack
 
-For three years, I built end-to-end applications with the pure MERN stack (MongoDB, Express.js, React, and Node.js) knitting together front-end components, Express middleware, and MongoDB data models (like Mongoose ORM). During that time, I learned full-stack fundamentals: designing database schemas, writing RESTful APIs, handling user authentication and sessions, and deploying services. Writing JavaScript across every layer taught me valuable lessons about asynchronous flows, error handling, and how front-end and back-end concerns intersect.
+For three years, I built end-to-end applications with the pure MERN stack (MongoDB, Express.js, React, and Node.js) knitting together front-end components, Express middleware, and MongoDB data models (like Mongoose, which is in fact, not an ORM, it's an ODM). During that time, I learned full-stack fundamentals: designing database schemas, writing RESTful APIs, handling user authentication and sessions, and deploying services. Writing JavaScript across every layer taught me valuable lessons about asynchronous flows, error handling, and how front-end and back-end concerns intersect.
 
 Then Next.js arrived and distilled many of those MERN best practices into a single, streamlined framework: file-based routing, built-in API routes, and server-side rendering. The transition sped up my workflow while preserving the full-stack and isomorphic JavaScript experience I cherished.
 
