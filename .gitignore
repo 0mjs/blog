@@ -1,3 +1,4 @@
-.air.toml
 tmp/*
-vendor/*
+.env
+.air.toml
+analytics.json

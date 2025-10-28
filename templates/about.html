@@ -1,47 +1,24 @@
 {{define "content"}}
-<div class="container">
-  <article class="about-page">
-    <!-- <h1>A bit about me</h1> -->
+<article class="about">
+  <h1>About</h1>
+  <p class="visitor-count">{{.Visitors}} unique visitors</p>
 
-    <!-- <div class="section-divider"></div> -->
+  <div class="about-content">
+    <p>Hi, I'm Matt. I'm a software engineer focused on backend systems, distributed architectures, and building
+      reliable software.</p>
 
-    <div class="about-content">
-      <h2>Hello! <span class="wave-emoji">👋</span></h2>
-      <p>
-        I'm Matt, a Software Engineer passionate about building systems that provide value to users.
-      </p>
+    <p>I work primarily with Go and TypeScript, building scalable systems and APIs. I'm interested in system design,
+      performance optimisation, and the practical side of software engineering.</p>
 
-      <p>
-        This blog is where I share my thoughts on software engineering, systems design, and the latest trends and
-        talking-points in modern technology.
-      </p>
+    <p>This blog is where I write about technical problems I've solved, things I'm learning, and occasionally my
+      thoughts on the software industry.</p>
 
-      <h2>My Approach</h2>
-      <p>
-        I'm particularly interested in:
-      </p>
-      <ul>
-        <li>Software architecture</li>
-        <li>Systems design</li>
-        <li>Performance optimisation</li>
-        <li>Developer experience</li>
-        <li>Open source</li>
-      </ul>
-
-      <h2>Connect</h2>
-      <p>
-        You can find me on <a href="https://github.com/0mjs" target="_blank" rel="noopener noreferrer">GitHub</a>,
-        <a href="https://linkedin.com/in/matt-j-stevenson" target="_blank" rel="noopener noreferrer">LinkedIn</a>,
-        or reach out via <a href="mailto:dev@mattjs.me">email</a> if you'd like to chat.
-      </p>
-
-      <h2>About This Blog</h2>
-      <p>
-        This blog is built with Zinc, an API framework for Go, using a minimalist approach with only HTML/CSS (no
-        JavaScript). The content is written in Markdown
-        and served through a simple, custom-built CMS.
-      </p>
-    </div>
-  </article>
-</div>
+    <h2>Get in touch</h2>
+    <p>You can find me on <a href="https://github.com/0mjs" target="_blank" rel="noopener">GitHub</a>,
+      <a href="https://www.linkedin.com/in/matt-j-stevenson/" target="_blank" rel="noopener">LinkedIn</a>, and
+      <a href="https://x.com/0mjs_" target="_blank" rel="noopener">X</a>. Feel free to
+      <a href="mailto:dev@mattjs.me">email me</a>.
+    </p>
+  </div>
+</article>
 {{end}}

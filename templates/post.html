@@ -1,46 +1,19 @@
 {{define "content"}}
-<div class="container">
-  <article class="post">
-    <header class="post-header">
-      <div class="post-meta">
-        <time datetime="{{.Post.Date.Format " 2006-01-02"}}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-          {{.Post.Date.Format "January 2, 2006"}}
-        </time>
-        <span class="reading-time">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          {{.Post.Content | countWords | readingTime}} min read
-        </span>
-      </div>
-      <h1>{{.Post.Title}}</h1>
-    </header>
-
-    <div class="section-divider"></div>
-
-    <div class="post-content">
-      {{.Post.HTML}}
+<article class="post">
+  <header class="post-header">
+    <h1>{{.Post.Title}}</h1>
+    <div class="post-meta-row">
+      <time datetime="{{.Post.Date.Format " 2006-01-02"}}">{{.Post.Date.Format "January 2, 2006"}}</time>
+      <span class="visitor-count">{{.Visitors}} reads</span>
     </div>
+  </header>
 
-    <footer class="post-footer">
-      <a href="/" class="back-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        Back to home
-      </a>
-    </footer>
-  </article>
-</div>
+  <div class="post-content">
+    {{.Post.HTML}}
+  </div>
+
+  <div class="post-footer">
+    <a href="/">← Back to posts</a>
+  </div>
+</article>
 {{end}}

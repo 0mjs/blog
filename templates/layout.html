@@ -5,139 +5,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{if .Post}}{{.Post.Title}} | {{end}}Matt J. Stevenson</title>
-  <meta name="description" content="Thoughts on software engineering, systems, and technology by Matt J. Stevenson">
+  <meta name="description" content="Thoughts on software engineering, systems, and technology">
   <link rel="stylesheet" href="/static/css/style.css">
-  <style>
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Regular.woff2') format('woff2');
-      font-weight: 400;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Italic.woff2') format('woff2');
-      font-weight: 400;
-      font-style: italic;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Medium.woff2') format('woff2');
-      font-weight: 500;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-MediumItalic.woff2') format('woff2');
-      font-weight: 500;
-      font-style: italic;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Bold.woff2') format('woff2');
-      font-weight: 700;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-BoldItalic.woff2') format('woff2');
-      font-weight: 700;
-      font-style: italic;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-ExtraBold.woff2') format('woff2');
-      font-weight: 800;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    @font-face {
-      font-family: 'JetBrains Mono';
-      src: url('/static/fonts/JetBrainsMono/JetBrainsMono-ExtraBoldItalic.woff2') format('woff2');
-      font-weight: 800;
-      font-style: italic;
-      font-display: swap;
-    }
-  </style>
-  <!-- Fallback font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=SF+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="/static/img/favicon/favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="/static/img/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon/favicon-16x16.png">
 </head>
 
 <body>
-  <header>
-    <div class="header-background">
-      <div class="header-glow"></div>
-    </div>
-    <nav>
-      <a href="/" class="logo">
-        <div class="logo-container">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="house-icon">
-            <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />
-          </svg>
-          <div class="logo-sparkle"></div>
-        </div>
-      </a>
-      <div class="nav-links">
-        <a href="/about" {{if eq .CurrentRoute "/about" }}class="active" {{end}}>
-          <span>About</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="7" r="4"></circle>
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          </svg>
-        </a>
-      </div>
-    </nav>
-  </header>
+  <div class="container">
+    <header>
+      <h1 class="site-title"><a href="/">Matt J. Stevenson</a></h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+      </nav>
+    </header>
 
-  <main>
-    {{template "content" .}}
-  </main>
+    <main>
+      {{template "content" .}}
+    </main>
 
-  <footer>
-    <div class="footer-content">
-      <p>© {{.Now.Year}} Matt J. Stevenson</p>
-      <div class="footer-links">
-        <a href="https://github.com/0mjs" target="_blank" rel="noopener noreferrer">
-          <span>GitHub</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path
-              d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-            </path>
-          </svg>
-        </a>
-        <a href="mailto:dev@mattjs.me">
-          <span>Email</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </footer>
+    <footer>
+      <p>© {{.Now.Year}} Matt J. Stevenson · <a href="https://github.com/0mjs" target="_blank" rel="noopener">GitHub</a>
+        · <a href="https://www.linkedin.com/in/matt-j-stevenson/" target="_blank" rel="noopener">LinkedIn</a>
+        · <a href="https://x.com/0mjs_" target="_blank" rel="noopener">X</a>
+        · <a href="https://www.codewars.com/users/0mjs" target="_blank" rel="noopener">CodeWars</a>
+        · <a href="mailto:dev@mattjs.me">Email</a></p>
+    </footer>
+  </div>
 </body>
 
 </html>
