@@ -6,7 +6,6 @@ services:
     environment:
       - PORT=3000
       - REDIS_URL=redis://redis:6379
-      - ADMIN_SECRET=${ADMIN_SECRET:-change-me-in-production}
     depends_on:
       - redis
     restart: unless-stopped

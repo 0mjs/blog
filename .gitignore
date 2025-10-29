@@ -1,6 +1,6 @@
 .env
 analytics.json
 vendor/*
-tmp/
+tmp/*
 *.log
 .DS_Store

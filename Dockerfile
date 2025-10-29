@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.24-alpine AS builder
+FROM golang:1.25.3-alpine AS builder
 
 WORKDIR /app
 
@@ -28,6 +28,7 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/content ./content
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/static ./static
+COPY --from=builder /app/public ./public
 
 # Expose port
 EXPOSE 3000

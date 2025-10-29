@@ -2,10 +2,26 @@
 {
     "title": "Why Go?",
     "date": "2025-10-28T23:13:06Z",
+    "read_time": 4,
     "draft": false
 }
 ---
 I still write TypeScript every day. Nest.js pays the bills. The ecosystem is massive, the tooling is solid, and honestly, it gets the job done. But when I'm building something for myself? I keep choosing Go.
+
+```go
+package main
+
+import "net/http"
+
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte("Hello World!"))
+    })
+
+    http.ListenAndServe(":8080", nil)
+}
+```
+
 
 It took me a while to figure out why.
 
