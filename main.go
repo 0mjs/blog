@@ -66,6 +66,7 @@ var (
 	postsMap  = make(map[string]Post)
 	analytics *Analytics
 	ctx       = context.Background()
+	templates = make(map[string]*template.Template)
 )
 
 func NewAnalytics(redisURL string) *Analytics {
@@ -347,6 +348,12 @@ func init() {
 		redisURL = "redis://localhost:6379"
 	}
 	analytics = NewAnalytics(redisURL)
+
+	// Pre-parse templates once
+	templates["index"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/index.html"))
+	templates["post"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/post.html"))
+	templates["about"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/about.html"))
+	templates["admin"] = template.Must(template.ParseFS(content, "templates/admin.html"))
 }
 
 func renderMarkdown(content string) template.HTML {
@@ -420,13 +427,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	analytics.Track("home", r)
 
-	tmpl, err := template.ParseFS(content, "templates/layout.html", "templates/index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	tmpl.Execute(w, map[string]interface{}{
+	templates["index"].Execute(w, map[string]interface{}{
 		"Posts":    posts,
 		"Now":      time.Now(),
 		"Visitors": analytics.GetTotalUniqueVisitors(),
@@ -443,13 +444,7 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 
 	analytics.Track("post:"+slug, r)
 
-	tmpl, err := template.ParseFS(content, "templates/layout.html", "templates/post.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	tmpl.Execute(w, map[string]interface{}{
+	templates["post"].Execute(w, map[string]interface{}{
 		"Post":     post,
 		"Now":      time.Now(),
 		"Visitors": analytics.GetTotalUniqueVisitors(),
@@ -459,13 +454,7 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 func handleAbout(w http.ResponseWriter, r *http.Request) {
 	analytics.Track("about", r)
 
-	tmpl, err := template.ParseFS(content, "templates/layout.html", "templates/about.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	tmpl.Execute(w, map[string]interface{}{
+	templates["about"].Execute(w, map[string]interface{}{
 		"Now":      time.Now(),
 		"Visitors": analytics.GetTotalUniqueVisitors(),
 	})
@@ -533,19 +522,13 @@ func handleAdminAnalytics(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return HTML dashboard
-	tmpl, err := template.ParseFS(content, "templates/admin.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	// Get admin secret from query or header
 	adminSecret := r.URL.Query().Get("secret")
 	if adminSecret == "" {
 		adminSecret = r.Header.Get("X-Admin-Secret")
 	}
 
-	tmpl.Execute(w, map[string]interface{}{
+	templates["admin"].Execute(w, map[string]interface{}{
 		"TotalVisitors":  totalVisitors,
 		"TotalCountries": len(countriesMap),
 		"Pages":          data,
