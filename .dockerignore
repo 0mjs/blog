@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+analytics.json
+tmp/
+*.log
+README.md
+.DS_Store
+

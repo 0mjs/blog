@@ -1,4 +1,6 @@
-tmp/*
 .env
-.air.toml
 analytics.json
+vendor/*
+tmp/
+*.log
+.DS_Store
