@@ -116,7 +116,10 @@ func (a *Analytics) getGeoLocation(ip string) (*GeoLocation, error) {
 	}
 
 	url := fmt.Sprintf("http://ip-api.com/json/%s", ip)
-	resp, err := http.Get(url)
+	
+	// Create HTTP client with timeout
+	client := &http.Client{Timeout: 2 * time.Second}
+	resp, err := client.Get(url)
 	if err != nil {
 		log.Printf("⚠️  Geolocation error for IP %s: %v", ip, err)
 		return nil, err
@@ -165,23 +168,28 @@ func (a *Analytics) Track(page string, r *http.Request) {
 	}
 
 	if shouldUpdate {
-		// Get geolocation (only if not already cached)
-		if visitor.Country == "" {
-			if geo, err := a.getGeoLocation(ip); err == nil {
-				visitor.Country = geo.Country
-				visitor.City = geo.City
-			} else {
-				// If geolocation fails, mark as Unknown
-				visitor.Country = "Unknown"
-				visitor.City = "Unknown"
-			}
-		}
-
 		visitor.IP = ip
 		visitor.Hash = visitorHash
 		visitor.LastVisit = now
 
-		// Save global visitor record
+		// Get geolocation asynchronously (don't block page load)
+		go func() {
+			if visitor.Country == "" {
+				if geo, err := a.getGeoLocation(ip); err == nil {
+					visitor.Country = geo.Country
+					visitor.City = geo.City
+				} else {
+					visitor.Country = "Unknown"
+					visitor.City = "Unknown"
+				}
+			}
+
+			// Save with geolocation data
+			visitorJSON, _ := json.Marshal(visitor)
+			a.client.Set(a.ctx, globalKey, visitorJSON, 60*24*time.Hour)
+		}()
+
+		// Save basic visitor record immediately (without blocking for geo)
 		visitorJSON, _ := json.Marshal(visitor)
 		a.client.Set(a.ctx, globalKey, visitorJSON, 60*24*time.Hour)
 
