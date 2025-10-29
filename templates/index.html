@@ -7,7 +7,7 @@
 <section class="posts">
   {{range .Posts}}
   <article class="post-item">
-    <time datetime="{{.Date.Format " 2006-01-02"}}">{{.Date.Format "Jan 2, 2006"}}</time>
+    <time datetime="{{.Date.Format " 2006-01-02"}}">{{.Date.Format "2 January, 2006"}}</time>
     <h2><a href="/post/{{.Slug}}">{{.Title}}</a></h2>
   </article>
   {{else}}

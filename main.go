@@ -18,19 +18,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/alecthomas/chroma/formatters/html"
-	"github.com/alecthomas/chroma/lexers"
-	"github.com/alecthomas/chroma/styles"
+	"github.com/alecthomas/chroma/v2/formatters/html"
+	"github.com/alecthomas/chroma/v2/lexers"
+	"github.com/alecthomas/chroma/v2/styles"
+
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/ast"
 	mdhtml "github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/redis/go-redis/v9/maintnotifications"
 )
 
 //go:embed templates/* static/* public/*
-var content embed.FS
+var embeddedContent embed.FS
 
 type Post struct {
 	Title   string        `json:"title"`
@@ -59,8 +61,7 @@ var (
 func init() {
 	entries, err := os.ReadDir("content")
 	if err != nil {
-		log.Printf("Warning: Could not read content directory: %v", err)
-		return
+		log.Fatalf("Could not read content directory: %v", err)
 	}
 
 	for _, entry := range entries {
@@ -111,9 +112,9 @@ func init() {
 	analytics = NewAnalytics(redisURL)
 
 	// Pre-parse templates once
-	templates["index"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/index.html"))
-	templates["post"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/post.html"))
-	templates["about"] = template.Must(template.ParseFS(content, "templates/layout.html", "templates/about.html"))
+	templates["index"] = template.Must(template.ParseFS(embeddedContent, "templates/layout.html", "templates/index.html"))
+	templates["post"] = template.Must(template.ParseFS(embeddedContent, "templates/layout.html", "templates/post.html"))
+	templates["about"] = template.Must(template.ParseFS(embeddedContent, "templates/layout.html", "templates/about.html"))
 }
 
 func NewAnalytics(redisURL string) *Analytics {
@@ -248,12 +249,14 @@ func renderMarkdown(content string) template.HTML {
 				lexer = lexers.Fallback
 			}
 
-			style := styles.Get("monokai")
+			style := styles.Get("gruvbox")
 			if style == nil {
 				style = styles.Fallback
 			}
 
-			formatter := html.New(html.WithClasses(true), html.TabWidth(4))
+			formatter := html.New(
+				html.PreventSurroundingPre(true),
+			)
 			iterator, err := lexer.Tokenise(nil, string(code.Literal))
 			if err != nil {
 				w.Write(code.Literal)
@@ -317,15 +320,15 @@ func main() {
 		port = "3000"
 	}
 
-	staticFS, _ := fs.Sub(content, "static")
+	staticFS, _ := fs.Sub(embeddedContent, "static")
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFS))))
 
-	publicFS, _ := fs.Sub(content, "public")
+	publicFS, _ := fs.Sub(embeddedContent, "public")
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.FS(publicFS))))
 
 	// Favicon handler at root path
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		favicon, err := content.ReadFile("public/favicon.ico")
+		favicon, err := embeddedContent.ReadFile("public/favicon.ico")
 		if err != nil {
 			http.NotFound(w, r)
 			return

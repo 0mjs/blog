@@ -9,7 +9,8 @@ require (
 )
 
 require (
+	github.com/alecthomas/chroma/v2 v2.20.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dlclark/regexp2 v1.4.0 // indirect
+	github.com/dlclark/regexp2 v1.11.5 // indirect
 )

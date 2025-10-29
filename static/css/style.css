@@ -1,3 +1,44 @@
+/* Font faces */
+@font-face {
+  font-family: 'JetBrainsMono';
+  src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrainsMono';
+  src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrainsMono';
+  src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrainsMono';
+  src: url('/static/fonts/JetBrainsMono/JetBrainsMono-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrainsMono';
+  src: url('/static/fonts/JetBrainsMono/JetBrainsMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Reset and base styles */
 * {
   margin: 0;
@@ -236,7 +277,7 @@ nav a:hover {
 
 /* Code blocks */
 .post-content code {
-  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-family: "JetBrainsMono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   font-size: 0.9em;
 }
 
@@ -247,7 +288,8 @@ nav a:hover {
   border: 1px solid var(--code-border);
 }
 
-.post-content pre {
+/* Chroma-generated code blocks (pre.chroma) */
+.post-content pre.chroma {
   background: var(--code-bg);
   border: 1px solid var(--code-border);
   border-radius: 6px;
@@ -256,112 +298,32 @@ nav a:hover {
   margin: 32px 0;
   font-size: 15px;
   line-height: 1.5;
+  font-family: "JetBrainsMono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
 }
 
-.post-content pre code {
+.post-content pre.chroma code {
   background: none;
   border: none;
   padding: 0;
 }
 
-/* Syntax highlighting - using Chroma with classes */
-.chroma {
-  background: transparent;
+/* Fallback for non-Chroma code blocks */
+.post-content pre:not(.chroma) {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 6px;
+  padding: 20px;
+  overflow-x: auto;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  font-family: "JetBrainsMono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
 }
 
-.chroma .c,
-.chroma .c1,
-.chroma .cm {
-  color: #6a737d;
-  font-style: italic;
-}
-
-.chroma .k,
-.chroma .kd,
-.chroma .kn,
-.chroma .kp,
-.chroma .kr,
-.chroma .kt {
-  color: #d73a49;
-  font-weight: 600;
-}
-
-.chroma .s,
-.chroma .s1,
-.chroma .s2,
-.chroma .sb,
-.chroma .sc,
-.chroma .sd,
-.chroma .sh {
-  color: #22863a;
-}
-
-.chroma .m,
-.chroma .mb,
-.chroma .mf,
-.chroma .mh,
-.chroma .mi {
-  color: #005cc5;
-}
-
-.chroma .na,
-.chroma .nc,
-.chroma .nf,
-.chroma .nx {
-  color: #6f42c1;
-}
-
-.chroma .o,
-.chroma .ow {
-  color: #d73a49;
-}
-
-@media (prefers-color-scheme: dark) {
-
-  .chroma .c,
-  .chroma .c1,
-  .chroma .cm {
-    color: #8b949e;
-  }
-
-  .chroma .k,
-  .chroma .kd,
-  .chroma .kn,
-  .chroma .kp,
-  .chroma .kr,
-  .chroma .kt {
-    color: #ff7b72;
-  }
-
-  .chroma .s,
-  .chroma .s1,
-  .chroma .s2,
-  .chroma .sb,
-  .chroma .sc,
-  .chroma .sd,
-  .chroma .sh {
-    color: #a5d6ff;
-  }
-
-  .chroma .m,
-  .chroma .mb,
-  .chroma .mf,
-  .chroma .mh,
-  .chroma .mi {
-    color: #79c0ff;
-  }
-
-  .chroma .na,
-  .chroma .nc,
-  .chroma .nf,
-  .chroma .nx {
-    color: #d2a8ff;
-  }
-
-  .chroma .o,
-  .chroma .ow {
-    color: #ff7b72;
-  }
+.post-content pre:not(.chroma) code {
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 /* Post footer */
@@ -421,6 +383,15 @@ nav a:hover {
 
 .about-content a:hover {
   border-bottom-color: var(--accent);
+}
+
+.about-content code {
+  font-family: "JetBrainsMono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--code-border);
 }
 
 /* Footer */
