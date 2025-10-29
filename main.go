@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/alecthomas/chroma/formatters/html"
@@ -40,8 +41,10 @@ type Post struct {
 }
 
 type Analytics struct {
-	client *redis.Client
-	ctx    context.Context
+	client      *redis.Client
+	ctx         context.Context
+	countCache  map[string]int
+	cacheMutex  sync.RWMutex
 }
 
 var (
@@ -64,7 +67,25 @@ func NewAnalytics(redisURL string) *Analytics {
 	}
 
 	log.Println("✅ Redis connected")
-	return &Analytics{client: client, ctx: ctx}
+	
+	a := &Analytics{
+		client:     client,
+		ctx:        ctx,
+		countCache: make(map[string]int),
+	}
+	
+	// Initial cache population
+	a.refreshCounts()
+	
+	// Refresh counts every 30 seconds in background
+	go func() {
+		for {
+			time.Sleep(30 * time.Second)
+			a.refreshCounts()
+		}
+	}()
+	
+	return a
 }
 
 func (a *Analytics) getIPHash(ip string) string {
@@ -73,19 +94,41 @@ func (a *Analytics) getIPHash(ip string) string {
 }
 
 func (a *Analytics) Track(page string, r *http.Request) {
-	ip := getRealIP(r)
-	ipHash := a.getIPHash(ip)
+	// Fire and forget - don't block page render
+	go func() {
+		ip := getRealIP(r)
+		ipHash := a.getIPHash(ip)
+		key := fmt.Sprintf("views:%s", page)
+		a.client.SAdd(a.ctx, key, ipHash)
+		a.client.Expire(a.ctx, key, 30*24*time.Hour)
+	}()
+}
+
+func (a *Analytics) refreshCounts() {
+	// Fetch all view counts from Redis
+	pages := []string{"home", "about"}
 	
-	// Add IP hash to page's visitor set (Redis handles uniqueness)
-	key := fmt.Sprintf("views:%s", page)
-	a.client.SAdd(a.ctx, key, ipHash)
-	a.client.Expire(a.ctx, key, 30*24*time.Hour) // 30 day expiry
+	// Get post slugs from postsMap
+	for slug := range postsMap {
+		pages = append(pages, "post:"+slug)
+	}
+	
+	newCache := make(map[string]int)
+	for _, page := range pages {
+		key := fmt.Sprintf("views:%s", page)
+		count, _ := a.client.SCard(a.ctx, key).Result()
+		newCache[page] = int(count)
+	}
+	
+	a.cacheMutex.Lock()
+	a.countCache = newCache
+	a.cacheMutex.Unlock()
 }
 
 func (a *Analytics) GetUniqueVisitors(page string) int {
-	key := fmt.Sprintf("views:%s", page)
-	count, _ := a.client.SCard(a.ctx, key).Result()
-	return int(count)
+	a.cacheMutex.RLock()
+	defer a.cacheMutex.RUnlock()
+	return a.countCache[page]
 }
 
 // Get real IP from request (handles proxies)
