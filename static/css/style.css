@@ -272,10 +272,7 @@ nav a:hover {
 /* Responsive */
 @media (max-width: 768px) {
   .theme-switcher {
-    position: static;
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
+    top: 72px;
   }
 }
 
