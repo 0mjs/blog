@@ -1,0 +1,51 @@
+{{define "layout_start"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{if .Post}}{{.Post.Title}} — {{end}}Matt J. Stevenson</title>
+  <meta name="description" content="Thoughts on software engineering, systems, and technology">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="/js/theme.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <span class="site-title">
+        <a href="/">
+          <img class="site-logo" src="/image/logo.png" alt="Matt J. Stevenson logo">
+          Matt J. Stevenson
+        </a>
+      </span>
+      <nav>
+        <a href="/about">about</a>
+        <button id="theme-toggle" aria-label="Toggle theme"></button>
+      </nav>
+    </header>
+
+    <main>
+{{end}}
+
+{{define "layout_end"}}
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        © {{.Now.Year}} · <a href="mailto:dev@mattjs.me">email</a> · <a href="https://github.com/0mjs" target="_blank"
+          rel="noopener">github</a> · <a href="https://linkedin.com/in/matt-j-stevenson" target="_blank"
+          rel="noopener">linkedin</a> · <a href="https://x.com/0mjs_" target="_blank" rel="noopener">x</a>
+      </div>
+      <p class="footer-credit">
+        Built with <a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener">Zinc</a>, the Go API framework.
+      </p>
+    </footer>
+  </div>
+</body>
+
+</html>
+{{end}}

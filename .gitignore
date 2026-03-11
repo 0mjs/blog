@@ -1,0 +1,8 @@
+.env
+analytics.json
+vendor/*
+tmp/*
+*.log
+.DS_Store
+site/content/*
+.air.toml

@@ -1,0 +1,76 @@
+{{define "index.html"}}
+{{template "layout_start" .}}
+
+<section class="posts">
+  {{range .Posts}}
+  <a class="post-item" href="/post/{{.Slug}}">
+    <div class="post-item-content">
+      <h2>{{.Title}}</h2>
+    </div>
+    <time datetime="{{.Date.Format " 2006-01-02"}}">{{.Date.Format "Jan 2006"}}</time>
+  </a>
+  {{else}}
+  <p>No posts yet.</p>
+  {{end}}
+</section>
+
+<section class="github-chart">
+  <div class="github-chart-card">
+    {{with .GitHubChart}}
+    <div class="github-chart-header">
+      <p class="github-chart-total">{{formatNumber .Total}} contributions in {{.Year}}</p>
+      <a class="github-chart-profile" href="{{.ProfileURL}}" target="_blank" rel="noopener">@{{.Username}}</a>
+    </div>
+
+    <div class="github-chart-scroll">
+      <table class="github-chart-table" role="img" aria-label="{{formatNumber .Total}} GitHub contributions in {{.Year}}">
+        <thead>
+          <tr class="github-chart-months">
+            <td class="github-chart-axis" aria-hidden="true"></td>
+            {{range .Months}}
+            <td class="github-chart-month" colspan="{{.ColSpan}}">{{.Name}}</td>
+            {{end}}
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Rows}}
+          <tr class="github-chart-row">
+            {{if .Label}}
+            <th class="github-chart-weekday" scope="row">{{.Label}}</th>
+            {{else}}
+            <th class="github-chart-weekday is-empty" scope="row" aria-hidden="true"></th>
+            {{end}}
+            {{range .Days}}
+            <td class="github-chart-cell{{if .Empty}} is-empty{{end}}">
+              {{if not .Empty}}
+              <span class="github-chart-day level-{{.Level}}" title="{{.Tooltip}}" aria-label="{{.Tooltip}}"></span>
+              {{end}}
+            </td>
+            {{end}}
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="github-chart-legend">
+      <span>Less</span>
+      <div class="github-chart-legend-scale" aria-hidden="true">
+        <span class="github-chart-legend-day level-0"></span>
+        <span class="github-chart-legend-day level-1"></span>
+        <span class="github-chart-legend-day level-2"></span>
+        <span class="github-chart-legend-day level-3"></span>
+        <span class="github-chart-legend-day level-4"></span>
+      </div>
+      <span>More</span>
+    </div>
+    {{else}}
+    <div class="github-chart-header">
+      <p class="github-chart-total">GitHub activity unavailable right now.</p>
+      <a class="github-chart-profile" href="{{.GitHubProfileURL}}" target="_blank" rel="noopener">github</a>
+    </div>
+    {{end}}
+  </div>
+</section>
+{{template "layout_end" .}}
+{{end}}

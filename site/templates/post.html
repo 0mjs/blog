@@ -1,0 +1,25 @@
+{{define "post.html"}}
+{{template "layout_start" .}}
+<article class="post">
+  <header class="post-header">
+    <h1>{{.Post.Title}}</h1>
+    <p class="post-meta">{{.Post.Date.Format "January 2, 2006"}} · {{.Post.ReadTime}} min read</p>
+    {{if .Post.Tags}}
+    <div class="tags">
+      {{range .Post.Tags}}
+      <span class="tag tag-v{{tagColor .}}">{{.}}</span>
+      {{end}}
+    </div>
+    {{end}}
+  </header>
+
+  <div class="post-content">
+    {{.Post.HTML}}
+  </div>
+
+  <div class="post-footer">
+    <a href="/">← All posts</a>
+  </div>
+</article>
+{{template "layout_end" .}}
+{{end}}
