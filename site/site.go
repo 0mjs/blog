@@ -3,13 +3,14 @@ package site
 import (
 	"embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	htmlstd "html"
 	"html/template"
 	"io"
+	"io/fs"
 	"log"
 	"net/http"
-	"os"
 	"path"
 	"path/filepath"
 	"sort"
@@ -23,6 +24,8 @@ import (
 	mdhtml "github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
 	htmlnode "golang.org/x/net/html"
+
+	publicassets "blog.0mjs.dev/public"
 )
 
 //go:embed templates/* content/*
@@ -231,37 +234,33 @@ func (s *Site) newApp() *zinc.App {
 }
 
 func (s *Site) registerStatic(app *zinc.App) {
-	root := publicDir()
+	s.registerStaticDir(app, "/css", "css")
+	s.registerStaticDir(app, "/image", "image")
+	s.registerStaticDir(app, "/js", "js")
 
-	s.registerStaticDir(app, root, "/css", "css")
-	s.registerStaticDir(app, root, "/fonts", "fonts")
-	s.registerStaticDir(app, root, "/image", "image")
-	s.registerStaticDir(app, root, "/js", "js")
-	s.registerStaticDir(app, root, "/video", "video")
-
-	s.registerStaticFile(app, root, "/favicon.ico", "favicon.ico")
-	s.registerStaticFile(app, root, "/apple-touch-icon.png", "apple-touch-icon.png")
-	s.registerStaticFile(app, root, "/android-chrome-192x192.png", "android-chrome-192x192.png")
-	s.registerStaticFile(app, root, "/android-chrome-512x512.png", "android-chrome-512x512.png")
-	s.registerStaticFile(app, root, "/favicon-16x16.png", "favicon-16x16.png")
-	s.registerStaticFile(app, root, "/favicon-32x32.png", "favicon-32x32.png")
+	s.registerStaticFile(app, "/favicon.ico", "favicon.ico")
+	s.registerStaticFile(app, "/apple-touch-icon.png", "apple-touch-icon.png")
+	s.registerStaticFile(app, "/android-chrome-192x192.png", "android-chrome-192x192.png")
+	s.registerStaticFile(app, "/android-chrome-512x512.png", "android-chrome-512x512.png")
+	s.registerStaticFile(app, "/favicon-16x16.png", "favicon-16x16.png")
+	s.registerStaticFile(app, "/favicon-32x32.png", "favicon-32x32.png")
 }
 
-func (s *Site) registerStaticDir(app *zinc.App, root, prefix, dir string) {
+func (s *Site) registerStaticDir(app *zinc.App, prefix, dir string) {
 	app.UsePrefix(prefix, staticCacheHeaders())
 	must(app.Get(prefix+"/*path", func(c *zinc.Context) error {
 		assetPath, ok := staticAssetPath(c.Param("*"))
 		if !ok {
 			return zinc.ErrNotFound
 		}
-		return c.File(filepath.Join(root, dir, assetPath))
+		return serveEmbeddedFile(c, path.Join(dir, assetPath))
 	}))
 }
 
-func (s *Site) registerStaticFile(app *zinc.App, root, routePath, filePath string) {
+func (s *Site) registerStaticFile(app *zinc.App, routePath, filePath string) {
 	app.UsePrefix(routePath, staticCacheHeaders())
 	must(app.Get(routePath, func(c *zinc.Context) error {
-		return c.File(filepath.Join(root, filePath))
+		return serveEmbeddedFile(c, filePath)
 	}))
 }
 
@@ -273,27 +272,6 @@ func staticAssetPath(value string) (string, bool) {
 	return cleaned, true
 }
 
-func publicDir() string {
-	candidates := []string{
-		"public",
-		filepath.Join("..", "public"),
-	}
-
-	for _, candidate := range candidates {
-		info, err := os.Stat(filepath.Join(candidate, "css", "style.css"))
-		if err == nil && !info.IsDir() {
-			absolute, err := filepath.Abs(candidate)
-			if err != nil {
-				log.Fatalf("could not resolve public directory %s: %v", candidate, err)
-			}
-			return absolute
-		}
-	}
-
-	log.Fatal("could not locate public directory")
-	return ""
-}
-
 func staticCacheHeaders() zinc.HandlerFunc {
 	return func(c *zinc.Context) error {
 		c.SetHeader("Cache-Control", fmt.Sprintf("public, max-age=%d", staticMaxAge))
@@ -302,6 +280,14 @@ func staticCacheHeaders() zinc.HandlerFunc {
 		}
 		return c.Next()
 	}
+}
+
+func serveEmbeddedFile(c *zinc.Context, filePath string) error {
+	err := c.FileFS(filePath, publicassets.FS)
+	if errors.Is(err, fs.ErrNotExist) || errors.Is(err, fs.ErrInvalid) {
+		return zinc.ErrNotFound
+	}
+	return err
 }
 
 func (s *Site) handleHome(c *zinc.Context) error {
