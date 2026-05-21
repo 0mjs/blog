@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Why Go?",
+    "title": "Finding Go",
     "date": "2025-10-28T23:13:06Z",
     "read_time": 4,
     "draft": false,
@@ -8,23 +8,25 @@
 }
 ---
 
-In my day-to-day, TypeScript pays the bills. It keeps the lights on, as the saying goes.
+In my day-to-day job, TypeScript pays the bills, it "keeps the lights on" if you will.
 
-Having worked with Node.js for so much of my career, the Nest.js framework gives things structure, polish, and a level of sanity you start to take for granted. The ecosystem is enormous, the tooling is solid, and everything feels battle-tested. It does exactly what you'd expect from a mature stack.
+Having worked with Node.js for so long now, using a framework like Nest.js everyday gives the backend much needed structure, and a level of sanity you start to take for granted once you go back to something like Express. The ecosystem is enormous, and everything feels battle-tested, especially bolt-on packages for things like Kafka, CRON etc.
 
-But when I'm building something for myself? I keep choosing to work in Go.
+Recently however, I've felt a lot like this:
+
+![Go TS Meme](/image/meme/go-ts-node.jpg)
 
 It took me a while to properly understand why.
 
 ## The Thing About TypeScript
 
-TypeScript solved real problems. Type safety in JavaScript wasn't just nice to have, it was transformative. I remember the before-times: runtime errors that should've been caught at compile time, refactors powered by `grep`, and the constant uncertainty of what a function actually returned.
+TypeScript solved real problems. Type safety in JavaScript wasn't just nice to have, it's been totally transformative. I remember the before-times: runtime errors that should've been caught at compile time, refactors powered by `grep`, and the constant uncertainty of what a function actually returned.
 
-But there's something else that rarely gets said out loud: TypeScript is still a layer on top of JavaScript. A very good layer, but still a layer.
+But there's something else that rarely gets said out loud: TypeScript is still a layer on top of JavaScript. A very good layer, but still a layer, a "superset".
 
-Every new feature adds another abstraction trying to shape JavaScript into something more structured. Generics that disappear at runtime. Decorators that stayed "experimental" for years on end. Async/await wrapping promises, wrapping callbacks. Enums that exist, but that you're often advised not to use.
+Every new feature adds another abstraction trying to shape JavaScript into something more structured. Generics that disappear at runtime. Decorators that have stayed "experimental" for years on end. Async/await wrapping promises, wrapping callbacks. Enums that exist, but that you're then suddenly advised not to use.
 
-None of this makes it bad. It just makes it heavier than it sometimes needs to be.
+None of this makes it bad. It just makes it heavier than it sometimes needs to be. Not to mention the 60MB bundle size for a "Hello, World" binary.
 
 ## When I Found Go
 
