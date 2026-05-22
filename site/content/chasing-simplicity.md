@@ -1,6 +1,6 @@
 ---
 {
-    "title": "Finding Go",
+    "title": "Chasing Simplicity",
     "date": "2025-10-28T23:13:06Z",
     "read_time": 4,
     "draft": false,
