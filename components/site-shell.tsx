@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaXTwitter, FaYoutube } from "react-icons/fa6";
 import { versionedAsset } from "@/lib/assets";
 import { SiteNav } from "@/components/site-nav";
 // import { ThemeToggle } from "@/components/theme-toggle";
@@ -9,6 +9,7 @@ import { SiteNav } from "@/components/site-nav";
 const socialItems = [
   { href: "mailto:dev@mattjs.me", label: "Email", icon: <Mail size={16} strokeWidth={1.8} /> },
   { href: "https://github.com/0mjs", label: "GitHub", icon: <FaGithub size={16} /> },
+  { href: "https://x.com/0mjs_", label: "X", icon: <FaXTwitter size={15} /> },
   { href: "https://linkedin.com/in/matt-j-stevenson", label: "LinkedIn", icon: <FaLinkedin size={16} /> },
   { href: "https://www.youtube.com/@slaikers/playlists", label: "YouTube", icon: <FaYoutube size={17} /> },
 ];
