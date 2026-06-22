@@ -16,7 +16,7 @@
     "@fontsource/geist": "^5.2.9",
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "lucide-react": "^1.16.0",
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.2.0",
     "markdown-it-anchor": "^9.2.0",
     "next": "^16.2.6",
     "react": "^19.2.6",
