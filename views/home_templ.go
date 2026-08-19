@@ -145,14 +145,14 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<footer class=\"mt-16 text-right text-muted-foreground\"><span>© ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<footer class=\"mt-16 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between\"><span class=\"group/build inline-flex items-center whitespace-nowrap\"><span>built with</span> <span class=\"ml-2 inline-flex overflow-hidden whitespace-nowrap sm:ml-0 sm:max-w-0 sm:opacity-0 sm:transition-[max-width,opacity,margin] sm:duration-300 sm:ease-out sm:group-hover/build:ml-2 sm:group-hover/build:max-w-sm sm:group-hover/build:opacity-100 sm:group-focus-within/build:ml-2 sm:group-focus-within/build:max-w-sm sm:group-focus-within/build:opacity-100 motion-reduce:transition-none\"><a href=\"https://github.com/0mjs/zinc\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#AFC1FF]\">zinc</a>,&nbsp;<a href=\"https://github.com/a-h/templ\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#DBBD30]\">templ</a>,&nbsp;<a href=\"https://github.com/templui/templui\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#02ADD8]\">templui</a>,&nbsp;<a href=\"https://github.com/yuin/goldmark\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#B8B8B8]\">goldmark</a></span></span> <span class=\"sm:text-right\">© ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(time.Now().Format("2006"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 45, Col: 39}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 51, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -200,7 +200,7 @@ func sectionLabel(number, name string) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(number)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 54, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 60, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -213,7 +213,7 @@ func sectionLabel(number, name string) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 55, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 61, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -255,7 +255,7 @@ func row(lead, rest, href string, external bool) templ.Component {
 		var templ_7745c5c3_Var11 templ.SafeURL
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL(href))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 61, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 67, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -283,7 +283,7 @@ func row(lead, rest, href string, external bool) templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(lead)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 64, Col: 97}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 70, Col: 97}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -296,7 +296,7 @@ func row(lead, rest, href string, external bool) templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(rest)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 65, Col: 69}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 71, Col: 69}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -314,7 +314,7 @@ func row(lead, rest, href string, external bool) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(lead)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 67, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 73, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -327,7 +327,7 @@ func row(lead, rest, href string, external bool) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(rest)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 68, Col: 110}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/home.templ`, Line: 74, Col: 110}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
