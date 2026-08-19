@@ -11,24 +11,21 @@ templ Home(posts []*model.Post, projects []model.Project) {
 @Layout(SEO{Path: "/"}) {
 <main class="min-h-screen px-6 py-20 sm:py-28">
 	<div class="mx-auto max-w-xl">
-		<header>
-			@avatar.Avatar(avatar.Props{Class: "size-28 overflow-hidden rounded-full bg-brand"}) {
+		<header class="flex flex-col items-center text-center">
+			@avatar.Avatar(avatar.Props{Class: "size-30 overflow-hidden rounded-full bg-brand"}) {
 			@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover"})
 			}
 			<h1 class="mt-7 text-2xl font-medium tracking-tight">{ siteName }</h1>
 			<p class="mt-1.5 text-muted-foreground">{ siteTagline }</p>
-			<nav class="mt-6 flex gap-3">
-				<a class="transition-colors hover:text-brand" href="https://github.com/0mjs" target="_blank"
-					rel="noopener">github</a>
-				<span class="text-border" aria-hidden="true">/</span>
-				<a class="transition-colors hover:text-brand" href="https://x.com/0mjs_" target="_blank" rel="noopener">x</a>
-				<span class="text-border" aria-hidden="true">/</span>
-				<a class="transition-colors hover:text-brand" href="/rss.xml">rss</a>
+			<nav class="mt-6 flex justify-center gap-4 text-sm" aria-label="Social links">
+				<a class="group flex gap-1.5" href="https://github.com/0mjs" target="_blank" rel="noopener"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">github</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
+				<a class="group flex gap-1.5" href="https://x.com/0mjs_" target="_blank" rel="noopener"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">x</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
+				<a class="group flex gap-1.5" href="/rss.xml"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">rss</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
 			</nav>
 		</header>
 		<section class="mt-16">
 			@sectionLabel("projects")
-			<ul class="mt-4">
+			<ul class="mt-5 space-y-1">
 				for _, project := range projects {
 				@row(project.Name, project.Description, project.URL, true)
 				}
@@ -37,18 +34,16 @@ templ Home(posts []*model.Post, projects []model.Project) {
 		if len(posts) > 0 {
 		<section class="mt-14">
 			@sectionLabel("writing")
-			<ul class="mt-4">
+			<ul class="mt-5 space-y-1">
 				for _, post := range posts {
 				@row(post.Date.Format("Jan 2006"), post.Title, "/blog/" + post.Slug, false)
 				}
 			</ul>
-			<a href="/blog" class="mt-5 inline-block text-muted-foreground transition-colors hover:text-brand">all posts →</a>
+			<div class="mt-7 text-center"><a href="/blog" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand"><span>all writing</span><span aria-hidden="true">→</span></a></div>
 		</section>
 		}
-		<footer class="mt-20 flex items-center justify-between border-t pt-6 text-muted-foreground">
+		<footer class="mt-20 border-t pt-6 text-right text-muted-foreground">
 			<span>© { time.Now().Format("2006") }</span>
-			<a class="transition-colors hover:text-brand" href="https://github.com/0mjs/0mjs" target="_blank"
-				rel="noopener">source</a>
 		</footer>
 	</div>
 </main>
@@ -57,7 +52,8 @@ templ Home(posts []*model.Post, projects []model.Project) {
 
 templ sectionLabel(name string) {
 <div class="flex items-center gap-4">
-	<h2 class="text-xs tracking-[0.2em] text-muted-foreground uppercase">{ name }</h2>
+	@separator.Separator(separator.Props{Class: "h-px flex-1 bg-border border-0"})
+	<h2 class="text-xs tracking-[0.16em] text-muted-foreground">{ name }</h2>
 	@separator.Separator(separator.Props{Class: "h-px flex-1 bg-border border-0"})
 </div>
 }
@@ -67,11 +63,11 @@ templ row(lead, rest, href string, external bool) {
 	<a href={ templ.SafeURL(href) } if external { target="_blank" rel="noopener" }
 		class="group flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:gap-6">
 		if external {
-		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:w-32 sm:shrink-0">{ lead }</span>
-		<span class="text-muted-foreground">{ rest }</span>
+		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:shrink-0">{ lead }</span>
+		<span class="text-muted-foreground sm:ml-auto sm:text-right">{ rest }</span>
 		} else {
-		<time class="text-muted-foreground sm:w-32 sm:shrink-0">{ lead }</time>
-		<span class="font-medium lowercase transition-colors group-hover:text-brand">{ rest }</span>
+		<time class="text-muted-foreground sm:shrink-0">{ lead }</time>
+		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:ml-auto sm:text-right">{ rest }</span>
 		}
 	</a>
 </li>

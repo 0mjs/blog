@@ -14,6 +14,6 @@ func main() {
 	if address == "" {
 		address = ":3000"
 	}
-	log.Printf("Zinc blog listening on http://localhost%s", address)
+	log.Printf("Server listening on http://localhost%s", address)
 	log.Fatal(app.Listen(address))
 }

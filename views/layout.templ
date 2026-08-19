@@ -3,11 +3,14 @@ package views
 import (
 "time"
 "github.com/templui/templui/components/button"
+"mattjs.me/internal/siteinfo"
 )
 
-const siteName = "Matt Stevenson"
-const siteTagline = "I build schtuff."
-const baseURL = "https://mattjs.me"
+var (
+siteConfig = siteinfo.Current
+siteName = siteConfig.Name
+siteTagline = siteConfig.Tagline
+)
 
 type SEO struct {
 Title string
@@ -26,15 +29,15 @@ templ Layout(seo SEO) {
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>{ pageTitle(seo.Title) }</title>
 	<meta name="description" content={ description(seo.Description) } />
-	<link rel="canonical" href={ baseURL + seo.Path } />
+	<link rel="canonical" href={ siteConfig.BaseURL + seo.Path } />
 		<link rel="icon" href="/assets/favicon.ico" sizes="any" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-	<link rel="alternate" type="application/rss+xml" title={ siteName } href="/rss.xml" />
+	<link rel="alternate" type="application/rss+xml" title={ siteConfig.Name } href="/rss.xml" />
 	<meta property="og:title" content={ pageTitle(seo.Title) } />
 	<meta property="og:description" content={ description(seo.Description) } />
-	<meta property="og:url" content={ baseURL + seo.Path } />
+	<meta property="og:url" content={ siteConfig.BaseURL + seo.Path } />
 	<meta property="og:type" content={ ogType(seo.Article) } />
 	if seo.Article && !seo.Published.IsZero() {
 	<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) } />
@@ -79,12 +82,12 @@ templ Layout(seo SEO) {
 }
 
 func pageTitle(title string) string {
-if title == "" || title == siteName { return siteName }
-return title + " - " + siteName
+if title == "" || title == siteConfig.Name { return siteConfig.Name }
+return title + " - " + siteConfig.Name
 }
 
 func description(value string) string {
-if value == "" { return siteTagline }
+if value == "" { return siteConfig.Tagline }
 return value
 }
 

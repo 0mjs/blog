@@ -118,7 +118,7 @@ func BlogListByTag(posts []*model.Post, tag string) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<main class=\"min-h-screen px-6 py-20 sm:py-28\"><div class=\"mx-auto max-w-xl\"><div class=\"mb-10\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all posts</a><h1 class=\"mt-4 text-2xl font-medium tracking-tight\">#")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<main class=\"min-h-screen px-6 py-20 sm:py-28\"><div class=\"mx-auto max-w-xl\"><div class=\"mb-10\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all writing</a><h1 class=\"mt-4 text-2xl font-medium tracking-tight\">#")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -356,7 +356,7 @@ func BlogPost(post *model.Post) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<main class=\"min-h-screen px-6 py-20 sm:py-28\"><article class=\"mx-auto max-w-xl\"><div class=\"mb-10\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all posts</a></div><header class=\"mb-10 border-b pb-8\"><h1 class=\"text-2xl font-medium lowercase tracking-tight\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<main class=\"min-h-screen px-6 py-20 sm:py-28\"><article class=\"mx-auto max-w-xl\"><div class=\"mb-10\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all writing</a></div><header class=\"mb-10 border-b pb-8\"><h1 class=\"text-2xl font-medium lowercase tracking-tight\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -462,7 +462,7 @@ func BlogPost(post *model.Post) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</div><footer class=\"mt-16 border-t pt-6\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all posts</a></footer></article></main>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</div><footer class=\"mt-16 border-t pt-6\"><a href=\"/blog\" class=\"text-muted-foreground transition-colors hover:text-brand\">← all writing</a></footer></article></main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

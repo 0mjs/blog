@@ -32,7 +32,7 @@ templ BlogListByTag(posts []*model.Post, tag string) {
 		<main class="min-h-screen px-6 py-20 sm:py-28">
 			<div class="mx-auto max-w-xl">
 				<div class="mb-10">
-					<a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all posts</a>
+					<a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a>
 					<h1 class="mt-4 text-2xl font-medium tracking-tight">#{ tag }</h1>
 				</div>
 				if len(posts) == 0 {
@@ -70,7 +70,7 @@ templ BlogPost(post *model.Post) {
 	@Layout(SEO{Title: post.Title, Description: post.Subtitle, Path: "/blog/" + post.Slug, Article: true, Published: post.Date}) {
 		<main class="min-h-screen px-6 py-20 sm:py-28">
 			<article class="mx-auto max-w-xl">
-				<div class="mb-10"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all posts</a></div>
+				<div class="mb-10"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a></div>
 				<header class="mb-10 border-b pb-8">
 					<h1 class="text-2xl font-medium lowercase tracking-tight">{ post.Title }</h1>
 					<div class="mt-2 flex items-center gap-4 text-muted-foreground">
@@ -86,7 +86,7 @@ templ BlogPost(post *model.Post) {
 					}
 				</header>
 				<div class="prose">@templ.Raw(post.HTML)</div>
-				<footer class="mt-16 border-t pt-6"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all posts</a></footer>
+				<footer class="mt-16 border-t pt-6"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a></footer>
 			</article>
 		</main>
 	}

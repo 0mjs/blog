@@ -28,3 +28,8 @@ tags: [go]
 
 Run `make generate` after editing `.templ` files and `make css` after editing
 `assets/css`.
+
+## Configuration
+
+Site metadata is defined once in `internal/siteinfo/config.go`. Deployments can
+override it with `SITE_NAME`, `SITE_TAGLINE`, `SITE_URL`, and `SITE_LANGUAGE`.

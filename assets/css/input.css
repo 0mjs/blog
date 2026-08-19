@@ -26,18 +26,18 @@
   --border: oklch(0.9 0.006 85);
   --selection: oklch(0.205 0.006 85);
   --selection-foreground: oklch(0.985 0.004 85);
-  --brand: #0a70e8;
+  --brand: #147cf0;
 }
 
 .dark {
-  --background: oklch(0.175 0.005 85);
+  --background: #110e09;
   --foreground: oklch(0.94 0.004 85);
   --muted-foreground: oklch(0.65 0.008 85);
   --accent: oklch(0.24 0.006 85);
   --border: oklch(0.94 0.004 85 / 13%);
   --selection: oklch(0.94 0.004 85);
-  --selection-foreground: oklch(0.175 0.005 85);
-  --brand: #0a70e8;
+  --selection-foreground: #110e09;
+  --brand: #3b95ff;
 }
 
 @theme inline {
