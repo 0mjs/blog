@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync"
 
-	site "mattjs.me/internal/site"
+	"mattjs.me/site"
 )
 
 var (

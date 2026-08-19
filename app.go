@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/0mjs/zinc"
-	site "mattjs.me/internal/site"
+	"mattjs.me/site"
 )
 
 func newApp() (*zinc.App, error) {

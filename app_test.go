@@ -20,9 +20,9 @@ func TestRoutes(t *testing.T) {
 		contentType string
 	}{
 		{"/", http.StatusOK, "Matt Stevenson", "text/html"},
-		{"/blog", http.StatusOK, "constraints and simplicity keep me focused on building.", "text/html"},
-		{"/blog/why-go", http.StatusOK, "The Thing About TypeScript", "text/html"},
-		{"/blog/tag/go", http.StatusOK, "#go", "text/html"},
+		{"/blog", http.StatusOK, "Gopher Nation", "text/html"},
+		{"/blog/gopher-nation", http.StatusOK, "Gopher Nation", "text/html"},
+		{"/blog/tag/golang", http.StatusOK, "#golang", "text/html"},
 		{"/blog/missing", http.StatusNotFound, "Not Found", "text/plain"},
 		{"/rss.xml", http.StatusOK, "<rss", "application/rss+xml"},
 		{"/sitemap.xml", http.StatusOK, "<urlset", "application/xml"},
@@ -68,7 +68,7 @@ func TestRSSIsWellFormedAndDiscoverable(t *testing.T) {
 		`xmlns:atom="http://www.w3.org/2005/Atom"`,
 		`<language>en</language>`,
 		`<atom:link href="https://mattjs.me/rss.xml" rel="self" type="application/rss+xml"></atom:link>`,
-		`Why Go&apos;s constraints and simplicity keep me focused on building.`,
+		`<description>Becoming a Gopher.</description>`,
 	} {
 		if !strings.Contains(feed, expected) {
 			t.Fatalf("RSS missing %q", expected)
