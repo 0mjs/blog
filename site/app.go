@@ -39,6 +39,7 @@ func NewApp() (*zinc.App, error) {
 	}
 
 	app := zinc.New()
+	app.UseHTTP(cacheFonts)
 	if err := app.StaticFS("/assets", publicfs.FS); err != nil {
 		return nil, err
 	}
@@ -73,6 +74,15 @@ func NewApp() (*zinc.App, error) {
 		return c.String(fmt.Sprintf("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n", config.BaseURL))
 	})
 	return app, nil
+}
+
+func cacheFonts(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/assets/fonts/") {
+			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 func render(c *zinc.Context, component templ.Component) error {

@@ -75,3 +75,24 @@ func TestRSSIsWellFormedAndDiscoverable(t *testing.T) {
 		}
 	}
 }
+
+func TestFontsArePreloadedAndCached(t *testing.T) {
+	app, err := newApp()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	home := httptest.NewRecorder()
+	app.ServeHTTP(home, httptest.NewRequest(http.MethodGet, "/", nil))
+	for _, font := range []string{"IBMPlexMono-Regular.ttf", "IBMPlexMono-Medium.ttf"} {
+		if !strings.Contains(home.Body.String(), `rel="preload" href="/assets/fonts/IBMPlexMono/`+font+`"`) {
+			t.Errorf("homepage does not preload %s", font)
+		}
+	}
+
+	font := httptest.NewRecorder()
+	app.ServeHTTP(font, httptest.NewRequest(http.MethodGet, "/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf", nil))
+	if got := font.Header().Get("Cache-Control"); got != "public, max-age=31536000, immutable" {
+		t.Fatalf("font Cache-Control=%q", got)
+	}
+}
