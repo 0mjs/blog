@@ -5,7 +5,7 @@ import (
 "github.com/templui/templui/components/button"
 )
 
-const siteName = "Matt J. Stevenson"
+const siteName = "Matt Stevenson"
 const siteTagline = "I build schtuff."
 const baseURL = "https://mattjs.me"
 
@@ -27,8 +27,10 @@ templ Layout(seo SEO) {
 	<title>{ pageTitle(seo.Title) }</title>
 	<meta name="description" content={ description(seo.Description) } />
 	<link rel="canonical" href={ baseURL + seo.Path } />
-	<link rel="icon" type="image/png" href="/assets/image/matt.png" />
-	<link rel="apple-touch-icon" href="/assets/image/matt.png" />
+		<link rel="icon" href="/assets/favicon.ico" sizes="any" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
 	<link rel="alternate" type="application/rss+xml" title={ siteName } href="/rss.xml" />
 	<meta property="og:title" content={ pageTitle(seo.Title) } />
 	<meta property="og:description" content={ description(seo.Description) } />

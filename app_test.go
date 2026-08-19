@@ -19,7 +19,7 @@ func TestRoutes(t *testing.T) {
 		contains    string
 		contentType string
 	}{
-		{"/", http.StatusOK, "Matt J. Stevenson", "text/html"},
+		{"/", http.StatusOK, "Matt Stevenson", "text/html"},
 		{"/blog", http.StatusOK, "constraints and simplicity keep me focused on building.", "text/html"},
 		{"/blog/why-go", http.StatusOK, "The Thing About TypeScript", "text/html"},
 		{"/blog/tag/go", http.StatusOK, "#go", "text/html"},
@@ -28,6 +28,7 @@ func TestRoutes(t *testing.T) {
 		{"/sitemap.xml", http.StatusOK, "<urlset", "application/xml"},
 		{"/robots.txt", http.StatusOK, "Sitemap:", "text/plain"},
 		{"/assets/app.css", http.StatusOK, "--color-brand", "text/css"},
+		{"/assets/favicon.ico", http.StatusOK, "", "image/x-icon"},
 		{"/image/meme/go-ts-node.jpg", http.StatusOK, "", "image/jpeg"},
 	}
 	for _, tt := range tests {

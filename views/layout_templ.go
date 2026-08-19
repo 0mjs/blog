@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const siteName = "Matt J. Stevenson"
+const siteName = "Matt Stevenson"
 const siteTagline = "I build schtuff."
 const baseURL = "https://mattjs.me"
 
@@ -85,14 +85,14 @@ func Layout(seo SEO) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/image/matt.png\"><link rel=\"apple-touch-icon\" href=\"/assets/image/matt.png\"><link rel=\"alternate\" type=\"application/rss+xml\" title=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"><link rel=\"icon\" href=\"/assets/favicon.ico\" sizes=\"any\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/assets/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/assets/favicon-16x16.png\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/assets/apple-touch-icon.png\"><link rel=\"alternate\" type=\"application/rss+xml\" title=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(siteName)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 32, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 34, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -105,7 +105,7 @@ func Layout(seo SEO) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(pageTitle(seo.Title))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 33, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 35, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -118,7 +118,7 @@ func Layout(seo SEO) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(description(seo.Description))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 34, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 36, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -131,7 +131,7 @@ func Layout(seo SEO) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(baseURL + seo.Path)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 35, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 37, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -144,7 +144,7 @@ func Layout(seo SEO) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(ogType(seo.Article))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 36, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 38, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -162,7 +162,7 @@ func Layout(seo SEO) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(seo.Published.Format(time.RFC3339))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 38, Col: 85}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/layout.templ`, Line: 40, Col: 85}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {

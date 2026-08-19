@@ -91,7 +91,7 @@ func rss(posts []*model.Post) string {
 	body.WriteString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 	body.WriteString("<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n")
 	body.WriteString("  <channel>\n")
-	body.WriteString("    <title>Matt J. Stevenson</title>\n")
+	body.WriteString("    <title>Matt Stevenson</title>\n")
 	body.WriteString("    <link>https://mattjs.me</link>\n")
 	body.WriteString("    <description>I build schtuff.</description>\n")
 	body.WriteString("    <language>en</language>\n")
