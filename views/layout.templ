@@ -1,0 +1,92 @@
+package views
+
+import (
+"time"
+"github.com/templui/templui/components/button"
+)
+
+const siteName = "Matt J. Stevenson"
+const siteTagline = "I build schtuff."
+const baseURL = "https://mattjs.me"
+
+type SEO struct {
+Title string
+Description string
+Path string
+Article bool
+Published time.Time
+}
+
+templ Layout(seo SEO) {
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>{ pageTitle(seo.Title) }</title>
+	<meta name="description" content={ description(seo.Description) } />
+	<link rel="canonical" href={ baseURL + seo.Path } />
+	<link rel="icon" type="image/png" href="/assets/image/matt.png" />
+	<link rel="apple-touch-icon" href="/assets/image/matt.png" />
+	<link rel="alternate" type="application/rss+xml" title={ siteName } href="/rss.xml" />
+	<meta property="og:title" content={ pageTitle(seo.Title) } />
+	<meta property="og:description" content={ description(seo.Description) } />
+	<meta property="og:url" content={ baseURL + seo.Path } />
+	<meta property="og:type" content={ ogType(seo.Article) } />
+	if seo.Article && !seo.Published.IsZero() {
+	<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) } />
+	}
+	<meta name="twitter:card" content="summary" />
+	<link rel="preload" href="/assets/fonts/geist-mono-variable.woff2" as="font" type="font/woff2"
+		crossorigin="anonymous" />
+	<link rel="stylesheet" href="/assets/app.css" />
+	<script>
+		(function () { try { var p = localStorage.getItem('themePreference') || 'system'; var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } catch (e) { } })()
+	</script>
+</head>
+
+<body>
+	{ children... }
+	<div class="fixed right-4 bottom-4">
+		@button.Button(button.Props{
+		Variant: button.VariantGhost,
+		Size: button.SizeIcon,
+			Class: "flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+		Attributes: templ.Attributes{"data-theme-switcher": "true", "aria-label": "Toggle theme"},
+		}) {
+		<svg class="size-4 dark:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+			stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+		</svg>
+		<svg class="hidden size-4 dark:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+			stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+			<circle cx="12" cy="12" r="4"></circle>
+			<path
+				d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41">
+			</path>
+		</svg>
+		}
+	</div>
+	<script>
+			(function () { function pref() { return localStorage.getItem('themePreference') || 'system' } function apply() { var p = pref(); var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } document.addEventListener('click', function (e) { var b = e.target.closest('[data-theme-switcher]'); if (!b) return; var p = pref(); var d = document.documentElement.classList.contains('dark'); localStorage.setItem('themePreference', p === 'system' ? (d ? 'light' : 'dark') : (p === 'light' ? 'dark' : 'light')); apply() }); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (pref() === 'system') apply() }) })()
+	</script>
+</body>
+
+</html>
+}
+
+func pageTitle(title string) string {
+if title == "" || title == siteName { return siteName }
+return title + " - " + siteName
+}
+
+func description(value string) string {
+if value == "" { return siteTagline }
+return value
+}
+
+func ogType(article bool) string {
+if article { return "article" }
+return "website"
+}
