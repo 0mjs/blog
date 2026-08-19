@@ -2,7 +2,6 @@ package site
 
 import (
 	"fmt"
-	"io/fs"
 	"net/http"
 	"net/url"
 	"strings"
@@ -20,10 +19,7 @@ import (
 
 var projects = []model.Project{
 	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh"},
-	// {Name: "goff", Description: "go feature flag lib", URL: "https://github.com/0mjs/goff"},
 	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit"},
-	// {Name: "nuddge", Description: "calm wellness app", URL: "https://nuddge.app"},
-	// {Name: "samsa", Description: "ai medtech startup", URL: "https://hih.ie/initiatives/hihi-ai/hihi-ai-call-winners-2025/samsa-ltd/"},
 }
 
 // NewApp constructs the blog's shared HTTP handler for local and serverless use.
@@ -33,21 +29,11 @@ func NewApp() (*zinc.App, error) {
 	if err != nil {
 		return nil, err
 	}
-	images, err := fs.Sub(publicfs.FS, "image")
-	if err != nil {
-		return nil, err
-	}
-
 	app := zinc.New()
 	app.UseHTTP(cacheAssets)
 	if err := app.StaticFS("/assets", publicfs.FS); err != nil {
 		return nil, err
 	}
-	// Preserve the image URLs already used by the Markdown content.
-	if err := app.StaticFS("/image", images); err != nil {
-		return nil, err
-	}
-
 	app.Get("/", func(c *zinc.Context) error { return render(c, views.Home(blogService.Posts(), projects)) })
 	app.Get("/blog", func(c *zinc.Context) error { return render(c, views.BlogList(blogService.Posts())) })
 	app.Get("/blog/{slug}", func(c *zinc.Context) error {

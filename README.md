@@ -26,7 +26,8 @@ date: 2026-08-19
 tags: [go]
 ```
 
-Run `make generate` after editing `.templ` files and `make css` after editing
+`make dev` regenerates Templ and Tailwind output automatically. Outside the
+watcher, use `make generate` for `.templ` changes and `make css` for changes to
 `assets/css`.
 
 ## Configuration

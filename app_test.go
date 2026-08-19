@@ -29,7 +29,7 @@ func TestRoutes(t *testing.T) {
 		{"/robots.txt", http.StatusOK, "Sitemap:", "text/plain"},
 		{"/assets/app.css", http.StatusOK, "--color-brand", "text/css"},
 		{"/assets/favicon.ico", http.StatusOK, "", "image/x-icon"},
-		{"/image/meme/go-ts-node.jpg", http.StatusOK, "", "image/jpeg"},
+		{"/assets/image/meme/go-ts-node.jpg", http.StatusOK, "", "image/jpeg"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.path, func(t *testing.T) {

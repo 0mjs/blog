@@ -25,13 +25,12 @@ type Service struct {
 }
 
 type metadata struct {
-	Title       string   `yaml:"title"`
-	Subtitle    string   `yaml:"subtitle"`
-	Date        string   `yaml:"date"`
-	Description string   `yaml:"description"`
-	Draft       bool     `yaml:"draft"`
-	Tags        []string `yaml:"tags"`
-	ReadTime    int      `yaml:"read_time"`
+	Title    string   `yaml:"title"`
+	Subtitle string   `yaml:"subtitle"`
+	Date     string   `yaml:"date"`
+	Draft    bool     `yaml:"draft"`
+	Tags     []string `yaml:"tags"`
+	ReadTime int      `yaml:"read_time"`
 }
 
 var markup = regexp.MustCompile(`(?s)<[^>]*>|!\[[^]]*\]\([^)]*\)|\[([^]]+)\]\([^)]*\)|[*_#>` + "`" + `~]`)
@@ -113,9 +112,6 @@ func (s *Service) load(file string) (*model.Post, error) {
 	}
 	body := bodyAfterFrontMatter(string(source))
 	subtitle := meta.Subtitle
-	if subtitle == "" {
-		subtitle = meta.Description
-	}
 	if subtitle == "" {
 		subtitle = summarize(body)
 	}

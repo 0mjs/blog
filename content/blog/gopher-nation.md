@@ -15,7 +15,7 @@ Having worked with Node.js for so long now, using a framework like Nest.js every
 
 Recently however, I've felt a lot like this:
 
-![Go TS Meme](/image/meme/go-ts-node.jpg)
+![Go TS Meme](/assets/image/meme/go-ts-node.jpg)
 
 It took me a while to properly understand why.
 

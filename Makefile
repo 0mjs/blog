@@ -10,14 +10,14 @@ generate:
 css:
 	npm run css
 
-build: generate
+build: generate css
 	mkdir -p bin
 	go build -o bin/blog .
 
 test: generate
 	go test ./...
 
-run: generate
+run: generate css
 	go run .
 
 dev:
