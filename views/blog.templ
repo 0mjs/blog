@@ -6,17 +6,18 @@ import (
 )
 
 templ BlogList(posts []*model.Post) {
-	@Layout(SEO{Title: "Blog", Description: "Posts by " + siteName + ".", Path: "/blog"}) {
-		<main class="min-h-screen px-6 py-20 sm:py-28">
-			<div class="mx-auto max-w-xl">
-				<div class="mb-10">
-					<a href="/" class="text-muted-foreground transition-colors hover:text-brand">← back</a>
-					<h1 class="mt-4 text-2xl font-medium tracking-tight">blog</h1>
-				</div>
+	@Layout(SEO{Title: "All writing", Description: "Writing by " + siteName + ".", Path: "/blog"}) {
+		<main class="min-h-screen px-6 py-16 sm:py-24">
+			<div class="mx-auto max-w-2xl">
+				<header class="grid grid-cols-[1fr_auto_1fr] items-center border-b pb-5">
+					<a href="/" class="justify-self-start text-sm text-muted-foreground transition-colors hover:text-brand">← home</a>
+					<h1 class="text-sm font-medium tracking-[0.12em]">all writing</h1>
+					<span class="justify-self-end text-xs text-muted-foreground">{ formatPostCount(len(posts)) }</span>
+				</header>
 				if len(posts) == 0 {
-					<p class="text-muted-foreground">No posts yet.</p>
+					<p class="py-12 text-center text-muted-foreground">Nothing here yet.</p>
 				} else {
-					<div class="flex flex-col gap-8">
+					<div class="divide-y">
 						for _, post := range posts {
 							@postCard(post)
 						}
@@ -29,16 +30,17 @@ templ BlogList(posts []*model.Post) {
 
 templ BlogListByTag(posts []*model.Post, tag string) {
 	@Layout(SEO{Title: "Posts tagged: " + tag, Description: "Blog posts tagged with " + tag, Path: "/blog/tag/" + tag}) {
-		<main class="min-h-screen px-6 py-20 sm:py-28">
-			<div class="mx-auto max-w-xl">
-				<div class="mb-10">
-					<a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a>
-					<h1 class="mt-4 text-2xl font-medium tracking-tight">#{ tag }</h1>
-				</div>
+		<main class="min-h-screen px-6 py-16 sm:py-24">
+			<div class="mx-auto max-w-2xl">
+				<header class="grid grid-cols-[1fr_auto_1fr] items-center border-b pb-5">
+					<a href="/blog" class="justify-self-start text-sm text-muted-foreground transition-colors hover:text-brand">← writing</a>
+					<h1 class="text-sm font-medium tracking-[0.12em]">#{ tag }</h1>
+					<span class="justify-self-end text-xs text-muted-foreground">{ formatPostCount(len(posts)) }</span>
+				</header>
 				if len(posts) == 0 {
-					<p class="text-muted-foreground">No posts with this tag.</p>
+					<p class="py-12 text-center text-muted-foreground">Nothing with this tag yet.</p>
 				} else {
-					<div class="flex flex-col gap-8">
+					<div class="divide-y">
 						for _, post := range posts {
 							@postCard(post)
 						}
@@ -50,16 +52,19 @@ templ BlogListByTag(posts []*model.Post, tag string) {
 }
 
 templ postCard(post *model.Post) {
-	<article class="group">
-		<a href={ templ.SafeURL("/blog/" + post.Slug) } class="block">
-			<h2 class="font-medium lowercase transition-colors group-hover:text-brand">{ post.Title }</h2>
-			<p class="mt-1 text-muted-foreground">{ post.Subtitle }</p>
-			<div class="mt-2 flex items-center gap-4 text-muted-foreground"><time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time><span>{ formatReadTime(post.ReadTime) }</span></div>
+	<article class="group py-6 sm:py-7">
+		<a href={ templ.SafeURL("/blog/" + post.Slug) } class="grid gap-2 sm:grid-cols-[7rem_1fr_auto] sm:items-baseline sm:gap-6">
+			<time datetime={ post.Date.Format("2006-01-02") } class="text-xs text-muted-foreground">{ post.Date.Format("2006.01.02") }</time>
+			<div>
+				<h2 class="font-medium lowercase transition-colors group-hover:text-brand">{ post.Title }</h2>
+				<p class="mt-1 text-muted-foreground">{ post.Subtitle }</p>
+			</div>
+			<span class="text-xs text-muted-foreground sm:text-right">{ formatReadTime(post.ReadTime) }</span>
 		</a>
 		if len(post.Tags) > 0 {
-			<div class="mt-2 flex flex-wrap gap-3">
+			<div class="mt-3 flex flex-wrap gap-3 sm:ml-[8.5rem]">
 				for _, tag := range post.Tags {
-					<a href={ templ.SafeURL("/blog/tag/" + tag) } class="text-muted-foreground transition-colors hover:text-brand">#{ tag }</a>
+					<a href={ templ.SafeURL("/blog/tag/" + tag) } class="text-xs text-muted-foreground transition-colors hover:text-brand">#{ tag }</a>
 				}
 			</div>
 		}
@@ -68,28 +73,39 @@ templ postCard(post *model.Post) {
 
 templ BlogPost(post *model.Post) {
 	@Layout(SEO{Title: post.Title, Description: post.Subtitle, Path: "/blog/" + post.Slug, Article: true, Published: post.Date}) {
-		<main class="min-h-screen px-6 py-20 sm:py-28">
-			<article class="mx-auto max-w-xl">
-				<div class="mb-10"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a></div>
-				<header class="mb-10 border-b pb-8">
-					<h1 class="text-2xl font-medium lowercase tracking-tight">{ post.Title }</h1>
-					<div class="mt-2 flex items-center gap-4 text-muted-foreground">
+		<main class="min-h-screen px-6 py-16 sm:py-24">
+			<article class="mx-auto max-w-2xl">
+				<nav class="flex items-center justify-between text-sm">
+					<a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a>
+					<a href="/" class="text-muted-foreground transition-colors hover:text-brand">home</a>
+				</nav>
+				<header class="mx-auto mb-12 mt-14 max-w-xl text-center sm:mb-16 sm:mt-20">
+					<div class="flex items-center justify-center gap-3 text-xs text-muted-foreground">
 						<time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time>
+						<span aria-hidden="true">/</span>
 						<span>{ formatReadTime(post.ReadTime) }</span>
 					</div>
+					<h1 class="mt-5 text-2xl font-medium lowercase tracking-tight sm:text-3xl">{ post.Title }</h1>
+					<p class="mx-auto mt-3 max-w-lg text-muted-foreground">{ post.Subtitle }</p>
 					if len(post.Tags) > 0 {
-						<div class="mt-2 flex flex-wrap gap-3">
+						<div class="mt-4 flex flex-wrap justify-center gap-3 text-xs">
 							for _, tag := range post.Tags {
 								<a href={ templ.SafeURL("/blog/tag/" + tag) } class="text-muted-foreground transition-colors hover:text-brand">#{ tag }</a>
 							}
 						</div>
 					}
+					<div class="mx-auto mt-8 h-px w-12 bg-border"></div>
 				</header>
-				<div class="prose">@templ.Raw(post.HTML)</div>
-				<footer class="mt-16 border-t pt-6"><a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a></footer>
+				<div class="prose mx-auto max-w-[65ch]">@templ.Raw(post.HTML)</div>
+				<footer class="mt-20 border-t pt-6 text-center"><a href="/blog" class="text-sm text-muted-foreground transition-colors hover:text-brand">all writing ↑</a></footer>
 			</article>
 		</main>
 	}
 }
 
 func formatReadTime(minutes int) string { return strconv.Itoa(minutes) + " min read" }
+
+func formatPostCount(count int) string {
+	if count == 1 { return "1 entry" }
+	return strconv.Itoa(count) + " entries"
+}

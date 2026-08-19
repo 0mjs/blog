@@ -104,7 +104,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = sectionLabel("projects").Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = sectionLabel("[ projects ]").Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -127,7 +127,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = sectionLabel("writing").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = sectionLabel("[ writing ]").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

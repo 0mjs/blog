@@ -24,7 +24,7 @@ templ Home(posts []*model.Post, projects []model.Project) {
 			</nav>
 		</header>
 		<section class="mt-16">
-			@sectionLabel("projects")
+			@sectionLabel("[ projects ]")
 			<ul class="mt-5 space-y-1">
 				for _, project := range projects {
 				@row(project.Name, project.Description, project.URL, true)
@@ -33,7 +33,7 @@ templ Home(posts []*model.Post, projects []model.Project) {
 		</section>
 		if len(posts) > 0 {
 		<section class="mt-14">
-			@sectionLabel("writing")
+			@sectionLabel("[ writing ]")
 			<ul class="mt-5 space-y-1">
 				for _, post := range posts {
 				@row(post.Date.Format("Jan 2006"), post.Title, "/blog/" + post.Slug, false)
