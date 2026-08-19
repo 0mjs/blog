@@ -4,18 +4,17 @@ import (
 "time"
 "mattjs.me/internal/model"
 "github.com/templui/templui/components/avatar"
-"github.com/templui/templui/components/separator"
 )
 
 templ Home(posts []*model.Post, projects []model.Project) {
 @Layout(SEO{Path: "/"}) {
-<main class="min-h-screen px-6 py-20 sm:py-28">
-	<div class="mx-auto max-w-xl">
+<main class="min-h-screen px-6 py-16 sm:py-24">
+	<div class="mx-auto max-w-2xl">
 		<header class="flex flex-col items-center text-center">
 			@avatar.Avatar(avatar.Props{Class: "size-30 overflow-hidden rounded-full bg-brand"}) {
-			@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover", Attributes: templ.Attributes{"loading": "eager", "fetchpriority": "high", "decoding": "async", "width": "120", "height": "120"}})
+				@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover", Attributes: templ.Attributes{"loading": "eager", "fetchpriority": "high", "decoding": "async", "width": "120", "height": "120"}})
 			}
-			<h1 class="mt-7 text-2xl font-medium tracking-tight">{ siteName }</h1>
+			<h1 class="mt-6 text-2xl font-medium tracking-tight">{ siteName }</h1>
 			<p class="mt-1.5 text-muted-foreground">{ siteTagline }</p>
 			<nav class="mt-6 flex justify-center gap-4 text-sm" aria-label="Social links">
 				<a class="group flex gap-1.5" href="https://github.com/0mjs" target="_blank" rel="noopener"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">github</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
@@ -23,26 +22,26 @@ templ Home(posts []*model.Post, projects []model.Project) {
 				<a class="group flex gap-1.5" href="/rss.xml"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">rss</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
 			</nav>
 		</header>
-		<section class="mt-16">
-			@sectionLabel("[ projects ]")
-			<ul class="mt-5 space-y-1">
+		<section class="mt-14">
+			@sectionLabel("01", "projects")
+			<ul class="mt-3 space-y-1">
 				for _, project := range projects {
 				@row(project.Name, project.Description, project.URL, true)
 				}
 			</ul>
 		</section>
 		if len(posts) > 0 {
-		<section class="mt-14">
-			@sectionLabel("[ writing ]")
-			<ul class="mt-5 space-y-1">
+		<section class="mt-12">
+			@sectionLabel("02", "writing")
+			<ul class="mt-3 space-y-1">
 				for _, post := range posts {
 				@row(post.Date.Format("Jan 2006"), post.Title, "/blog/" + post.Slug, false)
 				}
 			</ul>
-			<div class="mt-7 text-center"><a href="/blog" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand"><span>all writing</span><span aria-hidden="true">→</span></a></div>
+			<div class="mt-5 text-right"><a href="/blog" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand"><span>all writing</span><span aria-hidden="true">→</span></a></div>
 		</section>
 		}
-		<footer class="mt-20 border-t pt-6 text-right text-muted-foreground">
+		<footer class="mt-16 text-right text-muted-foreground">
 			<span>© { time.Now().Format("2006") }</span>
 		</footer>
 	</div>
@@ -50,18 +49,17 @@ templ Home(posts []*model.Post, projects []model.Project) {
 }
 }
 
-templ sectionLabel(name string) {
-<div class="flex items-center gap-4">
-	@separator.Separator(separator.Props{Class: "h-px flex-1 bg-border border-0"})
+templ sectionLabel(number, name string) {
+<div class="flex items-baseline gap-3">
+	<span class="text-xs text-brand">{ number }</span>
 	<h2 class="text-xs tracking-[0.16em] text-muted-foreground">{ name }</h2>
-	@separator.Separator(separator.Props{Class: "h-px flex-1 bg-border border-0"})
 </div>
 }
 
 templ row(lead, rest, href string, external bool) {
 <li>
 	<a href={ templ.SafeURL(href) } if external { target="_blank" rel="noopener" }
-		class="group flex flex-col gap-0.5 py-2 sm:flex-row sm:items-baseline sm:gap-6">
+		class="group flex flex-col gap-0.5 py-2.5 sm:flex-row sm:items-baseline sm:gap-6">
 		if external {
 		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:shrink-0">{ lead }</span>
 		<span class="text-muted-foreground sm:ml-auto sm:text-right">{ rest }</span>
