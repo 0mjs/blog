@@ -1,11 +1,11 @@
 ---
 {
-  "title": "Why Go?",
-  "subtitle": "Why Go's constraints and simplicity keep me focused on building.",
+  "title": "Gopher Nation",
+  "subtitle": "Becoming a Gopher.",
   "date": "2025-10-28T23:13:06Z",
   "read_time": 4,
   "draft": false,
-  "tags": ["go", "typescript", "dx", "programming languages"],
+  "tags": ["golang"],
 }
 ---
 
