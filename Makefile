@@ -1,4 +1,4 @@
-.PHONY: install generate css build test run
+.PHONY: install generate css build test run dev dev/build
 
 install:
 	go mod download
@@ -19,3 +19,12 @@ test: generate
 
 run: generate
 	go run .
+
+dev:
+	air
+
+dev/build:
+	mkdir -p tmp
+	go tool templ generate
+	npm run css
+	go build -o tmp/blog .

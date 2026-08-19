@@ -11,6 +11,9 @@ make run
 
 Open <http://localhost:3000>.
 
+For live development, run `make dev` and open <http://localhost:7331>. Changes
+to Go, Templ, CSS, and Markdown files rebuild the app and reload the browser.
+
 ## Writing
 
 Posts live in `content/blog`. Set the list-page summary with `subtitle` in the
