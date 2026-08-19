@@ -96,3 +96,22 @@ func TestFontsArePreloadedAndCached(t *testing.T) {
 		t.Fatalf("font Cache-Control=%q", got)
 	}
 }
+
+func TestHomepageImageIsPreloadedAndCached(t *testing.T) {
+	app, err := newApp()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	home := httptest.NewRecorder()
+	app.ServeHTTP(home, httptest.NewRequest(http.MethodGet, "/", nil))
+	if !strings.Contains(home.Body.String(), `rel="preload" href="/assets/image/matt.png" as="image"`) {
+		t.Fatal("homepage does not preload matt.png")
+	}
+
+	image := httptest.NewRecorder()
+	app.ServeHTTP(image, httptest.NewRequest(http.MethodGet, "/assets/image/matt.png", nil))
+	if got := image.Header().Get("Cache-Control"); got != "public, max-age=86400, stale-while-revalidate=604800" {
+		t.Fatalf("image Cache-Control=%q", got)
+	}
+}

@@ -39,7 +39,7 @@ func NewApp() (*zinc.App, error) {
 	}
 
 	app := zinc.New()
-	app.UseHTTP(cacheFonts)
+	app.UseHTTP(cacheAssets)
 	if err := app.StaticFS("/assets", publicfs.FS); err != nil {
 		return nil, err
 	}
@@ -76,10 +76,13 @@ func NewApp() (*zinc.App, error) {
 	return app, nil
 }
 
-func cacheFonts(next http.Handler) http.Handler {
+func cacheAssets(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasPrefix(r.URL.Path, "/assets/fonts/") {
+		switch {
+		case strings.HasPrefix(r.URL.Path, "/assets/fonts/"):
 			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+		case r.URL.Path == "/assets/image/matt.png":
+			w.Header().Set("Cache-Control", "public, max-age=86400, stale-while-revalidate=604800")
 		}
 		next.ServeHTTP(w, r)
 	})

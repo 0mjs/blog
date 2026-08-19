@@ -43,6 +43,9 @@ templ Layout(seo SEO) {
 	<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) } />
 	}
 	<meta name="twitter:card" content="summary" />
+	if seo.Path == "/" {
+	<link rel="preload" href="/assets/image/matt.png" as="image" type="image/png" fetchpriority="high" />
+	}
 	<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf" as="font" type="font/ttf"
 		crossorigin="anonymous" />
 	<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf" as="font" type="font/ttf"

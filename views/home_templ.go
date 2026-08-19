@@ -64,7 +64,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover"}).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover", Attributes: templ.Attributes{"loading": "eager", "fetchpriority": "high", "decoding": "async", "width": "120", "height": "120"}}).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

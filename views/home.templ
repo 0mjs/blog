@@ -13,7 +13,7 @@ templ Home(posts []*model.Post, projects []model.Project) {
 	<div class="mx-auto max-w-xl">
 		<header class="flex flex-col items-center text-center">
 			@avatar.Avatar(avatar.Props{Class: "size-30 overflow-hidden rounded-full bg-brand"}) {
-			@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover"})
+			@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover", Attributes: templ.Attributes{"loading": "eager", "fetchpriority": "high", "decoding": "async", "width": "120", "height": "120"}})
 			}
 			<h1 class="mt-7 text-2xl font-medium tracking-tight">{ siteName }</h1>
 			<p class="mt-1.5 text-muted-foreground">{ siteTagline }</p>

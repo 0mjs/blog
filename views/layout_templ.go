@@ -176,7 +176,17 @@ func Layout(seo SEO) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<meta name=\"twitter:card\" content=\"summary\"><link rel=\"preload\" href=\"/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin=\"anonymous\"><link rel=\"preload\" href=\"/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf\" as=\"font\" type=\"font/ttf\" crossorigin=\"anonymous\"><link rel=\"stylesheet\" href=\"/assets/app.css\"><script>\n\t\t(function () { try { var p = localStorage.getItem('themePreference') || 'system'; var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } catch (e) { } })()\n\t</script></head><body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<meta name=\"twitter:card\" content=\"summary\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if seo.Path == "/" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<link rel=\"preload\" href=\"/assets/image/matt.png\" as=\"image\" type=\"image/png\" fetchpriority=\"high\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<link rel=\"preload\" href=\"/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf\" as=\"font\" type=\"font/ttf\" crossorigin=\"anonymous\"><link rel=\"preload\" href=\"/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf\" as=\"font\" type=\"font/ttf\" crossorigin=\"anonymous\"><link rel=\"stylesheet\" href=\"/assets/app.css\"><script>\n\t\t(function () { try { var p = localStorage.getItem('themePreference') || 'system'; var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } catch (e) { } })()\n\t</script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -184,7 +194,7 @@ func Layout(seo SEO) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"fixed right-4 bottom-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<div class=\"fixed right-4 bottom-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -200,7 +210,7 @@ func Layout(seo SEO) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<svg class=\"size-4 dark:hidden\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"></path></svg> <svg class=\"hidden size-4 dark:block\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"></circle> <path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"></path></svg>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<svg class=\"size-4 dark:hidden\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"></path></svg> <svg class=\"hidden size-4 dark:block\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"></circle> <path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"></path></svg>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -215,7 +225,7 @@ func Layout(seo SEO) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><script>\n\t\t\t(function () { function pref() { return localStorage.getItem('themePreference') || 'system' } function apply() { var p = pref(); var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } document.addEventListener('click', function (e) { var b = e.target.closest('[data-theme-switcher]'); if (!b) return; var p = pref(); var d = document.documentElement.classList.contains('dark'); localStorage.setItem('themePreference', p === 'system' ? (d ? 'light' : 'dark') : (p === 'light' ? 'dark' : 'light')); apply() }); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (pref() === 'system') apply() }) })()\n\t</script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><script>\n\t\t\t(function () { function pref() { return localStorage.getItem('themePreference') || 'system' } function apply() { var p = pref(); var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } document.addEventListener('click', function (e) { var b = e.target.closest('[data-theme-switcher]'); if (!b) return; var p = pref(); var d = document.documentElement.classList.contains('dark'); localStorage.setItem('themePreference', p === 'system' ? (d ? 'light' : 'dark') : (p === 'light' ? 'dark' : 'light')); apply() }); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (pref() === 'system') apply() }) })()\n\t</script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
