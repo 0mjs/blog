@@ -4,7 +4,7 @@
   "subtitle": "Simple beginnings.",
   "date": "2026-08-19",
   "read_time": 3,
-  "draft": false,
+  "draft": true,
   "tags": ["console-hacking"],
 }
 ---
