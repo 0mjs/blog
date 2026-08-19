@@ -47,7 +47,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<main class=\"min-h-screen px-6 py-16 sm:py-24\"><div class=\"mx-auto max-w-2xl\"><header class=\"flex flex-col items-center text-center\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<main class=\"min-h-screen px-6 py-12 sm:py-16\"><div class=\"mx-auto max-w-lg\"><header class=\"flex flex-col items-center text-center\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -99,7 +99,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><nav class=\"mt-6 flex justify-center gap-4 text-sm\" aria-label=\"Social links\"><a class=\"group flex gap-1.5\" href=\"https://github.com/0mjs\" target=\"_blank\" rel=\"noopener\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">github</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a> <a class=\"group flex gap-1.5\" href=\"https://x.com/0mjs_\" target=\"_blank\" rel=\"noopener\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">x</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a> <a class=\"group flex gap-1.5\" href=\"/rss.xml\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">rss</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a></nav></header><section class=\"mt-14\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><nav class=\"mt-6 flex justify-center gap-4 text-sm\" aria-label=\"Social links\"><a class=\"group flex gap-1.5\" href=\"https://github.com/0mjs\" target=\"_blank\" rel=\"noopener\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">github</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a> <a class=\"group flex gap-1.5\" href=\"https://x.com/0mjs_\" target=\"_blank\" rel=\"noopener\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">x</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a> <a class=\"group flex gap-1.5\" href=\"/rss.xml\"><span class=\"text-muted-foreground\" aria-hidden=\"true\">[</span><span class=\"transition-colors group-hover:text-brand\">rss</span><span class=\"text-muted-foreground\" aria-hidden=\"true\">]</span></a></nav></header><section class=\"mt-10\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -122,7 +122,7 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if len(posts) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<section class=\"mt-12\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<section class=\"mt-8\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -140,12 +140,12 @@ func Home(posts []*model.Post, projects []model.Project) templ.Component {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</ul><div class=\"mt-5 text-right\"><a href=\"/blog\" class=\"inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand\"><span>all writing</span><span aria-hidden=\"true\">→</span></a></div></section>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</ul><div class=\"mt-4 text-right\"><a href=\"/blog\" class=\"inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand\"><span>all writing</span><span aria-hidden=\"true\">→</span></a></div></section>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<footer class=\"mt-16 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between\"><span class=\"group/build inline-flex items-center whitespace-nowrap\"><span>built with</span> <span class=\"ml-2 inline-flex overflow-hidden whitespace-nowrap sm:ml-0 sm:max-w-0 sm:opacity-0 sm:transition-[max-width,opacity,margin] sm:duration-300 sm:ease-out sm:group-hover/build:ml-2 sm:group-hover/build:max-w-sm sm:group-hover/build:opacity-100 sm:group-focus-within/build:ml-2 sm:group-focus-within/build:max-w-sm sm:group-focus-within/build:opacity-100 motion-reduce:transition-none\"><a href=\"https://github.com/0mjs/zinc\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#AFC1FF]\">zinc</a>,&nbsp;<a href=\"https://github.com/a-h/templ\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#DBBD30]\">templ</a>,&nbsp;<a href=\"https://github.com/templui/templui\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#02ADD8]\">templui</a>,&nbsp;<a href=\"https://github.com/yuin/goldmark\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#B8B8B8]\">goldmark</a></span></span> <span class=\"sm:text-right\">© ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<footer class=\"mt-12 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between\"><span class=\"group/build inline-flex items-center whitespace-nowrap\"><span>built with</span> <span class=\"ml-2 inline-flex overflow-hidden whitespace-nowrap sm:ml-0 sm:max-w-0 sm:opacity-0 sm:transition-[max-width,opacity,margin] sm:duration-300 sm:ease-out sm:group-hover/build:ml-2 sm:group-hover/build:max-w-sm sm:group-hover/build:opacity-100 sm:group-focus-within/build:ml-2 sm:group-focus-within/build:max-w-sm sm:group-focus-within/build:opacity-100 motion-reduce:transition-none\"><a href=\"https://github.com/0mjs/zinc\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#AFC1FF]\">zinc</a>,&nbsp;<a href=\"https://github.com/a-h/templ\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#DBBD30]\">templ</a>,&nbsp;<a href=\"https://github.com/templui/templui\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#02ADD8]\">templui</a>,&nbsp;<a href=\"https://github.com/yuin/goldmark\" target=\"_blank\" rel=\"noopener\" class=\"transition-colors hover:text-[#B8B8B8]\">goldmark</a></span></span> <span class=\"sm:text-right\">© ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
