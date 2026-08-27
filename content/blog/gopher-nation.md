@@ -9,81 +9,205 @@
 }
 ---
 
-In my day-to-day job, TypeScript pays the bills, it "keeps the lights on" if you will.
+In my day-to-day job, TypeScript pays the bills. It keeps the lights on, if you will.
 
-Having worked with Node.js for so long now, using a framework like Nest.js everyday gives the backend much needed structure, and a level of sanity you start to take for granted once you go back to something like Express. The ecosystem is enormous, and everything feels battle-tested, especially bolt-on packages for things like Kafka, CRON etc.
+I've been working with Node.js for years now, and honestly, it's good. Using something like Nest.js every day gives a backend the kind of structure that you don't really appreciate until you go back and raw-dog an Express app and suddenly you're deciding where `user.service.ts` should live like it's 2018 again.
 
-Recently however, I've felt a lot like this:
+The ecosystem is enormous, everything has a package, and most of the boring stuff you actually need in a production backend - Kafka, CRON jobs, validation, queues, whatever - is basically a solved problem.
+
+I like TypeScript.
+
+Unfortunately, I also increasingly feel like this:
 
 ![Go TS Meme](/assets/image/meme/go-ts-node.jpg)
 
-It took me a while to properly understand why.
+And it took me a while to work out why.
 
 ## The Thing About TypeScript
 
-TypeScript solved real problems. Type safety in JavaScript wasn't just nice to have, it's been totally transformative. I remember the before-times: runtime errors that should've been caught at compile time, refactors powered by `grep`, and the constant uncertainty of what a function actually returned.
+TypeScript solved a massive problem.
 
-But there's something else that rarely gets said out loud: TypeScript is still a layer on top of JavaScript. A very good layer, but still a layer, a "superset".
+I remember writing JavaScript before TypeScript properly took over. Refactoring things with a combination of `grep`, hope and prayer. Functions returning objects that looked vaguely like the object you expected. Finding out what a value actually was by sticking a `console.log` in front of it and running the thing.
 
-Every new feature adds another abstraction trying to shape JavaScript into something more structured. Generics that disappear at runtime. Decorators that have stayed "experimental" for years on end. Async/await wrapping promises, wrapping callbacks. Enums that exist, but that you're then suddenly advised not to use.
+TypeScript made JavaScript dramatically better.
 
-None of this makes it bad. It just makes it heavier than it sometimes needs to be. Not to mention the 60MB bundle size for a "Hello, World" binary.
+But at the end of the day, you're still trying to discipline JavaScript.
+
+And sometimes you can feel it.
+
+You've got types that disappear entirely at runtime. Decorators. `tsconfig.json` options that apparently alter the fabric of reality. CJS versus ESM. `moduleResolution`. Five different ways to import the same package depending on what phase the moon is in.
+
+Then there are enums, which TypeScript added, and which half the TypeScript community will immediately tell you not to use.
+
+None of this makes TypeScript bad. I use it professionally every day and will continue to.
+
+There's just... a lot going on.
+
+Sometimes I want to write a little program without installing 800 packages and accidentally downloading half of GitHub into `node_modules`.
 
 ## When I Found Go
 
-I picked up _The Go Programming Language_ fully expecting to dislike it. Everyone said it was too simple. Too opinionated. Missing things I'd come to consider essential.
+I'd looked at Go a few times over the years and basically thought:
 
-Then I spent a weekend building a small API, and something clicked.
+> That's it?
 
-The language just got out of my way. No build pipeline gymnastics. No `tsconfig.json`. No Babel. No debates about CJS versus ESM. Just code that compiled to a single binary and ran with one command. Fast.
+The syntax looked almost suspiciously boring.
 
-Later, watching Rob Pike's talks helped it all make sense — especially [Simplicity is Complicated](https://www.youtube.com/watch?v=rFejpH_tAHM). The idea that constraints can be freeing. That removing features can sometimes create better systems.
+Where's all the stuff?
 
-Go doesn't have inheritance because inheritance introduces more problems than it solves. It has generics now, but most of the time you don't actually need them. Interfaces and concrete types are usually clearer and easier to reason about.
+Then I bought _The Go Programming Language_ and actually sat down with it properly.
 
-The standard library gives you what you need without forcing you into a framework treadmill. And if anything, there is actually a massive contingent of Go experts that swear against libraries or frameworks of any sort, especially for APIs, simply because the standard library is so powerful and feature-rich.
+I built a small API one weekend and somewhere along the way it just clicked.
+
+There was no framework. No build pipeline. No Babel. No `tsconfig.json`. No package manager discourse. No wondering whether the project was ESM, CommonJS, ESM pretending to be CommonJS, or CommonJS wearing an ESM hat.
+
+I wrote some Go.
+
+I ran:
+
+```sh
+go build
+```
+
+And it gave me a binary.
+
+That was basically it.
+
+It felt weirdly refreshing.
+
+Later I started watching Rob Pike talk about the philosophy behind the language, particularly [Simplicity is Complicated](https://www.youtube.com/watch?v=rFejpH_tAHM), and that was probably the point where Go stopped feeling "primitive" and started feeling deliberately small.
+
+That's the bit I hadn't really understood.
+
+Go isn't missing a load of features because nobody thought of them.
+
+A lot of them were left out on purpose.
+
+There's no traditional class inheritance hierarchy. Interfaces are implicit. Composition is everywhere. Generics eventually arrived, but you can write a surprising amount of useful software without touching them.
+
+And the standard library is ridiculous.
+
+The first time you realise you can build a completely respectable HTTP API using `net/http` without immediately reaching for a framework feels almost wrong if you've spent years in Node.
+
+There's an entire species of Go developer who will practically appear behind you and slap Gin out of your hand if you suggest installing it.
+
+And I'm starting to understand them.
 
 <div class="video-embed">
   <iframe
     src="https://www.youtube.com/embed/rFejpH_tAHM"
-    title="Simplicity is Complicated — Rob Pike"
+    title="Simplicity is Complicated - Rob Pike"
     frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen
   ></iframe>
 </div>
 
-> "Go doesn't have type hierarchy because hierarchies are brittle. Composition is more flexible." — Rob Pike (Google I/O 2012)
+> "Go doesn't have type hierarchy because hierarchies are brittle. Composition is more flexible." - Rob Pike (Google I/O 2012)
 
 ## What I Actually Like
 
-Goroutines make concurrency feel natural. Not easy, concurrency is never truly easy — but natural. No callback hell. No async/await acrobatics.
+Goroutines are probably the obvious one.
 
-Error handling is verbose, but I've grown to really appreciate that. `if err != nil` everywhere means I always know where things can fail, and what happens when they do. No exceptions bubbling up from deep inside a dependency. No unhandled promises surfacing hours later.
+Concurrency is still concurrency. You can absolutely make a complete balls of it.
 
-Compilation speed matters more than I realised it would. Most of my Go projects build in seconds. The binary is self-contained and "just runs". No `node_modules`. No container unless I actually need one. No worrying about Node versions or navigating the package-manager hellscape.
+But the basic model feels natural.
 
-It's a calmer way to build software.
+```go
+go doSomething()
+```
+
+There you go. It's doing something.
+
+Channels took me slightly longer to get my head around, but once they click, you start seeing why Go ended up absolutely everywhere in infrastructure and distributed systems.
+
+I also thought I'd hate the error handling.
+
+And to be fair, when you first see this repeated 900 times:
+
+```go
+if err != nil {
+    return err
+}
+```
+
+you do wonder if the language designers were taking the piss.
+
+But I've grown to really like it.
+
+Errors are just there. In front of you. You can see where something fails and you decide what happens next.
+
+There's no exception suddenly flying out of six layers of abstraction because a library decided this particular Tuesday was a good day to throw.
+
+The tooling is another huge part of it.
+
+- `go fmt`
+- `go test`
+- `go build`
+- `go mod`
+
+They're just... there.
+
+You don't spend an afternoon deciding which formatter your team should use.
+
+Go already decided.
+
+You don't spend another afternoon arguing about the formatter configuration.
+
+Go doesn't care.
+
+Shut up and write the code.
+
+And then there's deployment.
+
+Build binary. Copy binary. Run binary.
+
+Beautiful.
+
+No `node_modules`. No production Node version to worry about. No `npm install` on a server. Half the time I don't even bother with Docker unless I actually need Docker.
+
+It's just a calmer way to build software.
 
 ## The Honest Part
 
-I'm not ditching TypeScript. Realistically, I can't. Too much of the professional world runs on it. Nest.js is genuinely excellent at what it does. I'm not trying to fight that reality.
+I'm not becoming one of those people who announces they've "left TypeScript".
 
-But when I'm prototyping something, building internal tools, or just want to focus on the problem instead of the tooling, I reach for Go almost every time.
+I haven't.
 
-It's not about one language being objectively better.
-It's about which one keeps me focused on building.
+TypeScript is still what I use professionally and Nest.js is genuinely excellent. If somebody asked me to build a large product backend tomorrow with a team of TypeScript developers, I'm not going to burst through the wall dressed as the Go gopher and demand we rewrite everything.
 
-For me, that's Go.
+That would be insane.
+
+But for my own stuff?
+
+Go keeps winning.
+
+Small APIs. Internal tools. CLI programs. Random ideas I want to get running without spending the first hour assembling a JavaScript project like IKEA furniture.
+
+I reach for Go more and more.
+
+I've even built some fairly substantial things with it now, and every time I go back to it I get that same feeling: there just isn't much between me and the actual thing I'm trying to build.
+
+That's probably what I like most about it.
+
+Not that Go is "better" than TypeScript.
+
+That's boring language-war drivel.
+
+It's that Go seems almost aggressively uninterested in being clever.
+
+And after years of working in ecosystems where cleverness has a habit of becoming somebody else's maintenance problem six months later, I've started to appreciate that quite a lot.
 
 ## If You're Curious
 
-- _The Go Programming Language_ (Donovan & Kernighan) — genuinely worth reading cover to cover
-- [Effective Go](https://go.dev/doc/effective_go) — free, official, and teaches idiomatic Go
-- Rob Pike's [Concurrency is Not Parallelism](https://www.youtube.com/watch?v=oV9rvDllKEg) — ~30 minutes that will change how you think about systems
+- _The Go Programming Language_ (Donovan & Kernighan) - probably still the best proper introduction I've found
+- [Effective Go](https://go.dev/doc/effective_go) - free, official and worth reading even if parts of it are showing their age
+- Rob Pike's [Concurrency is Not Parallelism](https://www.youtube.com/watch?v=oV9rvDllKEg) - one of those talks that makes a concept you've heard 400 times suddenly make sense
 
-You don't need a 10-hour course.
+You don't need a 10-hour YouTube course.
 
-Read the docs.
-**Build something real**, that you're passionate about.
-See if it clicks.
+Read enough to stop being completely lost.
+
+Then build something you actually care about.
+
+That's what made Go click for me.
