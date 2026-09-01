@@ -35,7 +35,7 @@ There really was a Zombies mode hidden after the campaign. In 2008, that was bas
 
 Within a few months it was the thing everyone talked about and played every evening, usually far later than our parents appreciated.
 
-Naturally, after playing something obsessively for long enough, the next question becomes: how do I break it?
+I was already fairly handy with a laptop or PC for a kid that age. But this was probably the first time I'd looked at a game and been properly intrigued by the idea of breaking its rules.
 
 ## Changing numbers
 
