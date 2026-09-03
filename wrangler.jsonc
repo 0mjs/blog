@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "mattjs-blog",
+  "name": "blog",
   "compatibility_date": "2026-09-03",
   "workers_dev": true,
   "preview_urls": true,
