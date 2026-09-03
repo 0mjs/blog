@@ -4,6 +4,12 @@
   "compatibility_date": "2026-09-03",
   "workers_dev": true,
   "preview_urls": true,
+  "routes": [
+    { "pattern": "mattjs.me", "custom_domain": true },
+    { "pattern": "www.mattjs.me", "custom_domain": true },
+    { "pattern": "mattstevenson.dev", "custom_domain": true },
+    { "pattern": "www.mattstevenson.dev", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
