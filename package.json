@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "css": "tailwindcss -i ./assets/css/input.css -o ./public/app.css --minify",
-    "css:watch": "tailwindcss -i ./assets/css/input.css -o ./public/app.css --watch"
+    "css:watch": "tailwindcss -i ./assets/css/input.css -o ./public/app.css --watch",
+    "build:static": "npm run css && go run ./cmd/export"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

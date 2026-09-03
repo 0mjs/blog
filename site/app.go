@@ -17,7 +17,9 @@ import (
 	"mattjs.me/views"
 )
 
-var projects = []model.Project{
+// Projects are displayed on the home page and shared by the HTTP server and
+// the static site exporter.
+var Projects = []model.Project{
 	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh"},
 	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit"},
 }
@@ -34,7 +36,7 @@ func NewApp() (*zinc.App, error) {
 	if err := app.StaticFS("/assets", publicfs.FS); err != nil {
 		return nil, err
 	}
-	app.Get("/", func(c *zinc.Context) error { return render(c, views.Home(blogService.Posts(), projects)) })
+	app.Get("/", func(c *zinc.Context) error { return render(c, views.Home(blogService.Posts(), Projects)) })
 	app.Get("/blog", func(c *zinc.Context) error { return render(c, views.BlogList(blogService.Posts())) })
 	app.Get("/blog/{slug}", func(c *zinc.Context) error {
 		post, ok := blogService.Post(c.Param("slug"))
@@ -51,10 +53,10 @@ func NewApp() (*zinc.App, error) {
 		return render(c, views.BlogListByTag(blogService.PostsByTag(tag), tag))
 	})
 	app.Get("/rss.xml", func(c *zinc.Context) error {
-		return c.Data("application/rss+xml; charset=utf-8", []byte(rss(blogService.Posts(), config)))
+		return c.Data("application/rss+xml; charset=utf-8", []byte(RSS(blogService.Posts(), config)))
 	})
 	app.Get("/sitemap.xml", func(c *zinc.Context) error {
-		return c.Data("application/xml; charset=utf-8", []byte(sitemap(blogService.Posts(), config)))
+		return c.Data("application/xml; charset=utf-8", []byte(Sitemap(blogService.Posts(), config)))
 	})
 	app.Get("/robots.txt", func(c *zinc.Context) error {
 		return c.String(fmt.Sprintf("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n", config.BaseURL))
@@ -79,7 +81,8 @@ func render(c *zinc.Context, component templ.Component) error {
 	return component.Render(c.Context(), c.Writer())
 }
 
-func rss(posts []*model.Post, config siteinfo.Config) string {
+// RSS renders the site's RSS feed for either HTTP or static output.
+func RSS(posts []*model.Post, config siteinfo.Config) string {
 	var body strings.Builder
 	body.WriteString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
 	body.WriteString("<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n")
@@ -104,7 +107,8 @@ func rss(posts []*model.Post, config siteinfo.Config) string {
 	return body.String()
 }
 
-func sitemap(posts []*model.Post, config siteinfo.Config) string {
+// Sitemap renders the site's sitemap for either HTTP or static output.
+func Sitemap(posts []*model.Post, config siteinfo.Config) string {
 	var body strings.Builder
 	body.WriteString(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 	fmt.Fprintf(&body, "<url><loc>%s/</loc></url><url><loc>%s/blog</loc></url>", xmlEscape(config.BaseURL), xmlEscape(config.BaseURL))
