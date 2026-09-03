@@ -1,4 +1,4 @@
-// Command export renders the blog as a static site for Cloudflare Pages.
+// Command export renders the blog as a static site for Cloudflare Workers.
 package main
 
 import (
@@ -80,8 +80,24 @@ func export(output string) error {
 	if err := writeFile(output, "robots.txt", []byte(robots)); err != nil {
 		return err
 	}
+	if err := writeFile(output, "_headers", []byte(headers)); err != nil {
+		return err
+	}
 	return copyAssets(output)
 }
+
+const headers = `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'
+
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+`
 
 func writeHTML(output, route string, component templ.Component) error {
 	var rendered bytes.Buffer

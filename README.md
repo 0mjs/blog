@@ -34,3 +34,16 @@ watcher, use `make generate` for `.templ` changes and `make css` for changes to
 
 Site metadata is defined once in `internal/siteinfo/config.go`. Deployments can
 override it with `SITE_NAME`, `SITE_TAGLINE`, `SITE_URL`, and `SITE_LANGUAGE`.
+
+## Cloudflare Workers
+
+The production site is a static export served by Workers Static Assets.
+
+```sh
+npm run deploy:dry-run
+npm run deploy
+```
+
+`wrangler.jsonc` points Workers at `dist`. The deploy scripts rebuild the CSS
+and static HTML before uploading, and the exporter writes the Worker `_headers`
+rules into the output directory.
