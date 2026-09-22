@@ -1,102 +1,115 @@
 package views
 
 import (
-"time"
-"github.com/templui/templui/components/button"
-"mattjs.me/internal/siteinfo"
+	"mattjs.me/internal/siteinfo"
+	"time"
 )
 
 var (
-siteConfig = siteinfo.Current
-siteName = siteConfig.Name
-siteTagline = siteConfig.Tagline
+	siteConfig  = siteinfo.Current
+	siteName    = siteConfig.Name
+	siteTagline = siteConfig.Tagline
 )
 
 type SEO struct {
-Title string
-Description string
-Path string
-Article bool
-Published time.Time
+	Title       string
+	Description string
+	Path        string
+	Article     bool
+	Published   time.Time
 }
 
 templ Layout(seo SEO) {
-<!doctype html>
-<html lang={ siteConfig.Language }>
+	<!DOCTYPE html>
+	<html lang={ siteConfig.Language }>
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta name="color-scheme" content="dark"/>
+			<meta name="theme-color" content="#101010"/>
+			<title>{ pageTitle(seo.Title) }</title>
+			<meta name="description" content={ description(seo.Description) }/>
+			<link rel="canonical" href={ siteConfig.BaseURL + seo.Path }/>
+			<link rel="icon" href="/assets/favicon.ico" sizes="any"/>
+			<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"/>
+			<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"/>
+			<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+			<link rel="alternate" type="application/rss+xml" title={ siteConfig.Name } href="/rss.xml"/>
+			<meta property="og:title" content={ pageTitle(seo.Title) }/>
+			<meta property="og:description" content={ description(seo.Description) }/>
+			<meta property="og:url" content={ siteConfig.BaseURL + seo.Path }/>
+			<meta property="og:type" content={ ogType(seo.Article) }/>
+			if seo.Article && !seo.Published.IsZero() {
+				<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) }/>
+			}
+			<meta name="twitter:card" content="summary"/>
+			if seo.Path == "/" {
+				<link rel="preload" href="/assets/image/matt.png" as="image" type="image/png" fetchpriority="high"/>
+			}
+			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
+			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
+			<link rel="stylesheet" href="/assets/app.css"/>
+		</head>
+		<body>
+			<a href="#content" class="skip-link">Skip to content</a>
+			{ children... }
+		</body>
+	</html>
+}
 
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>{ pageTitle(seo.Title) }</title>
-	<meta name="description" content={ description(seo.Description) } />
-	<link rel="canonical" href={ siteConfig.BaseURL + seo.Path } />
-		<link rel="icon" href="/assets/favicon.ico" sizes="any" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-	<link rel="alternate" type="application/rss+xml" title={ siteConfig.Name } href="/rss.xml" />
-	<meta property="og:title" content={ pageTitle(seo.Title) } />
-	<meta property="og:description" content={ description(seo.Description) } />
-	<meta property="og:url" content={ siteConfig.BaseURL + seo.Path } />
-	<meta property="og:type" content={ ogType(seo.Article) } />
-	if seo.Article && !seo.Published.IsZero() {
-	<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) } />
-	}
-	<meta name="twitter:card" content="summary" />
-	if seo.Path == "/" {
-	<link rel="preload" href="/assets/image/matt.png" as="image" type="image/png" fetchpriority="high" />
-	}
-	<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf" as="font" type="font/ttf"
-		crossorigin="anonymous" />
-	<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf" as="font" type="font/ttf"
-		crossorigin="anonymous" />
-	<link rel="stylesheet" href="/assets/app.css" />
-	<script>
-		(function () { try { var p = localStorage.getItem('themePreference') || 'system'; var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } catch (e) { } })()
-	</script>
-</head>
-
-<body>
-	{ children... }
-	<div class="fixed right-4 top-4">
-		@button.Button(button.Props{
-		Variant: button.VariantGhost,
-		Size: button.SizeIcon,
-			Class: "flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
-		Attributes: templ.Attributes{"data-theme-switcher": "true", "aria-label": "Toggle theme"},
-		}) {
-		<svg class="size-4 dark:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-			stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-			<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
-		</svg>
-		<svg class="hidden size-4 dark:block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-			stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-			<circle cx="12" cy="12" r="4"></circle>
-			<path
-				d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41">
-			</path>
-		</svg>
+templ arrow(external bool) {
+	<svg class="row-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		if external {
+			<path d="M4 12 12 4M4 4h8v8"></path>
+		} else {
+			<path d="M3 8h10M9 4l4 4-4 4"></path>
 		}
-	</div>
-	<script>
-			(function () { function pref() { return localStorage.getItem('themePreference') || 'system' } function apply() { var p = pref(); var d = p === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : p === 'dark'; document.documentElement.classList.toggle('dark', d) } document.addEventListener('click', function (e) { var b = e.target.closest('[data-theme-switcher]'); if (!b) return; var p = pref(); var d = document.documentElement.classList.contains('dark'); localStorage.setItem('themePreference', p === 'system' ? (d ? 'light' : 'dark') : (p === 'light' ? 'dark' : 'light')); apply() }); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (pref() === 'system') apply() }) })()
-	</script>
-</body>
+	</svg>
+}
 
-</html>
+templ socialLinks() {
+	<nav class="social" aria-label="Social links">
+		<a href="https://github.com/0mjs" target="_blank" rel="noopener">GitHub</a>
+		<a href="https://x.com/0mjs_" target="_blank" rel="noopener">X</a>
+		<a href="/rss.xml">RSS</a>
+	</nav>
+}
+
+templ pageNav(back, label string) {
+	<nav class="page-nav" aria-label="Page navigation">
+		<a class="home-link" href="/">
+			<img class="nav-avatar" src="/assets/image/matt.png" alt="" width="28" height="28"/>
+			<span>{ siteName }</span>
+		</a>
+		<a class="back-link" href={ templ.SafeURL(back) }>{ label }</a>
+	</nav>
+}
+
+templ footer() {
+	<footer class="footer">
+		<details class="colophon">
+			<summary>Built with</summary>
+			<p><a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener">Zinc</a>, <a href="https://github.com/a-h/templ" target="_blank" rel="noopener">templ</a>, <a href="https://github.com/templui/templui" target="_blank" rel="noopener">templui</a> &amp; <a href="https://github.com/yuin/goldmark" target="_blank" rel="noopener">Goldmark</a>.</p>
+		</details>
+		<span>© { time.Now().Format("2006") }</span>
+	</footer>
 }
 
 func pageTitle(title string) string {
-if title == "" || title == siteConfig.Name { return siteConfig.Name }
-return title + " - " + siteConfig.Name
+	if title == "" || title == siteConfig.Name {
+		return siteConfig.Name
+	}
+	return title + " - " + siteConfig.Name
 }
-
 func description(value string) string {
-if value == "" { return siteConfig.Tagline }
-return value
+	if value == "" {
+		return siteConfig.Tagline
+	}
+	return value
 }
-
 func ogType(article bool) string {
-if article { return "article" }
-return "website"
+	if article {
+		return "article"
+	}
+	return "website"
 }

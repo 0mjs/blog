@@ -1,78 +1,54 @@
 package views
 
-import (
-"time"
-"mattjs.me/internal/model"
-"github.com/templui/templui/components/avatar"
-)
+import "mattjs.me/internal/model"
 
 templ Home(posts []*model.Post, projects []model.Project) {
-@Layout(SEO{Path: "/"}) {
-<main class="min-h-screen px-6 py-12 sm:py-16">
-	<div class="mx-auto max-w-lg">
-		<header class="flex flex-col items-center text-center">
-			@avatar.Avatar(avatar.Props{Class: "size-30 overflow-hidden rounded-full bg-brand"}) {
-				@avatar.Image(avatar.ImageProps{Src: "/assets/image/matt.png", Alt: siteName, Class: "size-full object-cover", Attributes: templ.Attributes{"loading": "eager", "fetchpriority": "high", "decoding": "async", "width": "120", "height": "120"}})
+	@Layout(SEO{Path: "/"}) {
+		<main class="shell home-shell" id="content">
+			<header>
+				<div class="profile">
+					<img class="profile-avatar" src="/assets/image/matt.png" alt={ siteName } width="64" height="64" fetchpriority="high" decoding="async"/>
+					<div class="profile-copy">
+						<h1>{ siteName }</h1>
+						<p class="tagline">{ siteTagline }</p>
+					</div>
+				</div>
+				@socialLinks()
+			</header>
+			<section class="section projects-section" aria-labelledby="projects-title">
+				<div class="section-head"><h2 id="projects-title">Projects</h2></div>
+				<ul class="rows project-rows">
+					for _, project := range projects {
+						<li>
+							<a class="row" href={ templ.SafeURL(project.URL) } target="_blank" rel="noopener">
+								<span class="project-symbol" aria-hidden="true">{ project.Name[:1] }</span>
+								<span class="row-copy">
+									<span class="row-title">{ project.Name }</span>
+									<span class="row-description">{ project.Description }</span>
+								</span>
+								@arrow(true)
+							</a>
+						</li>
+					}
+				</ul>
+			</section>
+			if len(posts) > 0 {
+				<section class="section writing-section" aria-labelledby="writing-title">
+					<div class="section-head"><h2 id="writing-title">Writing</h2><a href="/blog">All writing</a></div>
+					<ul class="rows writing-rows">
+						for _, post := range posts {
+							<li>
+								<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
+									<span class="row-copy"><span class="row-title">{ post.Title }</span></span>
+									<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
+									@arrow(false)
+								</a>
+							</li>
+						}
+					</ul>
+				</section>
 			}
-			<h1 class="mt-6 text-2xl font-medium tracking-tight">{ siteName }</h1>
-			<p class="mt-1.5 text-muted-foreground">{ siteTagline }</p>
-			<nav class="mt-6 flex justify-center gap-4 text-sm" aria-label="Social links">
-				<a class="group flex gap-1.5" href="https://github.com/0mjs" target="_blank" rel="noopener"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">github</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
-				<a class="group flex gap-1.5" href="https://x.com/0mjs_" target="_blank" rel="noopener"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">x</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
-				<a class="group flex gap-1.5" href="/rss.xml"><span class="text-muted-foreground" aria-hidden="true">[</span><span class="transition-colors group-hover:text-brand">rss</span><span class="text-muted-foreground" aria-hidden="true">]</span></a>
-			</nav>
-		</header>
-		<section class="mt-10">
-			@sectionLabel("01", "projects")
-			<ul class="mt-3 space-y-1">
-				for _, project := range projects {
-				@row(project.Name, project.Description, project.URL, true)
-				}
-			</ul>
-		</section>
-		if len(posts) > 0 {
-		<section class="mt-8">
-			@sectionLabel("02", "writing")
-			<ul class="mt-3 space-y-1">
-				for _, post := range posts {
-				@row(post.Date.Format("Jan 2006"), post.Title, "/blog/" + post.Slug, false)
-				}
-			</ul>
-			<div class="mt-4 text-right"><a href="/blog" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand"><span>all writing</span><span aria-hidden="true">→</span></a></div>
-		</section>
-		}
-		<footer class="mt-12 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-			<span class="group/build inline-flex items-center whitespace-nowrap">
-				<span>built with</span>
-				<span class="ml-2 inline-flex overflow-hidden whitespace-nowrap sm:ml-0 sm:max-w-0 sm:opacity-0 sm:transition-[max-width,opacity,margin] sm:duration-300 sm:ease-out sm:group-hover/build:ml-2 sm:group-hover/build:max-w-sm sm:group-hover/build:opacity-100 sm:group-focus-within/build:ml-2 sm:group-focus-within/build:max-w-sm sm:group-focus-within/build:opacity-100 motion-reduce:transition-none">
-					<a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener" class="transition-colors hover:text-[#AFC1FF]">zinc</a>,&nbsp;<a href="https://github.com/a-h/templ" target="_blank" rel="noopener" class="transition-colors hover:text-[#DBBD30]">templ</a>,&nbsp;<a href="https://github.com/templui/templui" target="_blank" rel="noopener" class="transition-colors hover:text-[#02ADD8]">templui</a>,&nbsp;<a href="https://github.com/yuin/goldmark" target="_blank" rel="noopener" class="transition-colors hover:text-[#B8B8B8]">goldmark</a>
-				</span>
-			</span>
-			<span class="sm:text-right">© { time.Now().Format("2006") }</span>
-		</footer>
-	</div>
-</main>
-}
-}
-
-templ sectionLabel(number, name string) {
-<div class="flex items-baseline gap-3">
-	<span class="text-xs text-brand">{ number }</span>
-	<h2 class="text-xs tracking-[0.16em] text-muted-foreground">{ name }</h2>
-</div>
-}
-
-templ row(lead, rest, href string, external bool) {
-<li>
-	<a href={ templ.SafeURL(href) } if external { target="_blank" rel="noopener" }
-		class="group flex flex-col gap-0.5 py-2.5 sm:flex-row sm:items-baseline sm:gap-6">
-		if external {
-		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:shrink-0">{ lead }</span>
-		<span class="text-muted-foreground sm:ml-auto sm:text-right">{ rest }</span>
-		} else {
-		<time class="text-muted-foreground sm:shrink-0">{ lead }</time>
-		<span class="font-medium lowercase transition-colors group-hover:text-brand sm:ml-auto sm:text-right">{ rest }</span>
-		}
-	</a>
-</li>
+			@footer()
+		</main>
+	}
 }

@@ -1,111 +1,99 @@
 package views
 
 import (
-	"strconv"
 	"mattjs.me/internal/model"
+	"strconv"
 )
 
 templ BlogList(posts []*model.Post) {
 	@Layout(SEO{Title: "All writing", Description: "Writing by " + siteName + ".", Path: "/blog"}) {
-		<main class="min-h-screen px-6 py-16 sm:py-24">
-			<div class="mx-auto max-w-2xl">
-				<header class="grid grid-cols-[1fr_auto_1fr] items-center border-b pb-5">
-					<a href="/" class="justify-self-start text-sm text-muted-foreground transition-colors hover:text-brand">← home</a>
-					<h1 class="text-sm font-medium tracking-[0.12em]">all writing</h1>
-					<span class="justify-self-end text-xs text-muted-foreground">{ formatPostCount(len(posts)) }</span>
-				</header>
-				if len(posts) == 0 {
-					<p class="py-12 text-center text-muted-foreground">Nothing here yet.</p>
-				} else {
-					<div class="divide-y">
-						for _, post := range posts {
-							@postCard(post)
-						}
-					</div>
-				}
-			</div>
+		<main class="shell archive-shell" id="content">
+			@pageNav("/", "Home")
+			<header class="page-heading">
+				<h1>Writing</h1>
+				<p class="count">{ formatPostCount(len(posts)) }</p>
+			</header>
+			@postList(posts)
+			@footer()
 		</main>
 	}
 }
 
 templ BlogListByTag(posts []*model.Post, tag string) {
 	@Layout(SEO{Title: "Posts tagged: " + tag, Description: "Blog posts tagged with " + tag, Path: "/blog/tag/" + tag}) {
-		<main class="min-h-screen px-6 py-16 sm:py-24">
-			<div class="mx-auto max-w-2xl">
-				<header class="grid grid-cols-[1fr_auto_1fr] items-center border-b pb-5">
-					<a href="/blog" class="justify-self-start text-sm text-muted-foreground transition-colors hover:text-brand">← writing</a>
-					<h1 class="text-sm font-medium tracking-[0.12em]">#{ tag }</h1>
-					<span class="justify-self-end text-xs text-muted-foreground">{ formatPostCount(len(posts)) }</span>
-				</header>
-				if len(posts) == 0 {
-					<p class="py-12 text-center text-muted-foreground">Nothing with this tag yet.</p>
-				} else {
-					<div class="divide-y">
-						for _, post := range posts {
-							@postCard(post)
-						}
-					</div>
-				}
-			</div>
+		<main class="shell archive-shell" id="content">
+			@pageNav("/blog", "All writing")
+			<header class="page-heading">
+				<h1>#{ tag }</h1>
+				<p class="count">{ formatPostCount(len(posts)) }</p>
+			</header>
+			@postList(posts)
+			@footer()
 		</main>
 	}
 }
 
-templ postCard(post *model.Post) {
-	<article class="group py-6 sm:py-7">
-		<a href={ templ.SafeURL("/blog/" + post.Slug) } class="grid gap-2 sm:grid-cols-[7rem_1fr_auto] sm:items-baseline sm:gap-6">
-			<time datetime={ post.Date.Format("2006-01-02") } class="text-xs text-muted-foreground">{ post.Date.Format("2006.01.02") }</time>
-			<div>
-				<h2 class="font-medium lowercase transition-colors group-hover:text-brand">{ post.Title }</h2>
-				<p class="mt-1 text-muted-foreground">{ post.Subtitle }</p>
-			</div>
-			<span class="text-xs text-muted-foreground sm:text-right">{ formatReadTime(post.ReadTime) }</span>
-		</a>
-		if len(post.Tags) > 0 {
-			<div class="mt-3 flex flex-wrap gap-3 sm:ml-[8.5rem]">
-				for _, tag := range post.Tags {
-					<a href={ templ.SafeURL("/blog/tag/" + tag) } class="text-xs text-muted-foreground transition-colors hover:text-brand">#{ tag }</a>
-				}
-			</div>
-		}
-	</article>
+templ postList(posts []*model.Post) {
+	if len(posts) == 0 {
+		<p class="empty">Nothing here yet.</p>
+	} else {
+		<div class="archive">
+			for _, post := range posts {
+				<article class="archive-row">
+					<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
+						<div class="row-copy">
+							<h2 class="row-title">{ post.Title }</h2>
+							<p class="row-description">{ post.Subtitle }</p>
+						</div>
+						<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
+						@arrow(false)
+					</a>
+					<div class="tags">
+						<span>{ formatReadTime(post.ReadTime) }</span>
+						for _, tag := range post.Tags {
+							<a href={ templ.SafeURL("/blog/tag/" + tag) }>#{ tag }</a>
+						}
+					</div>
+				</article>
+			}
+		</div>
+	}
 }
 
 templ BlogPost(post *model.Post) {
 	@Layout(SEO{Title: post.Title, Description: post.Subtitle, Path: "/blog/" + post.Slug, Article: true, Published: post.Date}) {
-		<main class="min-h-screen px-6 py-16 sm:py-24">
-			<article class="mx-auto max-w-2xl">
-				<nav class="flex items-center justify-between text-sm">
-					<a href="/blog" class="text-muted-foreground transition-colors hover:text-brand">← all writing</a>
-					<a href="/" class="text-muted-foreground transition-colors hover:text-brand">home</a>
-				</nav>
-				<header class="mx-auto mb-12 mt-14 max-w-xl text-center sm:mb-16 sm:mt-20">
-					<div class="flex items-center justify-center gap-3 text-xs text-muted-foreground">
+		<main class="shell article-shell" id="content">
+			@pageNav("/blog", "All writing")
+			<article>
+				<header class="article-heading">
+					<div class="article-meta">
 						<time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time>
-						<span aria-hidden="true">/</span>
+						<span aria-hidden="true">·</span>
 						<span>{ formatReadTime(post.ReadTime) }</span>
 					</div>
-					<h1 class="mt-5 text-2xl font-medium lowercase tracking-tight sm:text-3xl">{ post.Title }</h1>
-					<p class="mx-auto mt-3 max-w-lg text-muted-foreground">{ post.Subtitle }</p>
-					if len(post.Tags) > 0 {
-						<div class="mt-4 flex flex-wrap justify-center gap-3 text-xs">
-							for _, tag := range post.Tags {
-								<a href={ templ.SafeURL("/blog/tag/" + tag) } class="text-muted-foreground transition-colors hover:text-brand">#{ tag }</a>
-							}
-						</div>
-					}
-					<div class="mx-auto mt-8 h-px w-12 bg-border"></div>
+					<h1>{ post.Title }</h1>
+					<p class="article-subtitle">{ post.Subtitle }</p>
+					<div class="tags">
+						for _, tag := range post.Tags {
+							<a href={ templ.SafeURL("/blog/tag/" + tag) }>#{ tag }</a>
+						}
+					</div>
 				</header>
-				<div class="prose mx-auto max-w-[65ch]">@templ.Raw(post.HTML)</div>
-				<footer class="mt-20 border-t pt-6 text-center"><a href="/blog" class="text-sm text-muted-foreground transition-colors hover:text-brand">all writing ↑</a></footer>
+				<div class="prose">@templ.Raw(post.HTML)
+</div>
+				<footer class="article-footer">
+					<a href="/blog">← All writing</a>
+					<a href="#content">Back to top ↑</a>
+				</footer>
 			</article>
 		</main>
 	}
 }
 
 func formatReadTime(minutes int) string { return strconv.Itoa(minutes) + " min read" }
-
 func formatPostCount(count int) string {
-	if count == 1 { return "1 entry" }
+	if count == 1 {
+		return "1 entry"
+	}
 	return strconv.Itoa(count) + " entries"
 }
