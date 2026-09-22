@@ -22,6 +22,7 @@ import (
 var Projects = []model.Project{
 	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh"},
 	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit"},
+	{Name: "quitshark", Description: "quit nicotine app", URL: "https://quitshark.app"},
 }
 
 // NewApp constructs the blog's shared HTTP handler for local and serverless use.

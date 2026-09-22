@@ -22,7 +22,7 @@
   --surface: #19191d;
   --hover: #202025;
   --line: #29292f;
-  --brand: #ff847a;
+  --brand: #f04436;
   --color-brand: var(--brand);
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -49,7 +49,7 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
 .section-head h2 { font-size: .8125rem; font-weight: 400; color: var(--muted); }
 .section-head > a { color: var(--muted); font-size: .8125rem; }
-.section-head > a:hover { color: var(--foreground); }
+.section-head > a:hover { color: var(--brand); }
 .rows { list-style: none; margin: 0; padding: 0; min-width: 0; }
 .row { position: relative; display: flex; align-items: center; gap: 1rem; min-height: 3.6rem; padding: .8rem 0; }
 .row-copy { flex: 1; min-width: 0; }
@@ -120,7 +120,7 @@ svg { width: 1rem; height: 1rem; flex: none; }
 }
 
 /* Studio: one softly machined surface, only functional detail. */
-:root { --background: #101010; --foreground: #e9e7e3; --muted: #aba7a0; --faint: #95918a; --surface: #232220; --hover: #292724; --line: #34312d; --brand: #e7b88e; }
+:root { --background: #101010; --foreground: #e9e7e3; --muted: #aba7a0; --faint: #95918a; --surface: #232220; --hover: #292724; --line: #34312d; }
 .shell { max-width: 33rem; }
 .home-shell { background: #1b1a18; border: 1px solid #ffffff0a; border-radius: 1.75rem; margin-top: clamp(2rem, 7vh, 5rem); padding: 2.5rem; box-shadow: 0 18px 70px #00000020, inset 0 1px 0 #ffffff04; margin-bottom: 3rem; }
 .profile { flex-direction: column; gap: 1.2rem; text-align: center; }
