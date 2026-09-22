@@ -3,5 +3,6 @@
 /bin/
 /dist/
 /node_modules/
+/.wrangler/
 /tmp/
 *.log
