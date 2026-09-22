@@ -2,6 +2,7 @@
   "name": "mattjs-blog",
   "private": true,
   "scripts": {
+    "favicon": "sh scripts/generate-favicons.sh",
     "css": "tailwindcss -i ./assets/css/input.css -o ./public/app.css --minify",
     "css:watch": "tailwindcss -i ./assets/css/input.css -o ./public/app.css --watch",
     "build:static": "npm run css && go run ./cmd/export",

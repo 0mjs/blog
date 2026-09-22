@@ -1,11 +1,16 @@
 package main
 
 import (
+	"crypto/sha256"
 	"encoding/xml"
+	"fmt"
+	"image/png"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	publicfs "mattjs.me/public"
 )
 
 func TestRoutes(t *testing.T) {
@@ -105,7 +110,7 @@ func TestHomepageImageIsPreloadedAndCached(t *testing.T) {
 
 	home := httptest.NewRecorder()
 	app.ServeHTTP(home, httptest.NewRequest(http.MethodGet, "/", nil))
-	if !strings.Contains(home.Body.String(), `rel="preload" href="/assets/image/matt.png" as="image"`) {
+	if !strings.Contains(home.Body.String(), `rel="preload" href="`+versionedAsset(t, "image/matt.png")+`" as="image"`) {
 		t.Fatal("homepage does not preload matt.png")
 	}
 
@@ -113,5 +118,56 @@ func TestHomepageImageIsPreloadedAndCached(t *testing.T) {
 	app.ServeHTTP(image, httptest.NewRequest(http.MethodGet, "/assets/image/matt.png", nil))
 	if got := image.Header().Get("Cache-Control"); got != "public, max-age=86400, stale-while-revalidate=604800" {
 		t.Fatalf("image Cache-Control=%q", got)
+	}
+}
+
+func versionedAsset(t *testing.T, name string) string {
+	t.Helper()
+	data, err := publicfs.FS.ReadFile(name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	hash := sha256.Sum256(data)
+	return fmt.Sprintf("/assets/%s?v=%x", name, hash[:8])
+}
+
+func TestVersionedAssetsAndFavicons(t *testing.T) {
+	app, err := newApp()
+	if err != nil {
+		t.Fatal(err)
+	}
+	home := httptest.NewRecorder()
+	app.ServeHTTP(home, httptest.NewRequest(http.MethodGet, "/", nil))
+	for _, asset := range []struct {
+		name string
+		size int
+	}{
+		{"app.css", 0},
+		{"image/matt.png", 1254},
+		{"favicon.ico", 0},
+		{"favicon-16x16.png", 16},
+		{"favicon-32x32.png", 32},
+		{"apple-touch-icon.png", 180},
+	} {
+		t.Run(asset.name, func(t *testing.T) {
+			url := versionedAsset(t, asset.name)
+			if !strings.Contains(home.Body.String(), `"`+url+`"`) {
+				t.Fatalf("homepage missing versioned asset %s", url)
+			}
+			response := httptest.NewRecorder()
+			app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, url, nil))
+			if response.Code != http.StatusOK {
+				t.Fatalf("asset status=%d", response.Code)
+			}
+			if asset.size > 0 {
+				config, err := png.DecodeConfig(response.Body)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if config.Width != asset.size || config.Height != asset.size {
+					t.Fatalf("image is %dx%d, want %dx%d", config.Width, config.Height, asset.size, asset.size)
+				}
+			}
+		})
 	}
 }

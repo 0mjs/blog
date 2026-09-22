@@ -30,10 +30,10 @@ templ Layout(seo SEO) {
 			<title>{ pageTitle(seo.Title) }</title>
 			<meta name="description" content={ description(seo.Description) }/>
 			<link rel="canonical" href={ siteConfig.BaseURL + seo.Path }/>
-			<link rel="icon" href="/assets/favicon.ico" sizes="any"/>
-			<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"/>
-			<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"/>
-			<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/>
+			<link rel="icon" href={ faviconURL } sizes="16x16 32x32 48x48"/>
+			<link rel="icon" type="image/png" sizes="32x32" href={ favicon32URL }/>
+			<link rel="icon" type="image/png" sizes="16x16" href={ favicon16URL }/>
+			<link rel="apple-touch-icon" sizes="180x180" href={ appleTouchIconURL }/>
 			<link rel="alternate" type="application/rss+xml" title={ siteConfig.Name } href="/rss.xml"/>
 			<meta property="og:title" content={ pageTitle(seo.Title) }/>
 			<meta property="og:description" content={ description(seo.Description) }/>
@@ -44,11 +44,11 @@ templ Layout(seo SEO) {
 			}
 			<meta name="twitter:card" content="summary"/>
 			if seo.Path == "/" {
-				<link rel="preload" href="/assets/image/matt.png" as="image" type="image/png" fetchpriority="high"/>
+				<link rel="preload" href={ avatarURL } as="image" type="image/png" fetchpriority="high"/>
 			}
 			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
 			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
-			<link rel="stylesheet" href="/assets/app.css"/>
+			<link rel="stylesheet" href={ stylesheetURL }/>
 		</head>
 		<body>
 			<a href="#content" class="skip-link">Skip to content</a>
@@ -78,7 +78,7 @@ templ socialLinks() {
 templ pageNav(back, label string) {
 	<nav class="page-nav" aria-label="Page navigation">
 		<a class="home-link" href="/">
-			<img class="nav-avatar" src="/assets/image/matt.png" alt="" width="28" height="28"/>
+			<img class="nav-avatar" src={ avatarURL } alt="" width="28" height="28"/>
 			<span>{ siteName }</span>
 		</a>
 		<a class="back-link" href={ templ.SafeURL(back) }>{ label }</a>

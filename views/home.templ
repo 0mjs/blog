@@ -7,7 +7,7 @@ templ Home(posts []*model.Post, projects []model.Project) {
 		<main class="shell home-shell" id="content">
 			<header>
 				<div class="profile">
-					<img class="profile-avatar" src="/assets/image/matt.png" alt={ siteName } width="64" height="64" fetchpriority="high" decoding="async"/>
+					<img class="profile-avatar" src={ avatarURL } alt={ siteName } width="64" height="64" fetchpriority="high" decoding="async"/>
 					<div class="profile-copy">
 						<h1>{ siteName }</h1>
 						<p class="tagline">{ siteTagline }</p>

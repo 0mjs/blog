@@ -32,6 +32,10 @@ watcher, use `make generate` for `.templ` changes and `make css` for changes to
 
 ## Configuration
 
+Favicons are exported directly from `public/image/matt.png`. After replacing the
+headshot, run `npm run favicon` (requires ImageMagick). The icon, portrait, and
+stylesheet URLs are content-versioned automatically to refresh browser caches.
+
 Site metadata is defined once in `internal/siteinfo/config.go`. Deployments can
 override it with `SITE_NAME`, `SITE_TAGLINE`, `SITE_URL`, and `SITE_LANGUAGE`.
 
