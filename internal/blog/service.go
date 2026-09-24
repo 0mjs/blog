@@ -3,16 +3,20 @@ package blog
 import (
 	"bytes"
 	"fmt"
+	"html"
 	"io/fs"
 	"regexp"
 	"sort"
 	"strings"
 	"time"
 
+	chromahtml "github.com/alecthomas/chroma/v2/formatters/html"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	goldmarkhtml "github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/util"
 	"go.abhg.dev/goldmark/frontmatter"
 	"mattjs.me/internal/model"
 )
@@ -38,7 +42,12 @@ var markup = regexp.MustCompile(`(?s)<[^>]*>|!\[[^]]*\]\([^)]*\)|\[([^]]+)\]\([^
 func New(content fs.FS) (*Service, error) {
 	service := &Service{
 		markdown: goldmark.New(
-			goldmark.WithExtensions(extension.GFM, extension.Footnote, extension.Typographer, &frontmatter.Extender{}),
+			goldmark.WithExtensions(extension.GFM, extension.Footnote, extension.Typographer, &frontmatter.Extender{},
+				highlighting.NewHighlighting(
+					highlighting.WithFormatOptions(chromahtml.WithClasses(true)),
+					highlighting.WithWrapperRenderer(codeBlock),
+				),
+			),
 			goldmark.WithParserOptions(parser.WithAutoHeadingID()),
 			goldmark.WithRendererOptions(goldmarkhtml.WithUnsafe()),
 		),
@@ -62,6 +71,26 @@ func New(content fs.FS) (*Service, error) {
 	}
 	sort.Slice(service.posts, func(i, j int) bool { return service.posts[i].Date.After(service.posts[j].Date) })
 	return service, nil
+}
+
+// codeBlock wraps each fenced block so the page can label it with its language.
+// Highlighting uses CSS classes; the token colours live in assets/css/input.css.
+func codeBlock(w util.BufWriter, c highlighting.CodeBlockContext, entering bool) {
+	if entering {
+		_, _ = w.WriteString(`<div class="code"`)
+		if lang, ok := c.Language(); ok && len(lang) > 0 {
+			_, _ = w.WriteString(` data-lang="` + html.EscapeString(string(lang)) + `"`)
+		}
+		_, _ = w.WriteString(">")
+		if !c.Highlighted() {
+			_, _ = w.WriteString("<pre><code>")
+		}
+		return
+	}
+	if !c.Highlighted() {
+		_, _ = w.WriteString("</code></pre>")
+	}
+	_, _ = w.WriteString("</div>\n")
 }
 
 func (s *Service) Posts() []*model.Post {

@@ -17,4 +17,6 @@ type Project struct {
 	Name        string
 	Description string
 	URL         string
+	State       string // "live" or "wip"
+	Stage       string // e.g. "early", "pre-1.0"
 }

@@ -10,6 +10,8 @@ import (
 var (
 	stylesheetURL     = assetURL("app.css")
 	avatarURL         = assetURL("image/matt.png")
+	avatarScriptURL   = assetURL("js/avatar.js")
+	bytesScriptURL    = assetURL("js/bytes.js")
 	faviconURL        = assetURL("favicon.ico")
 	favicon32URL      = assetURL("favicon-32x32.png")
 	favicon16URL      = assetURL("favicon-16x16.png")

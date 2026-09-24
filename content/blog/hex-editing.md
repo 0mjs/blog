@@ -9,90 +9,90 @@
 }
 ---
 
-As I get older, memories from being a youngster seem to show up at random.
+Random memories from when I was a kid keep popping into my head lately. Must be an age thing.
 
-This one was about messing with Xbox 360 saves. I must've been 11 or 12.
+This one's about messing with Xbox 360 saves. I'd have been 11 or 12.
 
-I loved that console. By the end of the generation, my Microsoft account reckoned I'd owned six of them, which feels less excessive if you remember the Red Ring of Death. My dad and I did the towel trick more than once: wrap a dead Xbox in a towel, make it far too hot, then hope the dodgy connection inside woke up long enough for another few days of play. It was a terrible idea. We did it anyway.
+I loved that console. By the end of that generation my Microsoft account reckoned I'd owned six of them, which sounds mad until you remember the Red Ring of Death was a thing. Me and my dad did the towel trick more than once. If you've never heard of it, you wrapped a dead Xbox in a towel, let it basically cook itself, and hoped whatever had come loose inside would stick back down long enough to get a few more days out of it. Stupid idea. Worked sometimes, though.
 
-It was the generation that got me properly into games.
+That was the generation that got me properly into games.
 
-I remember bringing _Call of Duty 4: Modern Warfare_ home after pleading with my parents in Abbeycentre. Looking back, I probably shouldn't have been playing it. They were a bit more lenient and blissfully unaware back then. I got to experience it all and it didn't do me a bit of harm.
+I remember bringing _Call of Duty 4: Modern Warfare_ home after begging my parents in Abbeycentre. I definitely shouldn't have been playing it at that age, but parents were a bit more lenient back then (or just had no idea what was in it), and I turned out fine.
 
-...or so I think.
+Mostly.
 
-Then came _Call of Duty: World at War_. I was obsessed with WWII at the time — _Saving Private Ryan_, documentaries, all of it — so it was basically made for me.
+Then _Call of Duty: World at War_ came out in 2008 and that was it for me. I was obsessed with anything WWII at the time. _Saving Private Ryan_, documentaries, the lot. A Call of Duty set in WWII was more or less made with me in mind.
 
-At school, a few of us would spend breaks comparing campaign progress. One day, the friend furthest through it said he'd finished it and there was a Zombies mode at the end.
+At school a few of us used to compare how far we'd got in the campaign. Then one day the guy furthest ahead said he'd finished it and there was a zombies mode at the end.
 
-We assumed he was making it up. He wasn't.
+Nobody believed him. Turns out he was telling the truth.
 
-Zombies had this strange, hidden-away feel to it. It was dark, difficult and nothing like the campaign. Before long it was all anybody talked about, and we played it most evenings until somebody's parents put a stop to it (and sent them rightfully to bed, for school the next day).
+Zombies felt like something you weren't supposed to find. It was dark, properly difficult and nothing like the rest of the game, and before long it was all anybody talked about. We played it most nights until somebody's parents pulled the plug and sent them to bed. Fair enough, there was school in the morning.
 
-I was already fairly handy with a laptop or PC for a kid that age. But this was probably the first time I'd looked at a game and been properly intrigued by the idea of breaking its rules.
+## Infinite ammo
 
-The first tutorial I followed was not one of the massive Zombies mod menus. It was for infinite ammo in the campaign.
+I was already fairly handy on a computer for a kid. But I think this was the first time I looked at a game and wondered if I could make it do stuff it wasn't meant to.
 
-I copied a save to a USB stick, opened it on the family laptop, extracted `savegame.svg`, then opened it in a hex editor. The actual setting was almost disappointingly small:
+The first tutorial I followed wasn't anything fancy. It was infinite ammo for the campaign.
+
+Copy the save onto a USB stick, plug it into the family laptop, pull `savegame.svg` out, open it in a hex editor. Then go hunting for this:
 
 ```text
 player_sustainAmmo 1
 ```
 
-That `1` told the game not to take ammo away when I fired. I remember huge values like `999999` floating around in other tutorials, probably for health or jump height, but infinite ammo was just a switch.
+That was it. A single `1`. Turn it on and the game stops taking bullets off you when you shoot. Other tutorials had huge numbers like `999999` floating around for health and all sorts, but infinite ammo was just a switch.
 
-The clever bit is that the hex editor was not showing some secret ammo language. It was showing the same text as bytes. In ASCII, the start of `player_sustainAmmo 1` looks like this:
+Put the save back on the Xbox, load it up, and... it worked. I couldn't believe it.
 
-```text
+## What I was actually looking at
+
+I had no clue what I was doing at the time, which is kind of the best part looking back.
+
+A hex editor shows you a file as raw bytes. Hex on one side, and whatever those bytes are as text on the other. So `player_sustainAmmo 1` looked something like this:
+
+```hex
 70 6C 61 79 65 72 5F 73 75 73 74 61 69 6E 41 6D 6D 6F 20 31
  p  l  a  y  e  r  _  s  u  s  t  a  i  n  A  m  m  o     1
 ```
 
-Each pair is one byte. `70` is the letter `p`; `31` is the character `1`. The editor showed both columns, but I had no idea at the time that they were just two ways of looking at the same data.
+Every pair is one byte. `70` is a `p`, `31` is the character `1`. The editor was showing me the same data twice and I thought the numbers on the left were some sort of secret code.
 
-`player_sustainAmmo` was a setting the game already knew about — one of its developer variables, or dvars. The save file contained a name and a value; when the game loaded it, it treated `1` as enabled. I wasn't adding infinite ammo to _World at War_. I was finding a switch that Treyarch had already built and leaving it on.
+And `player_sustainAmmo` wasn't something I'd added. It was one of the game's own developer variables (dvars), a setting Treyarch had built in for themselves, and the save just had it written down. I wasn't really hacking in infinite ammo. I'd found a switch that was already there and left it on.
 
-That tiny discovery connected a lot of dots without me realising. A save was not just a mysterious blob: it had a format. Hex was not a weird programming language: it was a way to display bytes. And those bytes could be text, numbers, or something the game used as a setting.
+Numbers were a bit weirder. Later on I'd come across values in saves like `3F 42 0F 00`, which is `999999`, stored backwards. The game reads it as a little-endian integer, meaning the smallest byte goes first. If you didn't know that (I definitely didn't), you'd type your big number in the wrong order and end up with something completely different to what you wanted.
 
-Later I would find actual numbers in saves too. If a four-byte field contains `3F 42 0F 00`, and the game reads it as a little-endian integer, that is `999999` in decimal. Little-endian just means the least-significant byte comes first. But the infinite-ammo tutorial taught me the more useful lesson first: before changing bytes, you need to know what the game thinks they are.
+None of that was going through my head at 12. What I did pick up without knowing it was the loop. Change something in the file, load the game, see what happens, go back and change it again when it inevitably didn't work.
 
-Back in those days I had no idea how to say any of that. I just knew I could change a thing in a file, put the save back on the Xbox, and suddenly never run out of bullets in the campaign.
+I'd call that debugging now. At the time I just thought I was getting one over on Treyarch.
 
-That was enough to get its hooks into me.
+## Modded saves
 
-I started to understand the rhythm of it, even if I had none of the words for it. Change the file. Load the game. See what happened. If it did not work, go back and change something else.
-
-That is debugging, really. I just thought I was getting away with something.
-
-The more advanced stuff came later. I found forums full of custom _World at War_ saves, made by people who had worked out that the game would load configuration strings from the save and run commands it already understood.
-
-Something as simple as this could be enough to start a chain of nonsense:
+Then I found the forums, and people posting their own custom _World at War_ saves. These were a different level. Someone had worked out that the game would read config strings out of a save and run commands it already knew about, so you could chain them together:
 
 ```text
 bind BUTTON_BACK vstr mod2
 mod2 = god; give ray_gun
 ```
 
-`bind` connected a controller button to an action. `vstr` ran another named string. The game already had commands for god mode, noclip and giving you ammo. Somebody had realised that a save file could wire those pieces together.
+`bind` hooks a button up to something, `vstr` runs another string by name, and the game already had commands for god mode, noclip and giving yourself guns. Stack enough of those together and you've got a mod menu. No new code anywhere, just a load of strings and button bindings set up carefully enough to feel like a menu.
 
-That is how the old mod menus worked. They were not new software bolted onto the game. They were a pile of strings and button bindings, arranged carefully enough to feel like a menu.
+Didn't matter to me how it worked. It was magic. I'd jump into a zombies lobby, play it straight for a few rounds, then hit Back and pull out a Ray Gun or walk through a wall. Keeping a straight face was the hard part.
 
-To me, it was still magic. I would join a Zombies lobby, play normally for a few rounds, then hit a button and pull out a Ray Gun or walk straight through a wall. It was difficult to keep a straight face.
-
-There was one last annoying part. Editing the contents made the Xbox save container unhappy, so it had to be rehashed and resigned before it would load again. I treated that as a sacred ritual:
+The one annoying part was getting the Xbox to actually load the thing. Once you'd edited a save the console knew something was up, so it had to be rehashed and resigned before it'd take it. I did it in the same order every single time:
 
 ```text
 edit → rehash → resign → USB → Xbox
 ```
 
-Miss a step and it was back to the laptop.
+Forget one and it's back to the laptop.
 
-Looking back now, it is funny how much was hiding in that little routine. The save had a format. The bytes had an order. The edit had to pass an integrity check. Without realising it, I was doing a small bit of reverse engineering.
+## Looking back
 
-I was not consciously learning any of it. I was a kid trying to get infinite ammo in a game I probably should not have been playing.
+It's funny how much was going on in there when I think about it now. The save had a proper format, numbers were stored backwards, and the console wouldn't touch a file unless its hash and signature checked out. File formats, endianness, integrity checks. I was doing all of it to get infinite ammo in a game I shouldn't have been playing in the first place.
 
-Nearly twenty years later, I ended up hex editing a _Borderlands_ save. The tools are better now and I understand a bit more of what I am looking at, but the feeling was exactly the same: there is some state in a file, the game has rules for reading it, and perhaps those rules can be nudged.
+Nearly twenty years later I ended up hex editing a _Borderlands_ save, and it felt exactly the same. The tools are better and I know a bit more about what I'm looking at, but it's the same buzz.
 
-I did not become a software engineer because I changed a few bytes in an Xbox 360 save. But it was one of the first times a computer stopped feeling like a sealed box.
+I write software for a living now, and I love pretty much anything to do with it. I can't say for sure this is where that started. But whenever I think about how I got into it all, a USB stick, the family laptop and a hex editor are some of the first things that come to mind.
 
-A USB stick and a hex editor were a pretty good introduction, especially when the game started behaving in ways it absolutely should not.
+Good memory, anyway. Sorry, Treyarch.
