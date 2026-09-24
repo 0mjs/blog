@@ -7,10 +7,12 @@ templ Home(posts []*model.Post, projects []model.Project) {
 		<main class="shell home-shell" id="content">
 			<header>
 				<div class="profile">
-					<img class="profile-avatar" src={ avatarURL } alt={ siteName } width="64" height="64" fetchpriority="high" decoding="async"/>
+					<span class="avatar" data-file="matt.png · 256 bytes">
+						<img class="profile-avatar" src={ avatarURL } alt={ siteName } width="104" height="104" fetchpriority="high" decoding="async"/>
+					</span>
 					<div class="profile-copy">
 						<h1>{ siteName }</h1>
-						<p class="tagline">{ siteTagline }</p>
+						<p class="tagline">{ siteTagline }<span class="cursor" aria-hidden="true"></span></p>
 					</div>
 				</div>
 				@socialLinks()
@@ -18,12 +20,17 @@ templ Home(posts []*model.Post, projects []model.Project) {
 			<section class="section projects-section" aria-labelledby="projects-title">
 				<div class="section-head"><h2 id="projects-title">Projects</h2></div>
 				<ul class="rows project-rows">
-					for _, project := range projects {
+					for i, project := range projects {
 						<li>
 							<a class="row" href={ templ.SafeURL(project.URL) } target="_blank" rel="noopener">
-								<span class="project-symbol" aria-hidden="true">{ project.Name[:1] }</span>
+								<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
 								<span class="row-copy">
-									<span class="row-title">{ project.Name }</span>
+									<span class="row-title">
+										{ project.Name }
+										if project.State != "" {
+											<span class="status" data-state={ project.State }>{ project.State }<span class="status-stage">{ project.Stage }</span></span>
+										}
+									</span>
 									<span class="row-description">{ project.Description }</span>
 								</span>
 								@arrow(true)
@@ -36,10 +43,11 @@ templ Home(posts []*model.Post, projects []model.Project) {
 				<section class="section writing-section" aria-labelledby="writing-title">
 					<div class="section-head"><h2 id="writing-title">Writing</h2><a href="/blog">All writing</a></div>
 					<ul class="rows writing-rows">
-						for _, post := range posts {
+						for i, post := range posts {
 							<li>
 								<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
-									<span class="row-copy"><span class="row-title">{ post.Title }</span></span>
+									<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
+									<span class="row-copy"><span class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</span></span>
 									<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
 									@arrow(false)
 								</a>
@@ -50,5 +58,7 @@ templ Home(posts []*model.Post, projects []model.Project) {
 			}
 			@footer()
 		</main>
+		<script src={ avatarScriptURL } defer></script>
+		<script src={ bytesScriptURL } defer></script>
 	}
 }

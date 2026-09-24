@@ -9,6 +9,7 @@ var (
 	siteConfig  = siteinfo.Current
 	siteName    = siteConfig.Name
 	siteTagline = siteConfig.Tagline
+	build       = siteinfo.CurrentBuild
 )
 
 type SEO struct {
@@ -53,6 +54,29 @@ templ Layout(seo SEO) {
 		<body>
 			<a href="#content" class="skip-link">Skip to content</a>
 			{ children... }
+			<script>
+				(() => {
+					const units = [["year", 31536e3], ["month", 2592e3], ["day", 864e2], ["hour", 36e2], ["minute", 60]];
+					const rel = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+					for (const el of document.querySelectorAll("time[data-ago]")) {
+						const secs = (new Date(el.dateTime) - Date.now()) / 1e3;
+						const [unit, size] = units.find(([, size]) => Math.abs(secs) >= size) || ["minute", 60];
+						el.textContent = "built " + (Math.abs(secs) < 60 ? "just now" : rel.format(Math.round(secs / size), unit));
+						el.title = new Date(el.dateTime).toLocaleString();
+					}
+				})();
+				(() => {
+					const code = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+					let at = 0;
+					addEventListener("keydown", (e) => {
+						at = e.key === code[at] ? at + 1 : (e.key === code[0] ? 1 : 0);
+						if (at === code.length) {
+							at = 0;
+							document.documentElement.classList.toggle("god");
+						}
+					});
+				})();
+			</script>
 		</body>
 	</html>
 }
@@ -91,10 +115,24 @@ templ footer() {
 			<summary>Built with</summary>
 			<p><a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener">Zinc</a>, <a href="https://github.com/a-h/templ" target="_blank" rel="noopener">templ</a>, <a href="https://github.com/templui/templui" target="_blank" rel="noopener">templui</a> &amp; <a href="https://github.com/yuin/goldmark" target="_blank" rel="noopener">Goldmark</a>.</p>
 		</details>
-		<span>© { time.Now().Format("2006") }</span>
+		<span class="stamp">
+			if build.Commit != "" {
+				<a href={ templ.SafeURL(build.URL) } target="_blank" rel="noopener" title="Built from this commit">{ commitLabel() }</a>
+				<span aria-hidden="true">·</span>
+				<time datetime={ build.Time.Format(time.RFC3339) } data-ago>{ build.Time.Format("2 Jan 2006") }</time>
+				<span aria-hidden="true">·</span>
+			}
+			© { time.Now().Format("2006") }
+		</span>
 	</footer>
 }
 
+func commitLabel() string {
+	if build.Dirty {
+		return build.Commit + "*"
+	}
+	return build.Commit
+}
 func pageTitle(title string) string {
 	if title == "" || title == siteConfig.Name {
 		return siteConfig.Name

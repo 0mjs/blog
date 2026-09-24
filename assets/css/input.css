@@ -160,3 +160,94 @@ svg { width: 1rem; height: 1rem; flex: none; }
   .writing-rows .row { flex-wrap: wrap; gap: .2rem 1rem; }
   .writing-rows .row-copy { min-width: 11rem; }
 }
+
+/* Hex: the page reads like a save file open in a hex editor. Offsets, a cursor, nothing else. */
+:root { --brand-ink: #101010; }
+.tagline, .section-head h2, .row-date, .article-meta, .footer, .page-nav, .page-heading .count { font-family: var(--mono); }
+.tagline { font-size: .8125rem; letter-spacing: -.01em; }
+.cursor { display: inline-block; width: .55em; height: 1.1em; margin-left: .3em; vertical-align: -.2em; background: var(--brand); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.section-head h2 { text-transform: lowercase; letter-spacing: 0; font-size: .75rem; }
+.section-head h2::before { content: "// "; color: var(--faint); }
+.row-offset { flex: none; align-self: center; padding: .1rem .3rem; margin-left: -.3rem; border-radius: 3px; font: .6875rem/1.4 var(--mono); color: var(--faint); font-variant-numeric: tabular-nums; transition: color 160ms ease, background-color 160ms ease; }
+.row:hover .row-offset, .row:focus-visible .row-offset { background: var(--brand); color: var(--brand-ink); }
+.row-date { font-size: .6875rem; color: var(--faint); }
+.archive-row > .row { align-items: baseline; }
+.archive-row .row-offset { align-self: baseline; }
+.archive-row .tags { padding-left: 2.85rem; }
+.page-heading h1::after { content: "_"; margin-left: .1em; color: var(--brand); animation: blink 1.1s steps(1) infinite; }
+.prose pre { font-family: var(--mono); }
+
+/* ↑↑↓↓←→←→BA */
+.god { --brand: #3dff8a; --brand-ink: #06140b; }
+.god ::selection { background: #1d5c37; }
+.god body::after { content: "god mode: on"; position: fixed; right: 1rem; bottom: 1rem; padding: .35rem .6rem; border: 1px solid var(--brand); border-radius: 4px; font: .6875rem var(--mono); color: var(--brand); background: var(--background); }
+@media (max-width: 480px) {
+  .archive-row .tags { padding-left: 0; }
+}
+
+/* Hex portrait: the headshot decodes from a dump of its own pixels (public/js/avatar.js). */
+.avatar { position: relative; display: block; width: 6.5rem; height: 6.5rem; cursor: crosshair; -webkit-tap-highlight-color: transparent; }
+.avatar .profile-avatar { width: 100%; height: 100%; border-radius: 1.4rem; }
+.avatar canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 1.4rem; background: var(--background); box-shadow: 0 0 0 1px #ffffff0d, 0 6px 24px #00000030; }
+.avatar.is-live img { visibility: hidden; }
+.avatar::after { content: attr(data-file); position: absolute; left: 50%; top: calc(100% + .45rem); translate: -50% 0; white-space: nowrap; font: .625rem var(--mono); color: var(--faint); opacity: 0; transition: opacity 200ms ease; pointer-events: none; }
+.avatar.is-hex::after { opacity: 1; }
+.profile { gap: 1.5rem; }
+.profile .profile-copy { margin-top: .1rem; }
+@media (max-width: 480px) {
+  .avatar { width: 5.75rem; height: 5.75rem; }
+}
+
+/* Code: a labelled block, highlighted server-side by Chroma into these classes. */
+.prose .code { position: relative; }
+.prose .code[data-lang]::before { content: attr(data-lang); position: absolute; top: .55rem; right: .8rem; font: .625rem var(--mono); letter-spacing: .04em; color: var(--faint); text-transform: lowercase; pointer-events: none; }
+.prose .code[data-lang] pre { padding-top: 1.6rem; }
+.prose .code[data-lang="text"]::before, .prose .code[data-lang="plaintext"]::before { content: none; }
+.prose .code[data-lang="text"] pre { padding-top: 1.1rem; }
+.chroma { color: #d8d4cc; }
+.chroma .c, .chroma .c1, .chroma .cm, .chroma .cs, .chroma .ch { color: #7c776f; font-style: italic; }
+.chroma .cp, .chroma .cpf { color: #7c776f; }
+.chroma .k, .chroma .kd, .chroma .kn, .chroma .kr, .chroma .kp, .chroma .kc, .chroma .ow { color: #ff6f61; }
+.chroma .kt, .chroma .nb, .chroma .bp { color: #9ec4b6; }
+.chroma .s, .chroma .s1, .chroma .s2, .chroma .sb, .chroma .sc, .chroma .sd, .chroma .sh, .chroma .si, .chroma .sr, .chroma .ss, .chroma .dl { color: #e0c78f; }
+.chroma .se { color: #f0a07a; }
+.chroma .m, .chroma .mi, .chroma .mf, .chroma .mh, .chroma .mo, .chroma .mb, .chroma .il { color: #f0a07a; }
+.chroma .nf, .chroma .fm, .chroma .nx { color: #f2eee8; }
+.chroma .nt { color: #ff6f61; }
+.chroma .na, .chroma .nv, .chroma .vc, .chroma .vg, .chroma .vi { color: #c3b6e0; }
+.chroma .o, .chroma .p { color: #a39e96; }
+.chroma .gp { color: #ff6f61; user-select: none; }
+.chroma .gd { color: #ff8a80; }
+.chroma .gi { color: #9ec4b6; }
+.chroma .err { color: inherit; }
+.chroma .hl { display: block; background: #ffffff08; }
+
+/* Page transitions: same-origin navigations morph the avatar and post titles between pages. */
+@view-transition { navigation: auto; }
+.avatar, .nav-avatar { view-transition-name: avatar; }
+::view-transition-group(*) { animation-duration: 380ms; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 220ms; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* Project status: a small tag after the name. */
+.status { display: inline-flex; align-items: center; gap: .35rem; margin-left: .55rem; vertical-align: .1em; font: .625rem/1 var(--mono); color: var(--muted); letter-spacing: .02em; }
+.status::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; }
+.status[data-state="live"]::before { background: #6fcf8f; box-shadow: 0 0 0 3px #6fcf8f1f; }
+.status[data-state="wip"]::before { border: 1px solid #e3b25b; }
+.status-stage { color: var(--faint); }
+.status-stage::before { content: "· "; }
+.row:hover .status { color: var(--muted); }
+
+/* Footer build stamp. */
+.stamp { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; }
+.stamp a { color: var(--muted); }
+
+/* Byte field behind the homepage card (public/js/bytes.js). */
+.home-shell { position: relative; isolation: isolate; }
+.byte-field { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 400ms ease; mask-image: radial-gradient(circle var(--r) at var(--x, 50%) var(--y, 50%), #000 0%, #0000 100%); --r: 130px; }
+.byte-field-hot { --r: 46px; }
+.home-shell.is-probing .byte-field { opacity: .28; }
+.home-shell.is-probing .byte-field-hot { opacity: .75; }

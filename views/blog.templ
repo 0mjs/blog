@@ -1,6 +1,7 @@
 package views
 
 import (
+	"fmt"
 	"mattjs.me/internal/model"
 	"strconv"
 )
@@ -38,11 +39,12 @@ templ postList(posts []*model.Post) {
 		<p class="empty">Nothing here yet.</p>
 	} else {
 		<div class="archive">
-			for _, post := range posts {
+			for i, post := range posts {
 				<article class="archive-row">
 					<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
+						<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
 						<div class="row-copy">
-							<h2 class="row-title">{ post.Title }</h2>
+							<h2 class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</h2>
 							<p class="row-description">{ post.Subtitle }</p>
 						</div>
 						<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
@@ -71,7 +73,7 @@ templ BlogPost(post *model.Post) {
 						<span aria-hidden="true">·</span>
 						<span>{ formatReadTime(post.ReadTime) }</span>
 					</div>
-					<h1>{ post.Title }</h1>
+					<h1 style={ postTransition(post.Slug) }>{ post.Title }</h1>
 					<p class="article-subtitle">{ post.Subtitle }</p>
 					<div class="tags">
 						for _, tag := range post.Tags {
@@ -90,6 +92,12 @@ templ BlogPost(post *model.Post) {
 	}
 }
 
+// hexOffset labels list rows like lines in a hex editor: 0x00, 0x10, 0x20…
+func hexOffset(i int) string { return fmt.Sprintf("0x%02X", i*16) }
+// postTransition names a post's title so it morphs between list and article pages.
+func postTransition(slug string) templ.SafeCSS {
+	return templ.SafeCSS("view-transition-name: post-" + slug)
+}
 func formatReadTime(minutes int) string { return strconv.Itoa(minutes) + " min read" }
 func formatPostCount(count int) string {
 	if count == 1 {
