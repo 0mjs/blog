@@ -10,6 +10,7 @@ var (
 	siteName    = siteConfig.Name
 	siteTagline = siteConfig.Tagline
 	build       = siteinfo.CurrentBuild
+	socialImageAlt = "Matt Stevenson's black-and-white portrait on a coral paper background with cream abstract shapes."
 )
 
 type SEO struct {
@@ -40,10 +41,17 @@ templ Layout(seo SEO) {
 			<meta property="og:description" content={ description(seo.Description) }/>
 			<meta property="og:url" content={ siteConfig.BaseURL + seo.Path }/>
 			<meta property="og:type" content={ ogType(seo.Article) }/>
+			<meta property="og:image" content={ siteConfig.BaseURL + socialImageURL }/>
+			<meta property="og:image:type" content="image/jpeg"/>
+			<meta property="og:image:width" content="1200"/>
+			<meta property="og:image:height" content="630"/>
+			<meta property="og:image:alt" content={ socialImageAlt }/>
 			if seo.Article && !seo.Published.IsZero() {
 				<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) }/>
 			}
-			<meta name="twitter:card" content="summary"/>
+			<meta name="twitter:card" content="summary_large_image"/>
+			<meta name="twitter:image" content={ siteConfig.BaseURL + socialImageURL }/>
+			<meta name="twitter:image:alt" content={ socialImageAlt }/>
 			if seo.Path == "/" {
 				<link rel="preload" href={ avatarURL } as="image" type="image/png" fetchpriority="high"/>
 			}

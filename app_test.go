@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/xml"
 	"fmt"
+	"image/jpeg"
 	"image/png"
 	"net/http"
 	"net/http/httptest"
@@ -50,6 +51,44 @@ func TestRoutes(t *testing.T) {
 				t.Fatalf("content-type=%q", recorder.Header().Get("Content-Type"))
 			}
 		})
+	}
+}
+
+func TestSocialPreview(t *testing.T) {
+	app, err := newApp()
+	if err != nil {
+		t.Fatal(err)
+	}
+	imagePath := versionedAsset(t, "image/social-card.jpg")
+	for _, path := range []string{"/", "/blog/gopher-nation"} {
+		response := httptest.NewRecorder()
+		app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, path, nil))
+		for _, tag := range []string{
+			`property="og:image" content="https://mattjs.me` + imagePath + `"`,
+			`name="twitter:image" content="https://mattjs.me` + imagePath + `"`,
+			`name="twitter:card" content="summary_large_image"`,
+			`property="og:image:width" content="1200"`,
+			`property="og:image:height" content="630"`,
+		} {
+			if !strings.Contains(response.Body.String(), tag) {
+				t.Errorf("%s missing %s", path, tag)
+			}
+		}
+	}
+	response := httptest.NewRecorder()
+	app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, imagePath, nil))
+	if response.Code != http.StatusOK || !strings.HasPrefix(response.Header().Get("Content-Type"), "image/jpeg") {
+		t.Fatalf("social image response: %d %s", response.Code, response.Header().Get("Content-Type"))
+	}
+	if response.Body.Len() >= 5_000_000 {
+		t.Fatal("social image must be below 5 MB")
+	}
+	config, err := jpeg.DecodeConfig(response.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.Width != 1200 || config.Height != 630 {
+		t.Fatalf("social image is %dx%d, metadata declares 1200x630", config.Width, config.Height)
 	}
 }
 

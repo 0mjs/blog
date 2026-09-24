@@ -10,6 +10,7 @@ import (
 var (
 	stylesheetURL     = assetURL("app.css")
 	avatarURL         = assetURL("image/matt.png")
+	socialImageURL    = assetURL("image/social-card.jpg")
 	avatarScriptURL   = assetURL("js/avatar.js")
 	bytesScriptURL    = assetURL("js/bytes.js")
 	faviconURL        = assetURL("favicon.ico")
