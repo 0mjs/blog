@@ -19,4 +19,5 @@ type Project struct {
 	URL         string
 	State       string // "live" or "wip"
 	Stage       string // e.g. "early", "pre-1.0"
+	Kind        string // "oss" or "saas"
 }

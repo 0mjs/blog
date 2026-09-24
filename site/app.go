@@ -20,9 +20,9 @@ import (
 // Projects are displayed on the home page and shared by the HTTP server and
 // the static site exporter.
 var Projects = []model.Project{
-	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "wip", Stage: "pre-1.0"},
-	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit", State: "live", Stage: "early"},
-	{Name: "quitshark", Description: "quit nicotine app", URL: "https://quitshark.app", State: "live", Stage: "early"},
+	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "wip", Stage: "pre-1.0", Kind: "oss"},
+	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit", State: "live", Stage: "early", Kind: "saas"},
+	{Name: "quitshark", Description: "quit nicotine app", URL: "https://quitshark.app", State: "live", Stage: "early", Kind: "saas"},
 }
 
 // NewApp constructs the blog's shared HTTP handler for local and serverless use.

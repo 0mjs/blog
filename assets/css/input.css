@@ -251,3 +251,7 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .byte-field-hot { --r: 46px; }
 .home-shell.is-probing .byte-field { opacity: .28; }
 .home-shell.is-probing .byte-field-hot { opacity: .75; }
+
+/* Project kind: a right-hand column, matching the dates in the writing list. */
+.row-kind { flex: none; font: .6875rem var(--mono); color: var(--faint); text-decoration: none; letter-spacing: .02em; }
+.row:hover .row-kind { color: var(--muted); }

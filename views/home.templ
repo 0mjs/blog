@@ -33,6 +33,9 @@ templ Home(posts []*model.Post, projects []model.Project) {
 									</span>
 									<span class="row-description">{ project.Description }</span>
 								</span>
+								if project.Kind != "" {
+									<abbr class="row-kind" title={ kindTitle(project.Kind) }>{ project.Kind }</abbr>
+								}
 								@arrow(true)
 							</a>
 						</li>

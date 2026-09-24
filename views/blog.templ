@@ -98,6 +98,15 @@ func hexOffset(i int) string { return fmt.Sprintf("0x%02X", i*16) }
 func postTransition(slug string) templ.SafeCSS {
 	return templ.SafeCSS("view-transition-name: post-" + slug)
 }
+func kindTitle(kind string) string {
+	switch kind {
+	case "oss":
+		return "Open source"
+	case "saas":
+		return "Software as a service"
+	}
+	return kind
+}
 func formatReadTime(minutes int) string { return strconv.Itoa(minutes) + " min read" }
 func formatPostCount(count int) string {
 	if count == 1 {
