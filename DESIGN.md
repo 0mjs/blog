@@ -28,4 +28,4 @@ Or generate the production static export with `npm run build:static` after `make
 
 ## Selected direction
 
-Studio was selected for the blog. The accent is coral (`#f04436`), including link hovers, focus outlines and project arrows. Quitshark links to `https://quitshark.app` with the description "quit nicotine app".
+Studio was selected for the blog. The accent is coral (`#f04436`), including link hovers, focus outlines and project arrows. The homepage currently highlights Zinc and Cutwise.
