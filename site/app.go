@@ -21,7 +21,7 @@ import (
 // the static site exporter.
 var Projects = []model.Project{
 	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "wip", Stage: "pre-1.0", Kind: "oss"},
-	{Name: "cutwise", Description: "calorie tracker app", URL: "https://cutwise.fit", State: "live", Stage: "early", Kind: "saas"},
+	{Name: "sleekcode", Description: "leetcode practice in your terminal", URL: "https://github.com/0mjs/sleekcode", State: "live", Stage: "v1.0", Kind: "oss"},
 }
 
 // NewApp constructs the blog's shared HTTP handler for local and serverless use.
