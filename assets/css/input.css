@@ -244,6 +244,8 @@ svg { width: 1rem; height: 1rem; flex: none; }
 /* Footer build stamp. */
 .stamp { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; }
 .stamp a { color: var(--muted); }
+.stamp .studio-link { text-decoration: underline; text-decoration-color: var(--line); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color 160ms ease, text-decoration-color 160ms ease; }
+.stamp .studio-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
 
 /* Byte field behind the homepage card (public/js/bytes.js). */
 .home-shell { position: relative; isolation: isolate; }

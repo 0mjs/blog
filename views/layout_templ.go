@@ -596,7 +596,7 @@ func footer() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, " <span aria-hidden=\"true\">·</span> <a href=\"https://carbonsoft.sh\" target=\"_blank\" rel=\"noopener\" title=\"Design engineering studio\">Carbonsoft</a></span></footer>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, " <span aria-hidden=\"true\">·</span> <a href=\"https://carbonsoft.sh\" target=\"_blank\" rel=\"noopener\" class=\"studio-link\" title=\"Design engineering studio\">carbonsoft.sh</a></span></footer>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
