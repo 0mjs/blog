@@ -1,7 +1,7 @@
-// Byte field: the card's own text sits behind it as bytes, and the pointer
+// Byte field: the hero's own text sits behind it as bytes, and the pointer
 // uncovers a soft patch of it. Both layers are drawn once; CSS masks do the reveal.
 (() => {
-  const card = document.querySelector(".home-shell");
+  const card = document.querySelector(".home-hero");
   if (!card || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
   const HEX = "0123456789ABCDEF";
@@ -23,7 +23,7 @@
     canvas.height = Math.round(h * dpr);
     const ctx = canvas.getContext("2d");
     ctx.scale(dpr, dpr);
-    ctx.font = '10px "IBM Plex Mono", ui-monospace, monospace';
+    ctx.font = '10px "Geist Mono", ui-monospace, monospace';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = colour;

@@ -1,53 +1,66 @@
 package views
 
-import "mattjs.me/internal/model"
+import (
+	"fmt"
+	"mattjs.me/internal/model"
+)
 
 templ Home(posts []*model.Post, projects []model.Project) {
 	@Layout(SEO{Path: "/"}) {
-		<main class="shell home-shell" id="content">
-			<header>
+		<main class="frame" id="content">
+			<section class="block home-hero" aria-label="About">
+				<div class="grid-bg" aria-hidden="true"></div>
 				<div class="profile">
-					<span class="avatar" data-file="matt.png · 256 bytes">
+					<span class="avatar reveal" data-file="matt.png · 256 bytes">
 						<img class="profile-avatar" src={ avatarURL } alt={ siteName } width="104" height="104" fetchpriority="high" decoding="async"/>
 					</span>
-					<div class="profile-copy">
-						<h1>{ siteName }</h1>
-						<p class="tagline">{ siteTagline }<span class="cursor" aria-hidden="true"></span></p>
+					<div>
+						<p class="eyebrow reveal" style="--d: 80ms">hello, world</p>
+						<h1 class="headline reveal" style="--d: 140ms"><span class="headline-fade">{ siteName }</span></h1>
+						<p class="tagline reveal" style="--d: 220ms">{ siteTagline }<span class="cursor" aria-hidden="true"></span></p>
+						<div class="reveal" style="--d: 300ms">
+							@socialLinks()
+						</div>
 					</div>
 				</div>
-				@socialLinks()
-			</header>
-			<section class="section projects-section" aria-labelledby="projects-title">
-				<div class="section-head"><h2 id="projects-title">Projects</h2></div>
-				<ul class="rows project-rows">
-					for i, project := range projects {
-						<li>
-							<a class="row" href={ templ.SafeURL(project.URL) } target="_blank" rel="noopener">
-								<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
-								<span class="row-copy">
-									<span class="row-title">
-										{ project.Name }
-										if project.State != "" {
-											<span class="status" data-state={ project.State }>{ project.State }<span class="status-stage">{ project.Stage }</span></span>
-										}
+			</section>
+			<section class="block" id="projects" aria-labelledby="projects-title" data-reveal>
+				<div class="section-head"><h2 class="eyebrow" id="projects-title">projects</h2></div>
+				for _, group := range projectGroups(projects) {
+					<h3 class="group-label">{ group.Label }</h3>
+					<ul class="rows project-rows">
+						for i, project := range group.Projects {
+							<li style={ rowIndex(i) }>
+								<a class="row" href={ templ.SafeURL(project.URL) } target="_blank" rel="noopener">
+									<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
+									<span class="row-copy">
+										<span class="row-title">
+											{ project.Name }
+											if project.State != "" {
+												<span class="status" data-state={ project.State }>{ project.State }<span class="status-stage">{ project.Stage }</span></span>
+											}
+										</span>
+										<span class="row-description">{ project.Description }</span>
 									</span>
-									<span class="row-description">{ project.Description }</span>
-								</span>
-								if project.Kind != "" {
-									<abbr class="row-kind" title={ kindTitle(project.Kind) }>{ project.Kind }</abbr>
-								}
-								@arrow(true)
-							</a>
-						</li>
-					}
-				</ul>
+									@arrow(true)
+								</a>
+							</li>
+						}
+					</ul>
+				}
 			</section>
 			if len(posts) > 0 {
-				<section class="section writing-section" aria-labelledby="writing-title">
-					<div class="section-head"><h2 id="writing-title">Writing</h2><a href="/blog">All writing</a></div>
+				<section class="block" aria-labelledby="writing-title" data-reveal>
+					<div class="section-head">
+						<h2 class="eyebrow" id="writing-title">writing</h2>
+						<a href="/blog">
+							All writing
+							@arrow(false)
+						</a>
+					</div>
 					<ul class="rows writing-rows">
 						for i, post := range posts {
-							<li>
+							<li style={ rowIndex(i) }>
 								<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
 									<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
 									<span class="row-copy"><span class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</span></span>
@@ -59,9 +72,37 @@ templ Home(posts []*model.Post, projects []model.Project) {
 					</ul>
 				</section>
 			}
-			@footer()
 		</main>
 		<script src={ avatarScriptURL } defer></script>
 		<script src={ bytesScriptURL } defer></script>
 	}
+}
+
+type projectGroup struct {
+	Label    string
+	Projects []model.Project
+}
+
+// projectGroups splits the projects into SaaS and open source, keeping their order and skipping empty groups.
+func projectGroups(projects []model.Project) []projectGroup {
+	groups := []projectGroup{{Label: "saas"}, {Label: "open source"}}
+	for _, p := range projects {
+		i := 1
+		if p.Kind == "saas" {
+			i = 0
+		}
+		groups[i].Projects = append(groups[i].Projects, p)
+	}
+	out := groups[:0]
+	for _, g := range groups {
+		if len(g.Projects) > 0 {
+			out = append(out, g)
+		}
+	}
+	return out
+}
+
+// rowIndex staggers list rows as their section scrolls into view.
+func rowIndex(i int) templ.SafeCSS {
+	return templ.SafeCSS(fmt.Sprintf("--i: %d", i))
 }

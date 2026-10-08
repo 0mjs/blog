@@ -8,86 +8,109 @@ import (
 
 templ BlogList(posts []*model.Post) {
 	@Layout(SEO{Title: "All writing", Description: "Writing by " + siteName + ".", Path: "/blog"}) {
-		<main class="shell archive-shell" id="content">
-			@pageNav("/", "Home")
-			<header class="page-heading">
-				<h1>Writing</h1>
-				<p class="count">{ formatPostCount(len(posts)) }</p>
-			</header>
+		<main class="frame" id="content">
+			@pageHeading("writing", "Writing", formatPostCount(len(posts)))
 			@postList(posts)
-			@footer()
 		</main>
 	}
 }
 
 templ BlogListByTag(posts []*model.Post, tag string) {
 	@Layout(SEO{Title: "Posts tagged: " + tag, Description: "Blog posts tagged with " + tag, Path: "/blog/tag/" + tag}) {
-		<main class="shell archive-shell" id="content">
-			@pageNav("/blog", "All writing")
-			<header class="page-heading">
-				<h1>#{ tag }</h1>
-				<p class="count">{ formatPostCount(len(posts)) }</p>
-			</header>
+		<main class="frame" id="content">
+			@pageHeading("tag", "#"+tag, formatPostCount(len(posts)))
 			@postList(posts)
-			@footer()
 		</main>
 	}
 }
 
+// The heading block shared by the archive and tag pages, with the blinking cursor after the title.
+templ pageHeading(label, title, count string) {
+	<header class="block page-heading">
+		<div class="grid-bg" aria-hidden="true"></div>
+		<p class="eyebrow reveal">{ label }</p>
+		<h1 class="reveal" style="--d: 80ms"><span class="headline-fade">{ title }</span><span class="blink" aria-hidden="true">_</span></h1>
+		<p class="count reveal" style="--d: 160ms">{ count }</p>
+	</header>
+}
+
 templ postList(posts []*model.Post) {
-	if len(posts) == 0 {
-		<p class="empty">Nothing here yet.</p>
-	} else {
-		<div class="archive">
-			for i, post := range posts {
-				<article class="archive-row">
-					<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
-						<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
-						<div class="row-copy">
-							<h2 class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</h2>
-							<p class="row-description">{ post.Subtitle }</p>
+	<section class="block" data-reveal>
+		if len(posts) == 0 {
+			<p class="empty">Nothing here yet.</p>
+		} else {
+			<div class="rows">
+				for i, post := range posts {
+					<article class="archive-row" style={ rowIndex(i) }>
+						<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
+							<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
+							<div class="row-copy">
+								<h2 class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</h2>
+								<p class="row-description">{ post.Subtitle }</p>
+							</div>
+							<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
+						</a>
+						<div class="tags">
+							<span>{ formatReadTime(post.ReadTime) }</span>
+							for _, tag := range post.Tags {
+								<a href={ templ.SafeURL("/blog/tag/" + tag) }>#{ tag }</a>
+							}
 						</div>
-						<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
-						@arrow(false)
-					</a>
-					<div class="tags">
-						<span>{ formatReadTime(post.ReadTime) }</span>
-						for _, tag := range post.Tags {
-							<a href={ templ.SafeURL("/blog/tag/" + tag) }>#{ tag }</a>
-						}
-					</div>
-				</article>
-			}
-		</div>
-	}
+					</article>
+				}
+			</div>
+		}
+	</section>
 }
 
 templ BlogPost(post *model.Post) {
 	@Layout(SEO{Title: post.Title, Description: post.Subtitle, Path: "/blog/" + post.Slug, Article: true, Published: post.Date}) {
-		<main class="shell article-shell" id="content">
-			@pageNav("/blog", "All writing")
+		<main class="frame" id="content">
 			<article>
-				<header class="article-heading">
-					<div class="article-meta">
-						<time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time>
-						<span aria-hidden="true">·</span>
-						<span>{ formatReadTime(post.ReadTime) }</span>
-					</div>
-					<h1 style={ postTransition(post.Slug) }>{ post.Title }</h1>
-					<p class="article-subtitle">{ post.Subtitle }</p>
-					<div class="tags">
+				<header class="block article-heading">
+					<div class="grid-bg" aria-hidden="true"></div>
+					<p class="eyebrow reveal">
+						<time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time> · { formatReadTime(post.ReadTime) }
+					</p>
+					<h1 class="reveal" style={ titleStyle(post.Slug) }><span class="headline-fade">{ post.Title }</span></h1>
+					<p class="article-subtitle reveal" style="--d: 160ms">{ post.Subtitle }</p>
+					<div class="tags reveal" style="--d: 220ms">
 						for _, tag := range post.Tags {
 							<a href={ templ.SafeURL("/blog/tag/" + tag) }>#{ tag }</a>
 						}
 					</div>
 				</header>
-				<div class="prose">@templ.Raw(post.HTML)
+				<div class="block prose">@templ.Raw(post.HTML)
 </div>
-				<footer class="article-footer">
+				<footer class="block article-footer">
 					<a href="/blog">← All writing</a>
 					<a href="#content">Back to top ↑</a>
 				</footer>
 			</article>
+		</main>
+	}
+}
+
+// NotFound is served for any address that isn't a page, with a 404 status.
+templ NotFound() {
+	@Layout(SEO{Title: "Page not found", Description: "This page doesn't exist.", Path: "/404", NoIndex: true}) {
+		<main class="frame" id="content">
+			<section class="block missing">
+				<div class="grid-bg" aria-hidden="true"></div>
+				<p class="eyebrow reveal">404</p>
+				<h1 class="headline reveal" style="--d: 80ms"><span class="headline-fade">Nothing here.</span></h1>
+				<p class="reveal" style="--d: 160ms">This page doesn't exist, or it moved. Try the homepage or the writing.</p>
+				<nav class="social reveal" style="--d: 240ms" aria-label="Elsewhere">
+					<a class="pill" href="/">
+						Home
+						@arrow(false)
+					</a>
+					<a class="pill" href="/blog">
+						All writing
+						@arrow(false)
+					</a>
+				</nav>
+			</section>
 		</main>
 	}
 }
@@ -98,14 +121,9 @@ func hexOffset(i int) string { return fmt.Sprintf("0x%02X", i*16) }
 func postTransition(slug string) templ.SafeCSS {
 	return templ.SafeCSS("view-transition-name: post-" + slug)
 }
-func kindTitle(kind string) string {
-	switch kind {
-	case "oss":
-		return "Open source"
-	case "saas":
-		return "Software as a service"
-	}
-	return kind
+// titleStyle combines the title's view-transition name with its reveal delay.
+func titleStyle(slug string) templ.SafeCSS {
+	return templ.SafeCSS("view-transition-name: post-" + slug + "; --d: 80ms")
 }
 func formatReadTime(minutes int) string { return strconv.Itoa(minutes) + " min read" }
 func formatPostCount(count int) string {

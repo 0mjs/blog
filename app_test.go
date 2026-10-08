@@ -29,13 +29,14 @@ func TestRoutes(t *testing.T) {
 		{"/blog", http.StatusOK, "Gopher Nation", "text/html"},
 		{"/blog/gopher-nation", http.StatusOK, "Gopher Nation", "text/html"},
 		{"/blog/tag/golang", http.StatusOK, "#golang", "text/html"},
-		{"/blog/missing", http.StatusNotFound, "Not Found", "text/plain"},
+		{"/blog/missing", http.StatusNotFound, "Nothing here", "text/html"},
+		{"/no-such-page", http.StatusNotFound, "Nothing here", "text/html"},
 		{"/rss.xml", http.StatusOK, "<rss", "application/rss+xml"},
 		{"/sitemap.xml", http.StatusOK, "<urlset", "application/xml"},
 		{"/robots.txt", http.StatusOK, "Sitemap:", "text/plain"},
 		{"/assets/app.css", http.StatusOK, "--color-brand", "text/css"},
 		{"/assets/favicon.ico", http.StatusOK, "", "image/x-icon"},
-		{"/assets/image/meme/go-ts-node.jpg", http.StatusOK, "", "image/jpeg"},
+		{"/assets/image/social-card.jpg", http.StatusOK, "", "image/jpeg"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.path, func(t *testing.T) {
@@ -128,14 +129,14 @@ func TestFontsArePreloadedAndCached(t *testing.T) {
 
 	home := httptest.NewRecorder()
 	app.ServeHTTP(home, httptest.NewRequest(http.MethodGet, "/", nil))
-	for _, font := range []string{"IBMPlexMono-Regular.ttf", "IBMPlexMono-Medium.ttf"} {
-		if !strings.Contains(home.Body.String(), `rel="preload" href="/assets/fonts/IBMPlexMono/`+font+`"`) {
+	for _, font := range []string{"Geist.woff2", "GeistMono.woff2"} {
+		if !strings.Contains(home.Body.String(), `rel="preload" href="/assets/fonts/Geist/`+font+`"`) {
 			t.Errorf("homepage does not preload %s", font)
 		}
 	}
 
 	font := httptest.NewRecorder()
-	app.ServeHTTP(font, httptest.NewRequest(http.MethodGet, "/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf", nil))
+	app.ServeHTTP(font, httptest.NewRequest(http.MethodGet, "/assets/fonts/Geist/GeistMono.woff2", nil))
 	if got := font.Header().Get("Cache-Control"); got != "public, max-age=31536000, immutable" {
 		t.Fatalf("font Cache-Control=%q", got)
 	}

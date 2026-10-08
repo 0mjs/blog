@@ -1,14 +1,23 @@
-# Studio
+# Design
 
-Dark, minimal blog direction on `codex/ui-studio`.
+mattjs.me shares its design system with [carbonsoft.sh](https://carbonsoft.sh): Geist and Geist Mono, true black (or
+white) with hairline greys, a single railed column with sections stacked inside it, faint grid backgrounds, and the same
+motion vocabulary. Coral (`#f04436`) is the personal accent, the way each product has its own accent on carbonsoft.sh.
 
-## Research and interpretation
+What stays Matt's: the hex-editor details (`0x00` row offsets, `// projects` labels, the blinking cursor), the hex
+portrait that decodes from its own pixels (`public/js/avatar.js`), the byte field behind the hero (`public/js/bytes.js`)
+and the ↑↑↓↓←→←→BA god mode.
 
-Reference: [Studio design reference](https://www.vitsoe.com/us/about/good-design).
+## Principles
 
-Unobtrusive, useful objects and attention to proportion. One soft graphite enclosure, centred identity, inset link groups and coral accents; no decorative controls.
-
-This is an original interpretation of those principles, not a clone. Homepage, archive, tag pages and both articles share the design. Original copy, content, routes, RSS, metadata and project links are retained. The supplied coral headshot is used unchanged. Dark presentation is explicit and ignores old light-mode local storage.
+- One column, comfortable reading width; articles are prose first.
+- Light and dark themes, remembered per visitor, painted before first render so a refresh never flashes.
+- Motion: things rise a little out of a soft blur on a long ease-out, lists stagger, section labels sweep once,
+  pills lift with a spring, the footer wordmark rises with scroll. Only transform, opacity and filter animate, and
+  `prefers-reduced-motion` turns all of it off.
+- Same-origin navigations morph the portrait and post titles between pages (cross-document view transitions).
+- Code blocks stay dark in both themes so Chroma's palette reads the same everywhere.
+- Unknown pages get a real 404 (Zinc's `NotFound` and error handler locally, `dist/404.html` on Cloudflare).
 
 ## Run
 
@@ -17,15 +26,3 @@ make run
 ```
 
 Or generate the production static export with `npm run build:static` after `make generate`.
-
-## Verification
-
-- templ formatting and generation, CSS compilation, existing Go tests, and static export passed.
-- Browser-checked home, archive, both articles and tag navigation at desktop and mobile sizes.
-- No horizontal overflow at 390px or 320px on the homepage; image loading and keyboard skip navigation checked.
-- Desktop, mobile, archive and article screenshots captured for the comparison gallery.
-- No new dependencies, production deployment, or remote branch push.
-
-## Selected direction
-
-Studio was selected for the blog. The accent is coral (`#f04436`), including link hovers, focus outlines and project arrows. The homepage currently highlights Zinc and SleekCode.

@@ -1,6 +1,7 @@
 package site
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -20,7 +21,9 @@ import (
 // Projects are displayed on the home page and shared by the HTTP server and
 // the static site exporter.
 var Projects = []model.Project{
-	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "wip", Stage: "pre-1.0", Kind: "oss"},
+	{Name: "cutwise", Description: "ai calorie tracker for ios", URL: "https://cutwise.fit", State: "live", Stage: "app store", Kind: "saas"},
+	{Name: "quitshark", Description: "quit nicotine, gently", URL: "https://quitshark.app", State: "live", Stage: "app store", Kind: "saas"},
+	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "live", Stage: "v0.7.3", Kind: "oss"},
 	{Name: "sleekcode", Description: "leetcode practice in your terminal", URL: "https://github.com/0mjs/sleekcode", State: "live", Stage: "v1.0", Kind: "oss"},
 }
 
@@ -31,11 +34,9 @@ func NewApp() (*zinc.App, error) {
 	if err != nil {
 		return nil, err
 	}
-	app := zinc.New()
+	app := zinc.New(zinc.Config{ErrorHandler: htmlErrors})
 	app.UseHTTP(cacheAssets)
-	if err := app.StaticFS("/assets", publicfs.FS); err != nil {
-		return nil, err
-	}
+	app.StaticFS("/assets", publicfs.FS)
 	app.Get("/", func(c *zinc.Context) error { return render(c, views.Home(blogService.Posts(), Projects)) })
 	app.Get("/blog", func(c *zinc.Context) error { return render(c, views.BlogList(blogService.Posts())) })
 	app.Get("/blog/{slug}", func(c *zinc.Context) error {
@@ -61,6 +62,12 @@ func NewApp() (*zinc.App, error) {
 	app.Get("/robots.txt", func(c *zinc.Context) error {
 		return c.String(fmt.Sprintf("User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n", config.BaseURL))
 	})
+	// Unknown addresses get the same HTML 404 page as a missing post
+	app.NotFound(func(c *zinc.Context) error { return zinc.ErrNotFound })
+	// Catch any route or spec mistake now, not on the first request that reaches it
+	if err := app.Validate(); err != nil {
+		return nil, err
+	}
 	return app, nil
 }
 
@@ -74,6 +81,16 @@ func cacheAssets(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+// htmlErrors serves the site's own 404 page for anything not found; other errors keep Zinc's plain-text bodies.
+func htmlErrors(c *zinc.Context, err error) {
+	if errors.Is(err, zinc.ErrNotFound) {
+		c.Status(http.StatusNotFound)
+		_ = render(c, views.NotFound())
+		return
+	}
+	zinc.TextErrors(c, err)
 }
 
 func render(c *zinc.Context, component templ.Component) error {

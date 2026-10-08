@@ -19,19 +19,39 @@ type SEO struct {
 	Path        string
 	Article     bool
 	Published   time.Time
+	NoIndex     bool
 }
 
 templ Layout(seo SEO) {
 	<!DOCTYPE html>
-	<html lang={ siteConfig.Language }>
+	<html lang={ siteConfig.Language } data-theme="dark">
 		<head>
 			<meta charset="utf-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<meta name="color-scheme" content="dark"/>
-			<meta name="theme-color" content="#101010"/>
+			<meta name="color-scheme" content="dark light"/>
+			<meta name="theme-color" content="#000000"/>
+			<!-- Paint the saved theme before anything renders, so a refresh never flashes the wrong background -->
+			<style>html{background:#000;color-scheme:dark}html[data-theme="light"]{background:#fff;color-scheme:light}</style>
+			<script>
+				// Arriving through a page morph: skip entrance animations, the morph already moves things
+				addEventListener("pagereveal", function (e) {
+					if (!e.viewTransition) return;
+					document.documentElement.classList.add("no-entrance");
+					document.querySelectorAll("[data-reveal]").forEach(function (el) { el.classList.add("is-shown"); });
+				});
+				try {
+					var t = localStorage.getItem("theme");
+					if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+					if (t === "light") document.querySelector('meta[name="theme-color"]').content = "#ffffff";
+				} catch (e) {}
+			</script>
 			<title>{ pageTitle(seo.Title) }</title>
 			<meta name="description" content={ description(seo.Description) }/>
-			<link rel="canonical" href={ siteConfig.BaseURL + seo.Path }/>
+			if seo.NoIndex {
+				<meta name="robots" content="noindex"/>
+			} else {
+				<link rel="canonical" href={ siteConfig.BaseURL + seo.Path }/>
+			}
 			<link rel="icon" href={ faviconURL } sizes="16x16 32x32 48x48"/>
 			<link rel="icon" type="image/png" sizes="32x32" href={ favicon32URL }/>
 			<link rel="icon" type="image/png" sizes="16x16" href={ favicon16URL }/>
@@ -55,14 +75,17 @@ templ Layout(seo SEO) {
 			if seo.Path == "/" {
 				<link rel="preload" href={ avatarURL } as="image" type="image/png" fetchpriority="high"/>
 			}
-			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
-			<link rel="preload" href="/assets/fonts/IBMPlexMono/IBMPlexMono-Medium.ttf" as="font" type="font/ttf" crossorigin="anonymous"/>
+			<link rel="preload" href="/assets/fonts/Geist/Geist.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
+			<link rel="preload" href="/assets/fonts/Geist/GeistMono.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>
 			<link rel="stylesheet" href={ stylesheetURL }/>
 		</head>
 		<body>
 			<a href="#content" class="skip-link">Skip to content</a>
+			@topbar(seo.Path == "/")
 			{ children... }
+			@footer()
 			<script>
+				// Build stamp: "built 3 hours ago"
 				(() => {
 					const units = [["year", 31536e3], ["month", 2592e3], ["day", 864e2], ["hour", 36e2], ["minute", 60]];
 					const rel = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -73,6 +96,28 @@ templ Layout(seo SEO) {
 						el.title = new Date(el.dateTime).toLocaleString();
 					}
 				})();
+				// Theme toggle, remembered across visits
+				(() => {
+					const root = document.documentElement;
+					document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+						const next = root.dataset.theme === "dark" ? "light" : "dark";
+						root.dataset.theme = next;
+						document.querySelector('meta[name="theme-color"]').content = next === "dark" ? "#000000" : "#ffffff";
+						try { localStorage.setItem("theme", next); } catch (e) {}
+					});
+				})();
+				// Scroll reveals. Anything already on screen is shown straight away (never hidden, so titles are never
+				// blank on load or mid-navigation); only content below the fold waits to rise in as it scrolls into view.
+				(() => {
+					const io = "IntersectionObserver" in window && new IntersectionObserver((entries) => {
+						for (const e of entries) if (e.isIntersecting) { e.target.classList.add("is-shown"); io.unobserve(e.target); }
+					}, { rootMargin: "0px 0px -8% 0px" });
+					for (const el of document.querySelectorAll("[data-reveal]")) {
+						if (!io || el.getBoundingClientRect().top < innerHeight) el.classList.add("is-shown");
+						else { el.classList.add("pending"); io.observe(el); }
+					}
+				})();
+				// ↑↑↓↓←→←→BA
 				(() => {
 					const code = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 					let at = 0;
@@ -89,10 +134,37 @@ templ Layout(seo SEO) {
 	</html>
 }
 
+// The site-wide bar. On the homepage the hero carries the portrait, so the bar shows just the name
+// (two elements can't share the avatar's view-transition name on one page).
+templ topbar(home bool) {
+	<header class="topbar">
+		<div class="frame topbar-inner">
+			<a class="brand" href="/" aria-label={ siteName + ", home" }>
+				if !home {
+					<img class="nav-avatar" src={ avatarURL } alt="" width="28" height="28" style="view-transition-name: avatar"/>
+				}
+				<span class="brand-name">{ siteName }</span>
+			</a>
+			<nav class="topnav" aria-label="Site">
+				<a href="/#projects">Projects</a>
+				<a href="/blog">Writing</a>
+				<a class="wide" href="https://carbonsoft.sh" target="_blank" rel="noopener">
+					Carbon Software
+					@arrow(true)
+				</a>
+				<button type="button" class="theme-toggle" aria-label="Toggle light and dark mode">
+					<svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06" stroke-linecap="round"></path></svg>
+					<svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7Z" stroke-linejoin="round"></path></svg>
+				</button>
+			</nav>
+		</div>
+	</header>
+}
+
 templ arrow(external bool) {
-	<svg class="row-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+	<svg class={ "row-arrow", templ.KV("is-internal", !external) } viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 		if external {
-			<path d="M4 12 12 4M4 4h8v8"></path>
+			<path d="M5 11 11 5M6 5h5v5"></path>
 		} else {
 			<path d="M3 8h10M9 4l4 4-4 4"></path>
 		}
@@ -101,39 +173,38 @@ templ arrow(external bool) {
 
 templ socialLinks() {
 	<nav class="social" aria-label="Social links">
-		<a href="https://github.com/0mjs" target="_blank" rel="noopener">GitHub</a>
-		<a href="https://x.com/0mjs_" target="_blank" rel="noopener">X</a>
-		<a href="/rss.xml">RSS</a>
-	</nav>
-}
-
-templ pageNav(back, label string) {
-	<nav class="page-nav" aria-label="Page navigation">
-		<a class="home-link" href="/">
-			<img class="nav-avatar" src={ avatarURL } alt="" width="28" height="28"/>
-			<span>{ siteName }</span>
+		<a class="pill" href="https://github.com/0mjs" target="_blank" rel="noopener">
+			GitHub
+			@arrow(true)
 		</a>
-		<a class="back-link" href={ templ.SafeURL(back) }>{ label }</a>
+		<a class="pill" href="https://x.com/0mjs_" target="_blank" rel="noopener">
+			X
+			@arrow(true)
+		</a>
+		<a class="pill" href="/rss.xml">RSS</a>
 	</nav>
 }
 
 templ footer() {
-	<footer class="footer">
-		<details class="colophon">
-			<summary>Built with</summary>
-			<p><a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener">Zinc</a>, <a href="https://github.com/a-h/templ" target="_blank" rel="noopener">templ</a>, <a href="https://github.com/templui/templui" target="_blank" rel="noopener">templui</a> &amp; <a href="https://github.com/yuin/goldmark" target="_blank" rel="noopener">Goldmark</a>.</p>
-		</details>
-		<span class="stamp">
-			if build.Commit != "" {
-				<a href={ templ.SafeURL(build.URL) } target="_blank" rel="noopener" title="Built from this commit">{ commitLabel() }</a>
+	<footer class="frame site-footer">
+		<div class="footer-row">
+			<details class="colophon">
+				<summary>Built with ↓</summary>
+				<p><a href="https://github.com/0mjs/zinc" target="_blank" rel="noopener">Zinc</a>, <a href="https://github.com/a-h/templ" target="_blank" rel="noopener">templ</a>, <a href="https://github.com/templui/templui" target="_blank" rel="noopener">templui</a> &amp; <a href="https://github.com/yuin/goldmark" target="_blank" rel="noopener">Goldmark</a>.</p>
+			</details>
+			<span class="stamp">
+				if build.Commit != "" {
+					<a href={ templ.SafeURL(build.URL) } target="_blank" rel="noopener" title="Built from this commit">{ commitLabel() }</a>
+					<span aria-hidden="true">·</span>
+					<time datetime={ build.Time.Format(time.RFC3339) } data-ago>{ build.Time.Format("2 Jan 2006") }</time>
+					<span aria-hidden="true">·</span>
+				}
+				© { time.Now().Format("2006") }
 				<span aria-hidden="true">·</span>
-				<time datetime={ build.Time.Format(time.RFC3339) } data-ago>{ build.Time.Format("2 Jan 2006") }</time>
-				<span aria-hidden="true">·</span>
-			}
-			© { time.Now().Format("2006") }
-			<span aria-hidden="true">·</span>
-			<a href="https://carbonsoft.sh" target="_blank" rel="noopener" class="studio-link" title="Design engineering studio">carbonsoft.sh</a>
-		</span>
+				<a href="https://carbonsoft.sh" target="_blank" rel="noopener" class="studio-link" title="Carbon Software">carbonsoft.sh</a>
+			</span>
+		</div>
+		<p class="footer-mark" aria-hidden="true">mattjs.me</p>
 	</footer>
 }
 

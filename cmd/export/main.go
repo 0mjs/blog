@@ -70,6 +70,15 @@ func export(output string) error {
 		}
 	}
 
+	// Cloudflare serves this for any path that isn't a page, with a 404 status (wrangler.jsonc: not_found_handling)
+	var notFound bytes.Buffer
+	if err := views.NotFound().Render(context.Background(), &notFound); err != nil {
+		return err
+	}
+	if err := writeFile(output, "404.html", notFound.Bytes()); err != nil {
+		return err
+	}
+
 	if err := writeFile(output, "rss.xml", []byte(site.RSS(allPosts, config))); err != nil {
 		return err
 	}

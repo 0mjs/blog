@@ -55,7 +55,7 @@
 
   function draw(settled) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = `500 ${cell * 0.5}px "IBM Plex Mono", ui-monospace, monospace`;
+    ctx.font = `500 ${cell * 0.5}px "Geist Mono", ui-monospace, monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const brand = getComputedStyle(wrap).getPropertyValue("--brand").trim();
