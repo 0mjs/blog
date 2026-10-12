@@ -23,6 +23,7 @@ import (
 var Projects = []model.Project{
 	{Name: "cutwise", Description: "ai calorie tracker for ios", URL: "https://cutwise.fit", State: "live", Stage: "app store", Kind: "saas"},
 	{Name: "quitshark", Description: "quit nicotine, gently", URL: "https://quitshark.app", State: "live", Stage: "app store", Kind: "saas"},
+	{Name: "rallo", Description: "padel & pickleball scoreboard", URL: "https://rallo.club", State: "wip", Stage: "in review", Kind: "saas"},
 	{Name: "zinc", Description: "go http framework", URL: "https://zinc.carbonsoft.sh", State: "live", Stage: "v0.7.3", Kind: "oss"},
 	{Name: "sleekcode", Description: "leetcode practice in your terminal", URL: "https://github.com/0mjs/sleekcode", State: "live", Stage: "v1.0", Kind: "oss"},
 }
