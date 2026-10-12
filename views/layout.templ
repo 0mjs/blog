@@ -149,6 +149,7 @@ templ topbar(home bool) {
 				<a href="/#projects">Projects</a>
 				<a href="/blog">Writing</a>
 				<a class="wide" href="https://carbonsoft.sh" target="_blank" rel="noopener">
+					@carbonMark()
 					Carbon Software
 					@arrow(true)
 				</a>
@@ -159,6 +160,11 @@ templ topbar(home bool) {
 			</nav>
 		</div>
 	</header>
+}
+
+// The Carbon Software "C", matching carbonsoft.sh. Follows the text colour.
+templ carbonMark() {
+	<svg class="carbon-mark" viewBox="274 256 741 741" fill="currentColor" aria-hidden="true"><path d="M615 256H868Q893 256 905 277L1005 454H652C581 454 523 512 523 580V675L320 546V505C320 385 475 256 615 256Z"></path><path d="M284 566L497 700C512 752 560 787 610 787H966L835 973Q822 996 798 996H585C435 996 284 858 284 712Z"></path></svg>
 }
 
 templ arrow(external bool) {
@@ -201,7 +207,10 @@ templ footer() {
 				}
 				© { time.Now().Format("2006") }
 				<span aria-hidden="true">·</span>
-				<a href="https://carbonsoft.sh" target="_blank" rel="noopener" class="studio-link" title="Carbon Software">carbonsoft.sh</a>
+				<a href="https://carbonsoft.sh" target="_blank" rel="noopener" class="studio-link" title="Carbon Software">
+					@carbonMark()
+					carbonsoft.sh
+				</a>
 			</span>
 		</div>
 		<p class="footer-mark" aria-hidden="true">mattjs.me</p>
