@@ -380,7 +380,6 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .stamp a:hover { color: var(--foreground); }
 .stamp .studio-link { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
 .stamp .studio-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
-.row-title .carbon-mark { display: inline-block; width: .8em; height: .8em; margin-right: .35em; vertical-align: -.05em; }
 .stamp .studio-link .carbon-mark { display: inline-block; width: .8em; height: .8em; margin-right: .3em; vertical-align: -.08em; }
 /* Oversized wordmark, cut off by the bottom of the page, as on carbonsoft.sh */
 .footer-mark { margin: 1.5rem 0 0; translate: 0 18%; text-align: center; white-space: nowrap; font-size: clamp(3rem, 15vw, 7.5rem); line-height: 1; font-weight: 600; letter-spacing: -.07em; color: transparent; background: linear-gradient(180deg, var(--line-strong) 0%, transparent 85%); -webkit-background-clip: text; background-clip: text; user-select: none; }
