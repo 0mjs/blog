@@ -18,8 +18,11 @@ import (
 	"mattjs.me/views"
 )
 
-// showSaaS toggles the saas projects on the home page.
+// showSaaS toggles the saas projects on the home page. When off, they're
+// replaced by a single link to Carbon Software.
 const showSaaS = false
+
+var carbonProject = model.Project{Name: "carbon software", Description: "design engineering studio", URL: "https://carbonsoft.sh", Kind: "saas", CarbonMark: true}
 
 // Projects are displayed on the home page and shared by the HTTP server and
 // the static site exporter.
@@ -35,7 +38,10 @@ var allProjects = []model.Project{
 }
 
 func visibleProjects(projects []model.Project) []model.Project {
-	visible := make([]model.Project, 0, len(projects))
+	visible := make([]model.Project, 0, len(projects)+1)
+	if !showSaaS {
+		visible = append(visible, carbonProject)
+	}
 	for _, project := range projects {
 		if project.Kind == "saas" && !showSaaS {
 			continue

@@ -20,4 +20,5 @@ type Project struct {
 	State       string // "live" or "wip"
 	Stage       string // e.g. "early", "pre-1.0"
 	Kind        string // "oss" or "saas"
+	CarbonMark  bool   // show the Carbon Software "C" before the name
 }

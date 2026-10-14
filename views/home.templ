@@ -35,6 +35,9 @@ templ Home(posts []*model.Post, projects []model.Project) {
 									<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
 									<span class="row-copy">
 										<span class="row-title">
+											if project.CarbonMark {
+												@carbonMark()
+											}
 											{ project.Name }
 											if project.State != "" {
 												<span class="status" data-state={ project.State }>{ project.State }<span class="status-stage">{ project.Stage }</span></span>
