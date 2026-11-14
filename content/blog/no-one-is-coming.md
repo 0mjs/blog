@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Nobody's coming to save you.",
+  "title": "Thoughts 001",
   "subtitle": "",
   "date": "2026-11-14",
   "draft": false,
