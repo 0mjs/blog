@@ -26,6 +26,8 @@ Then he turns it into a question, and a fairly uncomfortable one. If everyone yo
 
 The useful one. The one whose shoulder people cry on, who can be in that room and be of some help to everyone else in it. He's honest that it takes real toughness, because it means taking a major loss without collapsing under it. And if the person you're losing loves you, that's exactly who they'd want you to be.
 
+He comes back to this idea a lot, and when he wrote it down, in _12 Rules for Life_, he made it your father's funeral specifically. He tells his students to aim to be the person in that room that everyone, in their grief, can rely on. I think the choice of the father matters. For a lot of us he is the last person standing between us and the front of the line, the one we assume will know what to do, and the day he's gone is the day there's nobody left ahead of us. What it's really asking is how you will be on that day.
+
 The longer you sit with it, the less it has to do with funerals at all. Every family, sooner or later, has a hard room of its own, and in every one of them there comes a moment where people look around for the adult, only to find there's nobody older left to look at.
 
 Men tend to get handed this early, usually as an order. Be strong, be the rock. I'd argue it's wider than that though, and that it falls to whoever in the room stops waiting first.
