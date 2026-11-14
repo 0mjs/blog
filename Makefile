@@ -1,4 +1,4 @@
-.PHONY: install generate css build test run dev dev/build
+.PHONY: install generate css build test run dev dev/build write
 
 install:
 	go mod download
@@ -22,6 +22,10 @@ run: generate css
 
 dev:
 	air
+
+# The local writing app: edit posts with a live preview, add images, publish. http://127.0.0.1:4000
+write: generate
+	go run ./cmd/editor
 
 dev/build:
 	mkdir -p tmp

@@ -11,6 +11,8 @@ var (
 	stylesheetURL     = assetURL("app.css")
 	avatarURL         = assetURL("image/matt.png")
 	socialImageURL    = assetURL("image/social-card.jpg")
+	socialChipURL     = assetURL("image/social-chip.png")
+	playlistCoverURL  = assetURL("image/pocket-oranges.jpg")
 	avatarScriptURL   = assetURL("js/avatar.js")
 	bytesScriptURL    = assetURL("js/bytes.js")
 	faviconURL        = assetURL("favicon.ico")

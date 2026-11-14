@@ -28,15 +28,6 @@ type Service struct {
 	bySlug   map[string]*model.Post
 }
 
-type metadata struct {
-	Title    string   `yaml:"title"`
-	Subtitle string   `yaml:"subtitle"`
-	Date     string   `yaml:"date"`
-	Draft    bool     `yaml:"draft"`
-	Tags     []string `yaml:"tags"`
-	ReadTime int      `yaml:"read_time"`
-}
-
 var markup = regexp.MustCompile(`(?s)<[^>]*>|!\[[^]]*\]\([^)]*\)|\[([^]]+)\]\([^)]*\)|[*_#>` + "`" + `~]`)
 
 func New(content fs.FS) (*Service, error) {
@@ -53,6 +44,10 @@ func New(content fs.FS) (*Service, error) {
 		),
 		content: content,
 		bySlug:  make(map[string]*model.Post),
+	}
+	// No content: a service that only renders what it's handed (the local editor's preview)
+	if content == nil {
+		return service, nil
 	}
 
 	files, err := fs.Glob(content, "blog/*.md")
@@ -120,24 +115,29 @@ func (s *Service) load(file string) (*model.Post, error) {
 	if err != nil {
 		return nil, err
 	}
+	return s.Render(strings.TrimSuffix(strings.TrimPrefix(file, "blog/"), ".md"), source)
+}
+
+// Render turns one post's source (front matter and Markdown) into a post, exactly as the site does.
+func (s *Service) Render(slug string, source []byte) (*model.Post, error) {
 	ctx := parser.NewContext()
 	var rendered bytes.Buffer
 	if err := s.markdown.Convert(source, &rendered, parser.WithContext(ctx)); err != nil {
-		return nil, fmt.Errorf("render %s: %w", file, err)
+		return nil, fmt.Errorf("render %s: %w", slug, err)
 	}
 
-	var meta metadata
+	var meta Meta
 	data := frontmatter.Get(ctx)
 	if data == nil {
-		return nil, fmt.Errorf("%s has no front matter", file)
+		return nil, fmt.Errorf("%s has no front matter", slug)
 	}
 	if err := data.Decode(&meta); err != nil {
-		return nil, fmt.Errorf("decode %s: %w", file, err)
+		return nil, fmt.Errorf("decode %s: %w", slug, err)
 	}
 
 	date, err := parseDate(meta.Date)
 	if err != nil {
-		return nil, fmt.Errorf("date in %s: %w", file, err)
+		return nil, fmt.Errorf("date in %s: %w", slug, err)
 	}
 	body := bodyAfterFrontMatter(string(source))
 	subtitle := meta.Subtitle
@@ -152,7 +152,7 @@ func (s *Service) load(file string) (*model.Post, error) {
 	return &model.Post{
 		Title:    meta.Title,
 		Subtitle: subtitle,
-		Slug:     strings.TrimSuffix(strings.TrimPrefix(file, "blog/"), ".md"),
+		Slug:     slug,
 		Date:     date,
 		Tags:     meta.Tags,
 		HTML:     rendered.String(),
@@ -172,6 +172,9 @@ func parseDate(value string) (time.Time, error) {
 }
 
 func bodyAfterFrontMatter(source string) string {
+	if _, body, ok := cutFrontMatter(source); ok {
+		return strings.TrimSpace(body)
+	}
 	parts := strings.SplitN(source, "---", 3)
 	if len(parts) != 3 {
 		return source

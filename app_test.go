@@ -37,6 +37,7 @@ func TestRoutes(t *testing.T) {
 		{"/assets/app.css", http.StatusOK, "--color-brand", "text/css"},
 		{"/assets/favicon.ico", http.StatusOK, "", "image/x-icon"},
 		{"/assets/image/social-card.jpg", http.StatusOK, "", "image/jpeg"},
+		{"/assets/image/social-chip.png", http.StatusOK, "", "image/png"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.path, func(t *testing.T) {
@@ -61,20 +62,30 @@ func TestSocialPreview(t *testing.T) {
 		t.Fatal(err)
 	}
 	imagePath := versionedAsset(t, "image/social-card.jpg")
-	for _, path := range []string{"/", "/blog/gopher-nation"} {
+	chipPath := versionedAsset(t, "image/social-chip.png")
+	// Pages get the wide portrait card; posts get the square paint chip as a small card
+	for _, page := range []struct{ path, image, card, height string }{
+		{"/", imagePath, "summary_large_image", "630"},
+		{"/blog/gopher-nation", chipPath, "summary", "1200"},
+	} {
 		response := httptest.NewRecorder()
-		app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, path, nil))
+		app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, page.path, nil))
 		for _, tag := range []string{
-			`property="og:image" content="https://mattjs.me` + imagePath + `"`,
-			`name="twitter:image" content="https://mattjs.me` + imagePath + `"`,
-			`name="twitter:card" content="summary_large_image"`,
+			`property="og:image" content="https://mattjs.me` + page.image + `"`,
+			`name="twitter:image" content="https://mattjs.me` + page.image + `"`,
+			`name="twitter:card" content="` + page.card + `"`,
 			`property="og:image:width" content="1200"`,
-			`property="og:image:height" content="630"`,
+			`property="og:image:height" content="` + page.height + `"`,
 		} {
 			if !strings.Contains(response.Body.String(), tag) {
-				t.Errorf("%s missing %s", path, tag)
+				t.Errorf("%s missing %s", page.path, tag)
 			}
 		}
+	}
+	chip := httptest.NewRecorder()
+	app.ServeHTTP(chip, httptest.NewRequest(http.MethodGet, chipPath, nil))
+	if size, err := png.DecodeConfig(chip.Body); err != nil || size.Width != 1200 || size.Height != 1200 {
+		t.Fatalf("social chip should be a 1200x1200 PNG: %+v %v", size, err)
 	}
 	response := httptest.NewRecorder()
 	app.ServeHTTP(response, httptest.NewRequest(http.MethodGet, imagePath, nil))
@@ -184,6 +195,7 @@ func TestVersionedAssetsAndFavicons(t *testing.T) {
 	}{
 		{"app.css", 0},
 		{"image/matt.png", 1254},
+		{"image/pocket-oranges.jpg", 0},
 		{"favicon.ico", 0},
 		{"favicon-16x16.png", 16},
 		{"favicon-32x32.png", 32},

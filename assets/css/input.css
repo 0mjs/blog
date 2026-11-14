@@ -96,6 +96,18 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .pill:hover { border-color: var(--faint); background: var(--background); }
 .pill svg { width: .7rem; height: .7rem; color: var(--faint); }
 
+/* Playlist: the cover sits in the hero's bottom-right corner, its caption beside it, level with the social pills */
+.playlist-slot { position: absolute; right: 2.5rem; bottom: 3.5rem; }
+.playlist { display: flex; flex-direction: row-reverse; align-items: flex-end; gap: .8rem; }
+.playlist img { display: block; width: 4.5rem; height: 4.5rem; border-radius: 1rem; box-shadow: 0 0 0 1px var(--line-strong); transition: transform 450ms var(--ease-spring); }
+.playlist:hover img { transform: translateY(-3px) scale(1.04); }
+.playlist-copy { display: grid; justify-items: end; padding-bottom: .15rem; }
+.playlist-label { font: .625rem/1.4 var(--mono); color: var(--faint); }
+.playlist-label::before { content: "// "; }
+.playlist-title { display: inline-flex; align-items: center; gap: .35rem; font-size: .8125rem; font-weight: 500; line-height: 1.35; letter-spacing: -.01em; white-space: nowrap; }
+.playlist svg { width: .7rem; height: .7rem; color: var(--faint); transition: transform 300ms var(--ease-out), color 160ms ease; }
+.playlist:hover svg { color: var(--brand); transform: translate(2px, -2px); }
+
 /* Hex portrait: the headshot decodes from a dump of its own pixels (public/js/avatar.js). */
 .avatar { position: relative; display: block; width: 5.5rem; height: 5.5rem; cursor: crosshair; -webkit-tap-highlight-color: transparent; view-transition-name: avatar; }
 .avatar .profile-avatar { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 1.25rem; box-shadow: 0 0 0 1px var(--line); }
@@ -424,6 +436,9 @@ svg { width: 1rem; height: 1rem; flex: none; }
   .frame { width: calc(100% - 1rem); }
   .block { padding: 2.25rem 1.25rem; }
   .home-hero { padding-top: 3rem; padding-bottom: 2.5rem; }
+  .playlist-slot { position: relative; inset: auto; margin-top: 1.75rem; }
+  .playlist { flex-direction: row; align-items: center; }
+  .playlist-copy { justify-items: start; padding-bottom: 0; }
   .site-footer { padding-inline: 1.25rem; }
   .topbar-inner { padding-inline: .9rem; }
   .topnav .wide { display: none; }
@@ -442,5 +457,5 @@ svg { width: 1rem; height: 1rem; flex: none; }
   .reveal, [data-reveal], [data-reveal] .rows > * { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; }
   [data-reveal] .eyebrow { animation: none !important; background-position: 0 0; }
   .footer-mark, .cursor, .page-heading h1 .blink { animation: none !important; }
-  .social .pill { transition: none; }
+  .social .pill, .playlist img, .playlist svg { transition: none; }
 }

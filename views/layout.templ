@@ -11,6 +11,7 @@ var (
 	siteTagline = siteConfig.Tagline
 	build       = siteinfo.CurrentBuild
 	socialImageAlt = "Matt Stevenson's black-and-white portrait on a coral paper background with cream abstract shapes."
+	socialChipAlt  = "A coral paint chip with a cream label reading mattjs.me, F04436, coral, on paper."
 )
 
 type SEO struct {
@@ -61,17 +62,17 @@ templ Layout(seo SEO) {
 			<meta property="og:description" content={ description(seo.Description) }/>
 			<meta property="og:url" content={ siteConfig.BaseURL + seo.Path }/>
 			<meta property="og:type" content={ ogType(seo.Article) }/>
-			<meta property="og:image" content={ siteConfig.BaseURL + socialImageURL }/>
-			<meta property="og:image:type" content="image/jpeg"/>
+			<meta property="og:image" content={ siteConfig.BaseURL + preview(seo).URL }/>
+			<meta property="og:image:type" content={ preview(seo).Type }/>
 			<meta property="og:image:width" content="1200"/>
-			<meta property="og:image:height" content="630"/>
-			<meta property="og:image:alt" content={ socialImageAlt }/>
+			<meta property="og:image:height" content={ preview(seo).Height }/>
+			<meta property="og:image:alt" content={ preview(seo).Alt }/>
 			if seo.Article && !seo.Published.IsZero() {
 				<meta property="article:published_time" content={ seo.Published.Format(time.RFC3339) }/>
 			}
-			<meta name="twitter:card" content="summary_large_image"/>
-			<meta name="twitter:image" content={ siteConfig.BaseURL + socialImageURL }/>
-			<meta name="twitter:image:alt" content={ socialImageAlt }/>
+			<meta name="twitter:card" content={ preview(seo).Card }/>
+			<meta name="twitter:image" content={ siteConfig.BaseURL + preview(seo).URL }/>
+			<meta name="twitter:image:alt" content={ preview(seo).Alt }/>
 			if seo.Path == "/" {
 				<link rel="preload" href={ avatarURL } as="image" type="image/png" fetchpriority="high"/>
 			}
@@ -215,6 +216,19 @@ templ footer() {
 		</div>
 		<p class="footer-mark" aria-hidden="true">mattjs.me</p>
 	</footer>
+}
+
+// The image a link preview shows. Posts get the square paint chip as a small card; every other page gets the
+// wide portrait card.
+type socialPreview struct {
+	URL, Type, Height, Alt, Card string
+}
+
+func preview(seo SEO) socialPreview {
+	if seo.Article {
+		return socialPreview{URL: socialChipURL, Type: "image/png", Height: "1200", Alt: socialChipAlt, Card: "summary"}
+	}
+	return socialPreview{URL: socialImageURL, Type: "image/jpeg", Height: "630", Alt: socialImageAlt, Card: "summary_large_image"}
 }
 
 func commitLabel() string {

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor · mattjs.me</title>
+<link rel="icon" href="/assets/favicon-32x32.png">
+<style>
+@font-face { font-family: "Geist"; src: url("/assets/fonts/Geist/Geist.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Geist Mono"; src: url("/assets/fonts/Geist/GeistMono.woff2") format("woff2"); font-weight: 100 900; }
+:root {
+  --bg: #000; --subtle: #0a0a0a; --raised: #111; --fg: #ededed; --muted: #a1a1a1; --faint: #6b6b6b;
+  --line: #1f1f1f; --line-strong: #2e2e2e; --brand: #f04436; --ok: #3fb97f;
+  --sans: "Geist", ui-sans-serif, system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { display: grid; grid-template-rows: 3rem 1fr; background: var(--bg); color: var(--fg); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; overflow: hidden; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+::selection { background: color-mix(in oklab, var(--brand) 45%, transparent); }
+
+/* Top bar */
+.bar { display: flex; align-items: center; gap: .75rem; padding: 0 .75rem; border-bottom: 1px solid var(--line); min-width: 0; }
+.brand { font: 500 12px var(--mono); color: var(--muted); letter-spacing: .02em; white-space: nowrap; }
+.brand b { color: var(--fg); font-weight: 500; }
+.state { margin-left: auto; font: 12px var(--mono); color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.state.bad { color: var(--brand); }
+.btn { height: 1.9rem; padding: 0 .75rem; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; font-size: 13px; white-space: nowrap; transition: border-color .15s, background .15s, color .15s; }
+.btn:hover { border-color: var(--faint); }
+.btn.on { background: var(--raised); border-color: var(--faint); }
+.btn.primary { background: var(--fg); border-color: var(--fg); color: #000; font-weight: 500; }
+.btn.primary:hover { background: #fff; }
+.btn.danger { color: var(--brand); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.icon { width: 1.9rem; padding: 0; display: grid; place-items: center; }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 15rem minmax(22rem, 1fr) minmax(0, 1fr); min-height: 0; }
+.app.no-side { grid-template-columns: 0 minmax(22rem, 1fr) minmax(0, 1fr); }
+.app.no-preview { grid-template-columns: 15rem minmax(22rem, 1fr) 0; }
+.app.no-side.no-preview { grid-template-columns: 0 minmax(22rem, 1fr) 0; }
+.app > * { min-width: 0; min-height: 0; overflow: hidden; }
+
+/* Post list */
+.side { display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.side-head { display: flex; align-items: center; justify-content: space-between; padding: .75rem; }
+.label { font: 11px var(--mono); color: var(--faint); letter-spacing: .08em; text-transform: uppercase; }
+.posts { flex: 1; overflow-y: auto; padding: 0 .4rem .75rem; }
+.post { display: block; width: 100%; padding: .55rem .6rem; border: 0; border-radius: .5rem; background: transparent; text-align: left; }
+.post:hover { background: var(--subtle); }
+.post.current { background: var(--raised); }
+.post strong { display: block; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.post span { font: 11px var(--mono); color: var(--faint); }
+.post .draft { color: var(--brand); }
+
+/* Writing pane */
+.write { display: flex; flex-direction: column; position: relative; }
+.empty { margin: auto; text-align: center; color: var(--muted); }
+.meta { padding: 1.25rem 1.5rem .75rem; border-bottom: 1px solid var(--line); }
+.meta input { width: 100%; border: 0; outline: 0; background: transparent; }
+.meta input::placeholder, textarea::placeholder { color: var(--faint); }
+#title { font-size: 1.6rem; font-weight: 600; letter-spacing: -.035em; }
+#subtitle { margin-top: .15rem; color: var(--muted); font-size: 1rem; }
+.fields { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .85rem; }
+.field { display: flex; align-items: center; gap: .45rem; height: 1.8rem; padding: 0 .6rem; border: 1px solid var(--line); border-radius: .45rem; font: 12px var(--mono); color: var(--faint); }
+.field:focus-within { border-color: var(--line-strong); }
+.field input { color: var(--fg); font: 12px var(--mono); }
+.field.grow { flex: 1; min-width: 10rem; }
+#date { width: 7.6rem; } #readtime { width: 2.6rem; }
+#date::-webkit-calendar-picker-indicator { filter: invert(.6); }
+.pill { display: inline-flex; align-items: center; gap: .4rem; height: 1.8rem; padding: 0 .6rem; border-radius: .45rem; font: 12px var(--mono); border: 1px solid var(--line); color: var(--muted); }
+.pill i { width: .4rem; height: .4rem; border-radius: 50%; background: var(--brand); }
+.pill.live i { background: var(--ok); }
+
+.tools { display: flex; flex-wrap: wrap; gap: .15rem; padding: .4rem 1.1rem; border-bottom: 1px solid var(--line); }
+.tool { height: 1.75rem; min-width: 1.75rem; padding: 0 .45rem; border: 0; border-radius: .35rem; background: transparent; color: var(--muted); font: 12px var(--mono); }
+.tool:hover { background: var(--raised); color: var(--fg); }
+.tools hr { width: 1px; height: 1.1rem; margin: auto .3rem; border: 0; background: var(--line); }
+
+.pad { position: relative; flex: 1; min-height: 0; }
+#body { display: block; width: 100%; height: 100%; padding: 1.25rem 1.5rem 40vh; border: 0; outline: 0; resize: none; background: transparent; font: 15px/1.75 var(--mono); tab-size: 2; }
+.pad.dropping::after { content: "Drop to add the image"; position: absolute; inset: .6rem; display: grid; place-items: center; border: 1px dashed var(--brand); border-radius: .75rem; background: color-mix(in oklab, var(--brand) 8%, #000c); color: var(--fg); pointer-events: none; }
+.foot { display: flex; gap: 1rem; padding: .4rem 1.5rem; border-top: 1px solid var(--line); font: 11px var(--mono); color: var(--faint); }
+.foot span:last-child { margin-left: auto; }
+
+/* Slash menu */
+.menu { position: absolute; z-index: 5; width: 17rem; max-height: 17rem; overflow-y: auto; padding: .3rem; border: 1px solid var(--line-strong); border-radius: .6rem; background: var(--raised); box-shadow: 0 16px 40px #000a; }
+.menu button { display: flex; justify-content: space-between; gap: .75rem; width: 100%; padding: .4rem .55rem; border: 0; border-radius: .4rem; background: transparent; text-align: left; font-size: 13px; }
+.menu button span { color: var(--faint); font: 11px var(--mono); }
+.menu button.active { background: var(--line-strong); }
+[hidden] { display: none !important; }
+
+/* Preview */
+.view { display: flex; flex-direction: column; border-left: 1px solid var(--line); background: var(--subtle); }
+.view-head { display: flex; align-items: center; justify-content: space-between; padding: .5rem .75rem; border-bottom: 1px solid var(--line); }
+.frame-wrap { flex: 1; min-height: 0; display: flex; justify-content: center; }
+#frame { width: 100%; height: 100%; border: 0; background: #000; }
+.view.phone #frame { width: 390px; border-inline: 1px solid var(--line); }
+
+/* Dialogs */
+dialog { width: min(34rem, calc(100vw - 2rem)); padding: 1.4rem; border: 1px solid var(--line-strong); border-radius: .9rem; background: var(--subtle); color: var(--fg); }
+dialog::backdrop { background: #000b; backdrop-filter: blur(3px); }
+dialog h2 { margin: 0 0 .35rem; font-size: 1.1rem; letter-spacing: -.02em; }
+dialog p { margin: .35rem 0; color: var(--muted); }
+dialog label { display: block; margin-top: .85rem; font: 11px var(--mono); color: var(--faint); letter-spacing: .06em; text-transform: uppercase; }
+dialog input { display: block; width: 100%; margin-top: .3rem; padding: .5rem .65rem; border: 1px solid var(--line-strong); border-radius: .5rem; outline: 0; background: var(--bg); }
+dialog input:focus { border-color: var(--faint); }
+dialog .actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1.25rem; }
+dialog ul { margin: .4rem 0; padding-left: 1.1rem; color: var(--muted); font: 12px/1.7 var(--mono); max-height: 8rem; overflow-y: auto; }
+.warn { margin-top: .85rem; padding: .7rem .8rem; border: 1px solid color-mix(in oklab, var(--brand) 45%, var(--line)); border-radius: .6rem; }
+.warn p { color: var(--fg); margin: 0; }
+#log { margin: .85rem 0 0; padding: .75rem; height: 16rem; overflow: auto; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); font: 11.5px/1.6 var(--mono); color: var(--muted); white-space: pre-wrap; word-break: break-word; }
+.error { color: var(--brand) !important; }
+a { color: var(--fg); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <button class="btn icon" id="toggle-side" title="Show or hide the post list">☰</button>
+  <span class="brand"><b>mattjs.me</b> / editor</span>
+  <span class="state" id="state"></span>
+  <button class="btn on" id="toggle-preview">Preview</button>
+  <button class="btn" id="more" hidden>Unpublish</button>
+  <button class="btn danger" id="delete" hidden>Delete draft</button>
+  <button class="btn primary" id="publish" disabled>Publish</button>
+</header>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-head"><span class="label">Posts</span><button class="btn" id="new">New post</button></div>
+    <div class="posts" id="posts"></div>
+  </aside>
+
+  <main class="write">
+    <div class="empty" id="empty"><p>Pick a post on the left, or start a new one.</p><button class="btn primary" id="new-empty">New post</button></div>
+    <div class="meta" id="meta" hidden>
+      <input id="title" placeholder="Title" autocomplete="off">
+      <input id="subtitle" placeholder="Subtitle (shown under the title and in link previews)" autocomplete="off">
+      <div class="fields">
+        <span class="pill" id="status"><i></i><span></span></span>
+        <label class="field">date <input id="date" type="date"></label>
+        <label class="field grow">tags <input id="tags" placeholder="golang, life" autocomplete="off"></label>
+        <label class="field" title="Leave empty to work it out from the word count">mins <input id="readtime" inputmode="numeric" placeholder="auto"></label>
+      </div>
+    </div>
+    <div class="tools" id="tools" hidden></div>
+    <div class="pad" id="pad" hidden>
+      <textarea id="body" spellcheck="true" placeholder="Start writing. Type / on a new line for images, figures, code and more."></textarea>
+      <div class="menu" id="menu" hidden></div>
+    </div>
+    <div class="foot" id="foot" hidden><span id="words"></span><span id="address"></span><span>⌘B bold · ⌘I italic · ⌘K link · / insert</span></div>
+  </main>
+
+  <section class="view" id="view">
+    <div class="view-head"><span class="label">Live preview</span><button class="btn" id="phone">Phone width</button></div>
+    <div class="frame-wrap"><iframe id="frame" title="Preview"></iframe></div>
+  </section>
+</div>
+
+<dialog id="ask"><form method="dialog"><h2></h2><div class="content"></div><div class="actions"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn primary" value="ok"></button></div></form></dialog>
+<dialog id="ship"><h2></h2><div id="ship-info"></div><pre id="log" hidden></pre><div class="actions"><button class="btn" id="ship-close">Cancel</button><button class="btn primary" id="ship-go"></button></div></dialog>
+<input type="file" id="file" accept="image/*,.heic" multiple hidden>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const body = $("body"), frame = $("frame");
+let posts = [], current = null, saveTimer = 0, previewTimer = 0, previewRun = 0, saving = Promise.resolve();
+
+async function api(method, path, data, raw) {
+  const headers = { "X-Editor": "1" };
+  if (data !== undefined && !raw) headers["Content-Type"] = "application/json";
+  const response = await fetch(path, { method, headers, body: raw ? data : data === undefined ? undefined : JSON.stringify(data) });
+  if (!response.ok) {
+    let message = response.statusText;
+    try { message = (await response.json()).error || message; } catch {}
+    throw new Error(message);
+  }
+  return response;
+}
+const escapeHTML = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function setState(text, bad) { $("state").textContent = text; $("state").classList.toggle("bad", !!bad); }
+
+/* ---------- Dialog that asks for a few values ---------- */
+function ask({ title, text = "", fields = [], confirm = "OK" }) {
+  const dialog = $("ask");
+  dialog.querySelector("h2").textContent = title;
+  dialog.querySelector(".content").innerHTML = (text ? `<p>${escapeHTML(text)}</p>` : "") +
+    fields.map((f) => `<label>${escapeHTML(f.label)}<input name="${f.name}" value="${escapeHTML(f.value || "")}" placeholder="${escapeHTML(f.placeholder || "")}" ${f.optional ? "" : "required"} autocomplete="off"></label>`).join("");
+  dialog.querySelector('[value="ok"]').textContent = confirm;
+  dialog.returnValue = "";
+  dialog.showModal();
+  return new Promise((resolve) => dialog.addEventListener("close", () => {
+    if (dialog.returnValue !== "ok") return resolve(null);
+    resolve(Object.fromEntries(fields.map((f) => [f.name, dialog.querySelector(`[name="${f.name}"]`).value.trim()])));
+  }, { once: true }));
+}
+
+/* ---------- Post list ---------- */
+async function loadPosts() {
+  posts = await (await api("GET", "/api/posts")).json();
+  drawPosts();
+}
+function drawPosts() {
+  $("posts").innerHTML = posts.map((p) => `<button class="post${current && p.slug === current.slug ? " current" : ""}" data-slug="${p.slug}">
+    <strong>${escapeHTML(p.title || "Untitled")}</strong><span>${p.draft ? '<span class="draft">draft</span> · ' : ""}${escapeHTML((p.date || "").slice(0, 10))}</span></button>`).join("");
+}
+$("posts").addEventListener("click", (e) => { const item = e.target.closest(".post"); if (item) openPost(item.dataset.slug); });
+
+const slugify = (text) => text.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+async function newPost() {
+  const dialog = $("ask");
+  const sync = (e) => { if (e.target.name === "title") dialog.querySelector('[name="slug"]').value = slugify(e.target.value); };
+  dialog.addEventListener("input", sync);
+  const answer = await ask({ title: "New post", confirm: "Create draft", fields: [
+    { name: "title", label: "Title", placeholder: "No one is coming" },
+    { name: "slug", label: "Address (mattjs.me/blog/…)", placeholder: "no-one-is-coming" },
+  ] });
+  dialog.removeEventListener("input", sync);
+  if (!answer) return;
+  try {
+    const created = await (await api("POST", "/api/posts", { slug: slugify(answer.slug), meta: { title: answer.title } })).json();
+    await loadPosts();
+    await openPost(created.slug);
+    body.focus();
+  } catch (error) { setState(error.message, true); }
+}
+$("new").onclick = $("new-empty").onclick = newPost;
+
+/* ---------- Opening, editing, saving ---------- */
+async function openPost(slug) {
+  await flush();
+  try { current = await (await api("GET", "/api/posts/" + slug)).json(); }
+  catch (error) { setState(error.message, true); return; }
+  current.meta.tags = current.meta.tags || [];
+  for (const id of ["empty"]) $(id).hidden = true;
+  for (const id of ["meta", "tools", "pad", "foot"]) $(id).hidden = false;
+  $("title").value = current.meta.title || "";
+  $("subtitle").value = current.meta.subtitle || "";
+  $("date").value = (current.meta.date || "").slice(0, 10);
+  $("tags").value = current.meta.tags.join(", ");
+  $("readtime").value = current.meta.read_time || "";
+  body.value = current.body;
+  body.scrollTop = 0;
+  try { localStorage.setItem("editor-post", slug); } catch {}
+  location.hash = slug;
+  drawChrome();
+  drawPosts();
+  setState("Saved");
+  preview(true);
+}
+function drawChrome() {
+  const draft = current.meta.draft;
+  $("status").classList.toggle("live", !draft);
+  $("status").lastElementChild.textContent = draft ? "draft" : "published";
+  $("publish").disabled = false;
+  $("publish").textContent = draft ? "Publish" : "Publish changes";
+  $("more").hidden = draft;
+  $("delete").hidden = !draft;
+  $("address").textContent = "/blog/" + current.slug;
+  const count = (body.value.match(/\S+/g) || []).length;
+  $("words").textContent = `${count.toLocaleString()} words · ${Math.max(1, Math.ceil(count / 200))} min read`;
+}
+function collect() {
+  current.meta.title = $("title").value;
+  current.meta.subtitle = $("subtitle").value;
+  // Keep a full timestamp when only the day is shown and it hasn't changed
+  if ((current.meta.date || "").slice(0, 10) !== $("date").value) current.meta.date = $("date").value;
+  current.meta.tags = $("tags").value.split(",").map((t) => t.trim().toLowerCase().replace(/\s+/g, "-")).filter(Boolean);
+  current.meta.read_time = parseInt($("readtime").value, 10) || 0;
+  current.body = body.value;
+}
+function changed() {
+  if (!current) return;
+  collect();
+  drawChrome();
+  setState("Editing…");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 700);
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(preview, 180);
+}
+function save() {
+  clearTimeout(saveTimer);
+  saveTimer = 0;
+  if (!current) return saving;
+  const snapshot = JSON.parse(JSON.stringify(current));
+  saving = saving.then(async () => {
+    try {
+      await api("PUT", "/api/posts/" + snapshot.slug, snapshot);
+      const listed = posts.find((p) => p.slug === snapshot.slug);
+      if (listed) { Object.assign(listed, { title: snapshot.meta.title, date: snapshot.meta.date, draft: snapshot.meta.draft }); drawPosts(); }
+      if (!saveTimer) setState("Saved");
+    } catch (error) { setState("Not saved: " + error.message, true); }
+  });
+  return saving;
+}
+const flush = () => (saveTimer ? save() : saving);
+for (const id of ["title", "subtitle", "date", "tags", "readtime", "body"]) $(id).addEventListener("input", changed);
+addEventListener("beforeunload", () => {
+  if (saveTimer && current) { collect(); fetch("/api/posts/" + current.slug, { method: "PUT", keepalive: true, headers: { "X-Editor": "1", "Content-Type": "application/json" }, body: JSON.stringify(current) }); }
+});
+
+/* ---------- Live preview: the real page, patched in place so it never jumps ---------- */
+const normal = (html) => html.replace(/\s*\b(is-shown|pending)\b/g, "").replace(/ class=""/g, "");
+function patch(from, to) {
+  if (!from || !to) return;
+  const a = [...from.childNodes], b = [...to.childNodes];
+  const same = (x, y) => x.nodeType === y.nodeType && (x.nodeType === 1 ? normal(x.outerHTML) === normal(y.outerHTML) : x.nodeValue === y.nodeValue);
+  let start = 0;
+  while (start < a.length && start < b.length && same(a[start], b[start])) start++;
+  let endA = a.length, endB = b.length;
+  while (endA > start && endB > start && same(a[endA - 1], b[endB - 1])) { endA--; endB--; }
+  for (let i = start; i < endA; i++) a[i].remove();
+  for (let i = start; i < endB; i++) from.insertBefore(from.ownerDocument.importNode(b[i], true), a[endA] || null);
+}
+async function preview(full) {
+  if (!current || $("app").classList.contains("no-preview")) return;
+  const run = ++previewRun;
+  let html;
+  try { html = await (await api("POST", "/api/preview", current)).text(); }
+  catch (error) { setState("Preview: " + error.message, true); return; }
+  if (run !== previewRun) return;
+  const live = frame.contentDocument;
+  if (full === true || !live || !live.querySelector(".prose")) { frame.srcdoc = html; return; }
+  const next = new DOMParser().parseFromString(html, "text/html");
+  patch(live.querySelector(".article-heading"), next.querySelector(".article-heading"));
+  patch(live.querySelector(".prose"), next.querySelector(".prose"));
+  live.title = next.title;
+}
+// Keep the preview roughly level with where you're writing
+body.addEventListener("scroll", () => {
+  const page = frame.contentDocument && frame.contentDocument.scrollingElement;
+  if (!page) return;
+  const ratio = body.scrollTop / Math.max(1, body.scrollHeight - body.clientHeight);
+  page.scrollTop = ratio * (page.scrollHeight - page.clientHeight);
+});
+$("toggle-preview").onclick = () => { $("toggle-preview").classList.toggle("on", !$("app").classList.toggle("no-preview")); preview(true); };
+$("toggle-side").onclick = () => $("app").classList.toggle("no-side");
+$("phone").onclick = () => $("phone").classList.toggle("on", $("view").classList.toggle("phone"));
+
+/* ---------- Text editing ---------- */
+function replace(start, end, text, selectFrom, selectTo) {
+  body.focus();
+  body.setSelectionRange(start, end);
+  // insertText keeps the browser's undo history; setRangeText is the fallback
+  if (!document.execCommand(text ? "insertText" : "delete", false, text)) { body.setRangeText(text, start, end, "end"); changed(); }
+  if (selectFrom !== undefined) body.setSelectionRange(start + selectFrom, start + (selectTo ?? selectFrom));
+}
+// Insert a template; ⟦text⟧ marks what ends up selected, ready to type over
+function insert(template, { block = false } = {}) {
+  let start = body.selectionStart, end = body.selectionEnd;
+  const selected = body.value.slice(start, end);
+  if (selected) template = template.replace(/⟦[^⟧]*⟧/, "⟦" + selected + "⟧");
+  if (block) {
+    const before = body.value.slice(0, start), after = body.value.slice(end);
+    if (before && !before.endsWith("\n\n")) template = (before.endsWith("\n") ? "\n" : "\n\n") + template;
+    if (!after.startsWith("\n\n")) template += after.startsWith("\n") || !after ? "\n" : "\n\n";
+  }
+  const mark = template.indexOf("⟦"), close = template.indexOf("⟧");
+  const text = template.replace(/[⟦⟧]/g, "");
+  if (mark < 0) replace(start, end, text, text.length);
+  else replace(start, end, text, mark, close - 1);
+}
+function wrap(open, close = open, placeholder = "text") {
+  const start = body.selectionStart, end = body.selectionEnd, value = body.value;
+  if (value.slice(start - open.length, start) === open && value.slice(end, end + close.length) === close) {
+    replace(start - open.length, end + close.length, value.slice(start, end), 0, end - start);
+    return;
+  }
+  const inner = value.slice(start, end) || placeholder;
+  replace(start, end, open + inner + close, open.length, open.length + inner.length);
+}
+function prefixLines(prefix) {
+  const value = body.value;
+  const start = value.lastIndexOf("\n", body.selectionStart - 1) + 1;
+  let end = value.indexOf("\n", body.selectionEnd);
+  if (end < 0) end = value.length;
+  const lines = value.slice(start, end).split("\n");
+  const heading = /^#+ $/.test(prefix);
+  const all = lines.every((line) => line.startsWith(prefix));
+  const text = lines.map((line) => all ? line.slice(prefix.length) : prefix + (heading ? line.replace(/^#+ /, "") : line)).join("\n");
+  // With nothing selected, carry on typing at the end of the line
+  if (body.selectionStart === body.selectionEnd) replace(start, end, text, text.length);
+  else replace(start, end, text, 0, text.length);
+}
+function footnote() {
+  let n = 1;
+  while (body.value.includes(`[^${n}]`)) n++;
+  const at = body.selectionEnd;
+  replace(at, at, `[^${n}]`);
+  const tail = body.value.endsWith("\n") ? "\n" : "\n\n";
+  const from = body.value.length;
+  replace(from, from, `${tail}[^${n}]: Note`, tail.length + `[^${n}]: `.length, tail.length + `[^${n}]: Note`.length);
+}
+async function video() {
+  const answer = await ask({ title: "Embed a YouTube video", confirm: "Embed", fields: [{ name: "url", label: "YouTube link", placeholder: "https://www.youtube.com/watch?v=…" }, { name: "title", label: "What it is (for screen readers)", placeholder: "Video title" }] });
+  if (!answer) return;
+  const id = (answer.url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/) || [])[1];
+  if (!id) { setState("That doesn't look like a YouTube link", true); return; }
+  insert(`<iframe src="https://www.youtube-nocookie.com/embed/${id}" title="${escapeHTML(answer.title)}" loading="lazy" allowfullscreen></iframe>`, { block: true });
+}
+
+/* ---------- Images ---------- */
+let captioned = false;
+async function addImages(files) {
+  if (!current) return;
+  for (const file of files) {
+    if (!file.type.startsWith("image/") && !/\.heic$/i.test(file.name)) continue;
+    setState("Adding " + file.name + "…");
+    try {
+      const { url } = await (await api("POST", `/api/images?slug=${current.slug}&name=${encodeURIComponent(file.name || "image.png")}`, file, true)).json();
+      if (captioned) insert(`<figure class="fig">\n<div class="art"><img src="${url}" alt="⟦Describe the image⟧"></div>\n<figcaption>Caption</figcaption>\n</figure>`, { block: true });
+      else insert(`![⟦Describe the image⟧](${url})`, { block: true });
+      setState("Image added");
+    } catch (error) { setState(error.message, true); }
+  }
+}
+function pickImage(withCaption) { captioned = withCaption; $("file").value = ""; $("file").click(); }
+$("file").onchange = () => addImages($("file").files);
+const pad = $("pad");
+pad.addEventListener("dragover", (e) => { if ([...e.dataTransfer.types].includes("Files")) { e.preventDefault(); pad.classList.add("dropping"); } });
+pad.addEventListener("dragleave", () => pad.classList.remove("dropping"));
+pad.addEventListener("drop", (e) => { e.preventDefault(); pad.classList.remove("dropping"); captioned = false; addImages(e.dataTransfer.files); });
+body.addEventListener("paste", (e) => {
+  const files = [...e.clipboardData.files];
+  if (files.length) { e.preventDefault(); captioned = false; addImages(files); return; }
+  // Pasting a link over selected text turns the text into a link
+  const text = e.clipboardData.getData("text/plain").trim();
+  if (/^https?:\/\/\S+$/.test(text) && body.selectionStart !== body.selectionEnd) {
+    e.preventDefault();
+    const start = body.selectionStart, inner = body.value.slice(start, body.selectionEnd);
+    replace(start, body.selectionEnd, `[${inner}](${text})`, `[${inner}](${text})`.length);
+  }
+});
+
+/* ---------- Commands: the toolbar and the / menu share one list ---------- */
+const commands = [
+  { key: "B", name: "Bold", hint: "⌘B", run: () => wrap("**") },
+  { key: "I", name: "Italic", hint: "⌘I", run: () => wrap("_") },
+  { key: "S", name: "Strikethrough", run: () => wrap("~~") },
+  { key: "</>", name: "Inline code", run: () => wrap("`", "`", "code") },
+  { key: "Link", name: "Link", hint: "⌘K", run: () => insert("[⟦text⟧](https://)") },
+  {},
+  { key: "H2", name: "Heading", hint: "section", run: () => prefixLines("## ") },
+  { key: "H3", name: "Small heading", run: () => prefixLines("### ") },
+  { key: "Quote", name: "Quote", run: () => prefixLines("> ") },
+  { key: "List", name: "Bullet list", run: () => prefixLines("- ") },
+  { key: "1.", name: "Numbered list", run: () => prefixLines("1. ") },
+  { key: "☑", name: "Task list", run: () => prefixLines("- [ ] ") },
+  {},
+  { key: "Image", name: "Image", hint: "or drop / paste", run: () => pickImage(false) },
+  { key: "Figure", name: "Image with caption", hint: "numbered fig.", run: () => pickImage(true) },
+  { key: "Video", name: "YouTube video", run: video },
+  { key: "Code", name: "Code block", hint: "highlighted", run: () => insert("```⟦go⟧\n\n```", { block: true }) },
+  { key: "Table", name: "Table", run: () => insert("| ⟦Column⟧ | Column |\n| --- | --- |\n| Cell | Cell |", { block: true }) },
+  { key: "Aside", name: "Software aside", hint: "// in software terms", run: () => insert('<aside class="lesson">⟦What this was really teaching.⟧ <strong>The point in one line.</strong></aside>', { block: true }) },
+  { key: "A→B", name: "Two-box diagram", hint: "before → after", run: () => insert('<figure class="fig" data-reveal>\n<div class="split"><div class="box"><span>⟦left label⟧</span>what it is <em>highlight</em></div><i>→</i><div class="box"><span>right label</span>what it becomes</div></div>\n<figcaption>Caption</figcaption>\n</figure>', { block: true }) },
+  { key: "Note", name: "Footnote", run: footnote },
+  { key: "―", name: "Divider", run: () => insert("---", { block: true }) },
+];
+$("tools").innerHTML = commands.map((c, i) => c.name ? `<button class="tool" data-i="${i}" title="${c.name}${c.hint ? " (" + c.hint + ")" : ""}">${escapeHTML(c.key)}</button>` : "<hr>").join("");
+$("tools").addEventListener("mousedown", (e) => e.preventDefault()); // keep the selection in the text
+$("tools").addEventListener("click", (e) => { const tool = e.target.closest(".tool"); if (tool) commands[tool.dataset.i].run(); });
+
+/* ---------- / menu ---------- */
+const menu = $("menu");
+let menuItems = [], menuAt = 0;
+function caretPosition() {
+  const mirror = document.createElement("div"), style = getComputedStyle(body);
+  for (const property of ["font", "lineHeight", "padding", "tabSize", "letterSpacing"]) mirror.style[property] = style[property];
+  Object.assign(mirror.style, { position: "absolute", visibility: "hidden", whiteSpace: "pre-wrap", overflowWrap: "break-word", width: body.clientWidth + "px", top: 0, left: 0 });
+  mirror.textContent = body.value.slice(0, body.selectionStart);
+  const marker = mirror.appendChild(document.createElement("span"));
+  marker.textContent = "​";
+  pad.appendChild(mirror);
+  const position = { top: marker.offsetTop - body.scrollTop + parseFloat(style.lineHeight), left: marker.offsetLeft };
+  mirror.remove();
+  return position;
+}
+function slashQuery() {
+  const line = body.value.slice(body.value.lastIndexOf("\n", body.selectionStart - 1) + 1, body.selectionStart);
+  const match = line.match(/^\/([\w ]*)$/);
+  return match ? match[1].toLowerCase() : null;
+}
+function drawMenu() {
+  const query = slashQuery();
+  menuItems = query === null ? [] : commands.filter((c) => c.name && (c.name + " " + c.key).toLowerCase().includes(query));
+  // Names that start with what was typed come first: "/code" means the code block, not inline code
+  menuItems.sort((x, y) => y.name.toLowerCase().startsWith(query) - x.name.toLowerCase().startsWith(query));
+  if (!menuItems.length) { menu.hidden = true; return; }
+  menuAt = Math.min(menuAt, menuItems.length - 1);
+  menu.innerHTML = menuItems.map((c, i) => `<button class="${i === menuAt ? "active" : ""}" data-i="${i}">${c.name}<span>${escapeHTML(c.hint || "")}</span></button>`).join("");
+  const { top, left } = caretPosition();
+  menu.hidden = false;
+  menu.style.left = Math.min(left, pad.clientWidth - menu.offsetWidth - 8) + "px";
+  menu.style.top = (top + menu.offsetHeight > pad.clientHeight ? Math.max(8, top - menu.offsetHeight - 30) : top) + "px";
+  menu.querySelector(".active").scrollIntoView({ block: "nearest" });
+}
+function chooseMenu(index) {
+  const command = menuItems[index];
+  menu.hidden = true;
+  const end = body.selectionStart, start = body.value.lastIndexOf("\n", end - 1) + 1;
+  replace(start, end, "");
+  command.run();
+}
+menu.addEventListener("mousedown", (e) => { e.preventDefault(); const item = e.target.closest("button"); if (item) chooseMenu(+item.dataset.i); });
+body.addEventListener("input", () => { menuAt = 0; drawMenu(); });
+body.addEventListener("blur", () => { menu.hidden = true; });
+body.addEventListener("click", drawMenu);
+
+/* ---------- Keys ---------- */
+body.addEventListener("keydown", (e) => {
+  if (!menu.hidden) {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); menuAt = (menuAt + (e.key === "ArrowDown" ? 1 : menuItems.length - 1)) % menuItems.length; drawMenu(); return; }
+    if (e.key === "Enter" || e.key === "Tab") { e.preventDefault(); chooseMenu(menuAt); return; }
+    if (e.key === "Escape") { e.preventDefault(); menu.hidden = true; return; }
+  }
+  const command = e.metaKey || e.ctrlKey;
+  if (command && !e.shiftKey && !e.altKey) {
+    const shortcut = { b: () => wrap("**"), i: () => wrap("_"), k: () => insert("[⟦text⟧](https://)") }[e.key.toLowerCase()];
+    if (shortcut) { e.preventDefault(); shortcut(); return; }
+  }
+  if (e.key === "Tab") { e.preventDefault(); replace(body.selectionStart, body.selectionEnd, "  "); return; }
+  // Enter carries on a list or quote; Enter on an empty item ends it
+  if (e.key === "Enter" && !e.shiftKey && !command && body.selectionStart === body.selectionEnd) {
+    const at = body.selectionStart, lineStart = body.value.lastIndexOf("\n", at - 1) + 1;
+    const marker = body.value.slice(lineStart, at).match(/^(\s*)([-*] \[[ x]\] |[-*] |\d+\. |> )(.*)$/);
+    if (!marker) return;
+    e.preventDefault();
+    if (!marker[3].trim()) { replace(lineStart, at, ""); return; }
+    let next = marker[2].replace("[x]", "[ ]");
+    const number = next.match(/^(\d+)\. $/);
+    if (number) next = +number[1] + 1 + ". ";
+    replace(at, at, "\n" + marker[1] + next);
+  }
+});
+addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); if (current) { collect(); save(); } }
+});
+
+/* ---------- Publish ---------- */
+const ship = $("ship");
+let shipping = false, unpublishing = false;
+async function openShip(unpublish) {
+  if (!current) return;
+  unpublishing = unpublish;
+  collect();
+  await save();
+  let status;
+  try { status = await (await api("GET", "/api/status?slug=" + current.slug)).json(); }
+  catch (error) { setState(error.message, true); return; }
+  ship.querySelector("h2").textContent = unpublish ? "Unpublish this post?" : current.meta.draft ? "Publish this post?" : "Publish your changes?";
+  const others = status.others.length ? `<div class="warn"><p>Other changes in the repo that aren't committed yet will go live too, because the whole site is rebuilt:</p><ul>${status.others.map((f) => `<li>${escapeHTML(f)}</li>`).join("")}</ul></div>` : "";
+  const branch = status.branch !== "main" ? `<div class="warn"><p>You're on the branch "${escapeHTML(status.branch)}", not main. It will be pushed and deployed from there.</p></div>` : "";
+  $("ship-info").innerHTML = `<p><strong>${escapeHTML(current.meta.title || "Untitled")}</strong></p>
+    <p>${unpublish ? "It will be turned back into a draft and removed from" : "It will be committed, pushed to GitHub and deployed to"} <a href="${status.url}" target="_blank" rel="noopener">${status.url.replace("https://", "")}</a>. This takes about a minute.</p>${branch}${others}`;
+  $("log").hidden = true;
+  $("log").textContent = "";
+  $("ship-go").hidden = false;
+  $("ship-go").disabled = false;
+  $("ship-go").textContent = unpublish ? "Unpublish now" : "Publish now";
+  $("ship-close").textContent = "Cancel";
+  ship.showModal();
+}
+$("publish").onclick = () => openShip(false);
+$("more").onclick = () => openShip(true);
+$("ship-close").onclick = () => { if (!shipping) ship.close(); };
+ship.addEventListener("cancel", (e) => { if (shipping) e.preventDefault(); });
+$("ship-go").onclick = async () => {
+  const log = $("log");
+  shipping = true;
+  $("ship-go").disabled = true;
+  $("ship-close").textContent = "Working…";
+  log.hidden = false;
+  log.classList.remove("error");
+  let text = "";
+  try {
+    const response = await api("POST", "/api/publish", { slug: current.slug, unpublish: unpublishing });
+    const reader = response.body.getReader(), decoder = new TextDecoder();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+      log.textContent = text;
+      log.scrollTop = log.scrollHeight;
+    }
+  } catch (error) { text += "\nFAILED: " + error.message; log.textContent = text; }
+  shipping = false;
+  const done = text.match(/\nDONE (\S+)\s*$/);
+  $("ship-close").textContent = "Close";
+  if (done) {
+    $("ship-go").hidden = true;
+    ship.querySelector("h2").textContent = unpublishing ? "Unpublished" : "Published";
+    $("ship-info").innerHTML = unpublishing ? "<p>The post is a draft again and is off the live site.</p>" : `<p>It's live: <a href="${done[1]}" target="_blank" rel="noopener">${done[1].replace("https://", "")}</a></p>`;
+  } else {
+    log.classList.add("error");
+    $("ship-go").disabled = false;
+    $("ship-go").textContent = "Try again";
+  }
+  const slug = current.slug;
+  current = null;
+  await loadPosts();
+  await openPost(slug);
+};
+
+/* ---------- Delete a draft ---------- */
+$("delete").onclick = async () => {
+  if (!current) return;
+  const answer = await ask({ title: "Delete this draft?", text: `"${current.meta.title || "Untitled"}" and any images added to it will be deleted from the repo folder. This can't be undone from here.`, confirm: "Delete draft" });
+  if (!answer) return;
+  clearTimeout(saveTimer);
+  saveTimer = 0;
+  try { await saving; await api("DELETE", "/api/posts/" + current.slug); }
+  catch (error) { setState(error.message, true); return; }
+  current = null;
+  for (const id of ["meta", "tools", "pad", "foot"]) $(id).hidden = true;
+  $("empty").hidden = false;
+  for (const id of ["more", "delete"]) $(id).hidden = true;
+  $("publish").disabled = true;
+  frame.srcdoc = "";
+  location.hash = "";
+  setState("Draft deleted");
+  await loadPosts();
+};
+
+/* ---------- Start ---------- */
+(async () => {
+  await loadPosts();
+  let wanted = location.hash.slice(1);
+  try { wanted = wanted || localStorage.getItem("editor-post"); } catch {}
+  if (posts.some((p) => p.slug === wanted)) openPost(wanted);
+})();
+</script>
+</body>
+</html>
