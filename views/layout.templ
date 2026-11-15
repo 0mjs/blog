@@ -194,6 +194,21 @@ templ socialLinks() {
 
 templ footer() {
 	<footer class="frame site-footer">
+		<a class="studio" href="https://carbonsoft.sh" target="_blank" rel="noopener">
+			<div class="grid-bg" aria-hidden="true"></div>
+			<span class="studio-mark">
+				@carbonMark()
+			</span>
+			<span class="studio-copy">
+				<small>the company</small>
+				<strong>Carbon Software</strong>
+				<span>Product engineering. We design and build mobile apps, AI systems and web platforms.</span>
+			</span>
+			<span class="studio-go">
+				<span>carbonsoft.sh</span>
+				@arrow(true)
+			</span>
+		</a>
 		<div class="footer-row">
 			<details class="colophon">
 				<summary>Built with ↓</summary>
@@ -207,11 +222,6 @@ templ footer() {
 					<span aria-hidden="true">·</span>
 				}
 				© { time.Now().Format("2006") }
-				<span aria-hidden="true">·</span>
-				<a href="https://carbonsoft.sh" target="_blank" rel="noopener" class="studio-link" title="Carbon Software">
-					@carbonMark()
-					carbonsoft.sh
-				</a>
 			</span>
 		</div>
 		<p class="footer-mark" aria-hidden="true">mattjs.me</p>

@@ -390,9 +390,21 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .stamp { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: .45rem; }
 .stamp a { color: var(--muted); }
 .stamp a:hover { color: var(--foreground); }
-.stamp .studio-link { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
-.stamp .studio-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
-.stamp .studio-link .carbon-mark { display: inline-block; width: .8em; height: .8em; margin-right: .3em; vertical-align: -.08em; }
+/* Carbon Software, the company behind the site: a card at the top of the footer that links to carbonsoft.sh */
+.studio { position: relative; display: flex; align-items: center; gap: 1.1rem; margin-bottom: 1.5rem; padding: 1.15rem 1.35rem; border: 1px solid var(--line); border-radius: .875rem; background: var(--subtle); overflow: hidden; transition: border-color 200ms ease; }
+.studio:hover { border-color: var(--line-strong); }
+.studio .grid-bg { mask-image: linear-gradient(to right, #000, transparent 70%); }
+.studio > :not(.grid-bg) { position: relative; }
+.studio-mark { flex: none; display: grid; place-items: center; width: 3rem; height: 3rem; border: 1px solid var(--line-strong); border-radius: .75rem; background: var(--background); color: var(--foreground); transition: transform 450ms var(--ease-spring), color 200ms ease, border-color 200ms ease; }
+.studio-mark .carbon-mark { width: 1.35rem; height: 1.35rem; }
+.studio:hover .studio-mark { transform: rotate(-8deg) scale(1.06); color: var(--brand); border-color: color-mix(in oklab, var(--brand) 55%, var(--line-strong)); }
+.studio-copy { flex: 1; min-width: 0; }
+.studio-copy small { display: block; font: .6875rem var(--mono); color: var(--faint); }
+.studio-copy strong { display: block; margin-top: .1rem; font-size: 1rem; font-weight: 600; letter-spacing: -.025em; color: var(--foreground); }
+.studio-copy > span { display: block; margin-top: .1rem; font-size: .8125rem; line-height: 1.5; color: var(--muted); }
+.studio-go { display: inline-flex; align-items: center; gap: .4rem; font: .6875rem var(--mono); color: var(--muted); white-space: nowrap; transition: color 160ms ease; }
+.studio:hover .studio-go { color: var(--foreground); }
+.studio:hover .row-arrow { color: var(--brand); transform: translate(2px, -2px); }
 /* Oversized wordmark, cut off by the bottom of the page, as on carbonsoft.sh */
 .footer-mark { margin: 1.5rem 0 0; translate: 0 18%; text-align: center; white-space: nowrap; font-size: clamp(3rem, 15vw, 7.5rem); line-height: 1; font-weight: 600; letter-spacing: -.07em; color: transparent; background: linear-gradient(180deg, var(--line-strong) 0%, transparent 85%); -webkit-background-clip: text; background-clip: text; user-select: none; }
 @supports (animation-timeline: view()) {
@@ -447,6 +459,8 @@ svg { width: 1rem; height: 1rem; flex: none; }
   .writing-rows .row { flex-wrap: wrap; gap: .15rem .7rem; }
   .writing-rows .row-copy { min-width: 10rem; }
   .footer-row { flex-direction: column; gap: .75rem; }
+  .studio { align-items: flex-start; padding: 1rem; }
+  .studio-go > span { display: none; }
   .stamp { justify-content: flex-start; }
   .prose { font-size: 1rem; }
 }
