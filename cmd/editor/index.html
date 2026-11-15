@@ -68,6 +68,7 @@ button { cursor: pointer; }
 .field:focus-within { border-color: var(--line-strong); }
 .field input { color: var(--fg); font: 12px var(--mono); }
 .field.grow { flex: 1; min-width: 10rem; }
+button.field { background: transparent; color: var(--fg); }
 #date { width: 7.6rem; } #readtime { width: 2.6rem; }
 #date::-webkit-calendar-picker-indicator { filter: invert(.6); }
 .pill { display: inline-flex; align-items: center; gap: .4rem; height: 1.8rem; padding: 0 .6rem; border-radius: .45rem; font: 12px var(--mono); border: 1px solid var(--line); color: var(--muted); }
@@ -143,6 +144,7 @@ a { color: var(--fg); }
         <label class="field">date <input id="date" type="date"></label>
         <label class="field grow">tags <input id="tags" placeholder="golang, life" autocomplete="off"></label>
         <label class="field" title="Leave empty to work it out from the word count">mins <input id="readtime" inputmode="numeric" placeholder="auto"></label>
+        <button class="field" id="mood" type="button" title="The post's tone, shown as an emoji next to it. Click to change."></button>
       </div>
     </div>
     <div class="tools" id="tools" hidden></div>
@@ -241,6 +243,7 @@ async function openPost(slug) {
   $("date").value = (current.meta.date || "").slice(0, 10);
   $("tags").value = current.meta.tags.join(", ");
   $("readtime").value = current.meta.read_time || "";
+  drawMood();
   body.value = current.body;
   body.scrollTop = 0;
   try { localStorage.setItem("editor-post", slug); } catch {}
@@ -262,6 +265,15 @@ function drawChrome() {
   const count = (body.value.match(/\S+/g) || []).length;
   $("words").textContent = `${count.toLocaleString()} words · ${Math.max(1, Math.ceil(count / 200))} min read`;
 }
+// Tone cycles: none, sun, cloud
+const moods = { "": "tone –", sun: "tone ☀️", cloud: "tone ☁️" };
+function drawMood() { $("mood").textContent = moods[current.meta.mood || ""] || moods[""]; }
+$("mood").onclick = () => {
+  const order = ["", "sun", "cloud"];
+  current.meta.mood = order[(order.indexOf(current.meta.mood || "") + 1) % order.length];
+  drawMood();
+  changed();
+};
 function collect() {
   current.meta.title = $("title").value;
   current.meta.subtitle = $("subtitle").value;

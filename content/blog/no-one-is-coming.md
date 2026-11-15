@@ -3,6 +3,7 @@
   "title": "Thoughts 001",
   "subtitle": "",
   "date": "2026-11-14",
+  "mood": "cloud",
   "draft": false,
   "tags": [],
 }

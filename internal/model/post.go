@@ -11,6 +11,7 @@ type Post struct {
 	HTML     string
 	ReadTime int
 	Draft    bool
+	Mood     string // "sun" or "cloud"
 }
 
 type Project struct {

@@ -48,7 +48,8 @@ templ postList(posts []*model.Post) {
 								<h2 class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</h2>
 								<p class="row-description">{ post.Subtitle }</p>
 							</div>
-							<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
+							@mood(post.Mood)
+<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
 						</a>
 						<div class="tags">
 							<span>{ formatReadTime(post.ReadTime) }</span>
@@ -71,6 +72,7 @@ templ BlogPost(post *model.Post) {
 					<div class="grid-bg" aria-hidden="true"></div>
 					<p class="eyebrow reveal">
 						<time datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2, 2006") }</time> · { formatReadTime(post.ReadTime) }
+						@mood(post.Mood)
 					</p>
 					<h1 class="reveal" style={ titleStyle(post.Slug) }><span class="headline-fade">{ post.Title }</span></h1>
 					<p class="article-subtitle reveal" style="--d: 160ms">{ post.Subtitle }</p>
@@ -112,6 +114,16 @@ templ NotFound() {
 				</nav>
 			</section>
 		</main>
+	}
+}
+
+// mood shows a post's tone as weather: sun for the light ones, cloud for the heavy ones.
+templ mood(value string) {
+	switch value {
+		case "sun":
+			<span class="mood" role="img" aria-label="Sunny: a light one" title="A light one">☀️</span>
+		case "cloud":
+			<span class="mood" role="img" aria-label="Cloudy: a heavier one" title="A heavier one">☁️</span>
 	}
 }
 

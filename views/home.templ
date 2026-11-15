@@ -76,7 +76,8 @@ templ Home(posts []*model.Post, projects []model.Project) {
 								<a class="row" href={ templ.SafeURL("/blog/" + post.Slug) }>
 									<span class="row-offset" aria-hidden="true">{ hexOffset(i) }</span>
 									<span class="row-copy"><span class="row-title" style={ postTransition(post.Slug) }>{ post.Title }</span></span>
-									<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
+									@mood(post.Mood)
+<time class="row-date" datetime={ post.Date.Format("2006-01-02") }>{ post.Date.Format("Jan 2006") }</time>
 									@arrow(false)
 								</a>
 							</li>

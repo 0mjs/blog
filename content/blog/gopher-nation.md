@@ -4,6 +4,7 @@
   "subtitle": "Becoming a Gopher.",
   "date": "2025-10-28T23:13:06Z",
   "read_time": 7,
+  "mood": "sun",
   "draft": false,
   "tags": ["golang"],
 }

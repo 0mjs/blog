@@ -4,6 +4,7 @@
   "subtitle": "Super Ultra Hackerman 3000.",
   "date": "2026-08-19",
   "read_time": 10,
+  "mood": "sun",
   "draft": false,
   "tags": ["console-hacking"],
 }

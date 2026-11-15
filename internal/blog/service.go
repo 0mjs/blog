@@ -158,6 +158,7 @@ func (s *Service) Render(slug string, source []byte) (*model.Post, error) {
 		HTML:     rendered.String(),
 		ReadTime: readTime,
 		Draft:    meta.Draft,
+		Mood:     meta.Mood,
 	}, nil
 }
 

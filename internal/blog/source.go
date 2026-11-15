@@ -18,6 +18,7 @@ type Meta struct {
 	Draft    bool     `yaml:"draft" json:"draft"`
 	Tags     []string `yaml:"tags" json:"tags"`
 	ReadTime int      `yaml:"read_time" json:"read_time"`
+	Mood     string   `yaml:"mood" json:"mood"` // "sun" or "cloud": the post's tone, shown as an emoji
 }
 
 // Split separates a post's source into its front matter and Markdown body.
@@ -46,6 +47,9 @@ func Join(meta Meta, body string) string {
 	fmt.Fprintf(&b, "  \"date\": %s,\n", quote(meta.Date))
 	if meta.ReadTime > 0 {
 		fmt.Fprintf(&b, "  \"read_time\": %d,\n", meta.ReadTime)
+	}
+	if meta.Mood != "" {
+		fmt.Fprintf(&b, "  \"mood\": %s,\n", quote(meta.Mood))
 	}
 	fmt.Fprintf(&b, "  \"draft\": %t,\n", meta.Draft)
 	fmt.Fprintf(&b, "  \"tags\": [%s],\n", strings.Join(tags, ", "))

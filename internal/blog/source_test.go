@@ -8,7 +8,7 @@ import (
 )
 
 func TestSplitJoinRoundTrip(t *testing.T) {
-	meta := Meta{Title: `A "quoted" --- title`, Subtitle: "Sub: title", Date: "2026-11-14", Draft: true, Tags: []string{"go", "life"}, ReadTime: 4}
+	meta := Meta{Title: `A "quoted" --- title`, Subtitle: "Sub: title", Date: "2026-11-14", Draft: true, Tags: []string{"go", "life"}, ReadTime: 4, Mood: "cloud"}
 	body := "First paragraph.\n\n---\n\nAfter a rule."
 	gotMeta, gotBody, err := Split(Join(meta, body))
 	if err != nil {

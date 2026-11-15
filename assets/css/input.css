@@ -138,6 +138,8 @@ svg { width: 1rem; height: 1rem; flex: none; }
 .row-copy { flex: 1; min-width: 0; }
 .row-title { display: block; margin: 0; font-size: .9375rem; font-weight: 500; line-height: 1.45; letter-spacing: -.01em; color: var(--foreground); }
 .row-description { display: block; margin: .1rem 0 0; font-size: .8125rem; color: var(--muted); }
+.mood { flex: none; font-size: .8125rem; line-height: 1; }
+.eyebrow .mood { margin-left: .4rem; }
 .row-date { flex: none; font: .6875rem var(--mono); color: var(--faint); font-variant-numeric: tabular-nums; text-decoration: none; }
 .row-arrow { width: .8rem; height: .8rem; color: var(--faint); transition: transform 300ms var(--ease-out), color 160ms ease; }
 .row:hover .row-arrow { color: var(--brand); transform: translate(2px, -2px); }
