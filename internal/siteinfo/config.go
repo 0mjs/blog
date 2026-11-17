@@ -21,7 +21,7 @@ var Current = Load()
 func Load() Config {
 	return Config{
 		Name:     envOr("SITE_NAME", "Matt Stevenson"),
-		Tagline:  envOr("SITE_TAGLINE", "aka mickyard, plonks"),
+		Tagline:  envOr("SITE_TAGLINE", "I build things. Some of them work."),
 		BaseURL:  strings.TrimRight(envOr("SITE_URL", "https://mattjs.me"), "/"),
 		Language: envOr("SITE_LANGUAGE", "en"),
 	}
