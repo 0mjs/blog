@@ -1,7 +1,7 @@
 ---
 {
   "title": "Thoughts 001",
-  "subtitle": "",
+  "subtitle": "On parents, funerals and getting up.",
   "date": "2026-11-14",
   "mood": "cloud",
   "draft": false,
